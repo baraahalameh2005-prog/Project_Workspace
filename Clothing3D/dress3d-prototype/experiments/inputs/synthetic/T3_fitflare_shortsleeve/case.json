@@ -1,0 +1,65 @@
+{
+  "case": "T3_fitflare_shortsleeve",
+  "ground_truth": {
+    "style": {
+      "silhouette": "fit-and-flare",
+      "sleeve": "short",
+      "neckline": "round"
+    },
+    "measurements": {
+      "dress_length": 92,
+      "bust": 88,
+      "waist": 70,
+      "hip": 120,
+      "hem": 210,
+      "shoulder_width": 37,
+      "neck_width": 17,
+      "front_neck_drop": 10,
+      "back_neck_drop": 2.5,
+      "armhole_depth": 19,
+      "waist_position": 37,
+      "hip_position": 55,
+      "sleeve_length": 20,
+      "upper_arm": 32,
+      "cuff": 31
+    },
+    "options": {
+      "depth_ratio": 0.72,
+      "fold_count": 13,
+      "fold_amplitude": 2.6,
+      "sleeve_angle_deg": 38
+    },
+    "measurements_resolved_cm": {
+      "dress_length": 92.0,
+      "bust": 88.0,
+      "waist": 70.0,
+      "hip": 120.0,
+      "hem": 210.0,
+      "shoulder_width": 37.0,
+      "neck_width": 17.0,
+      "front_neck_drop": 10.0,
+      "back_neck_drop": 2.5,
+      "armhole_depth": 19.0,
+      "waist_position": 37.0,
+      "hip_position": 55.0,
+      "sleeve_length": 20.0,
+      "upper_arm": 32.0,
+      "cuff": 31.0
+    }
+  },
+  "camera": {
+    "size": [
+      600,
+      900
+    ],
+    "fov_deg": 25,
+    "elev": 3,
+    "center": [
+      0.0,
+      41.09642278529348,
+      0.3233017758213652
+    ],
+    "extent": 116.35575668857732
+  },
+  "label": "SYNTHETIC reference image rendered from a procedural ground-truth mesh"
+}

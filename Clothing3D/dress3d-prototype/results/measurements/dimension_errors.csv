@@ -1,0 +1,233 @@
+approach,variant,case,measurement,target_cm,measured_cm,abs_err_cm,pct_err,input,inferred_source
+E_hybrid,hybrid_front_v1,T1_straight_sleeveless,dress_length,90.0,89.82,-0.18,-0.2,user-provided,user
+E_hybrid,hybrid_front_v1,T1_straight_sleeveless,bust,96.0,95.95,-0.05,-0.05,user-provided,user
+E_hybrid,hybrid_front_v1,T1_straight_sleeveless,waist,92.0,91.97,-0.03,-0.04,user-provided,user
+E_hybrid,hybrid_front_v1,T1_straight_sleeveless,hip,100.0,100.21,0.21,0.21,user-provided,user
+E_hybrid,hybrid_front_v1,T1_straight_sleeveless,hem,102.0,101.99,-0.01,-0.01,user-provided,user
+E_hybrid,hybrid_front_v1,T1_straight_sleeveless,shoulder_width,37.0,37.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_v1,T1_straight_sleeveless,neck_width,18.0,17.33,-0.67,-3.74,inferred (photo/default),photo (HPS peaks)
+E_hybrid,hybrid_front_v1,T1_straight_sleeveless,front_neck_drop,8.0,6.43,-1.57,-19.63,inferred (photo/default),photo (luminance edge)
+E_hybrid,hybrid_front_v1,T1_straight_sleeveless,back_neck_drop,2.0,2.62,0.62,30.76,inferred (photo/default),photo (top contour dip)
+E_hybrid,hybrid_front_v1,T1_straight_sleeveless,armhole_depth,21.0,18.2,-2.8,-13.34,inferred (photo/default),photo (underarm row)
+E_hybrid,hybrid_front_v1,T1_straight_sleeveless,waist_position,40.0,37.7,-2.3,-5.76,inferred (photo/default),photo (min torso width row)
+E_hybrid,hybrid_front_v1,T2_aline_vneck,dress_length,100.0,99.78,-0.22,-0.22,user-provided,user
+E_hybrid,hybrid_front_v1,T2_aline_vneck,bust,90.0,89.94,-0.06,-0.07,user-provided,user
+E_hybrid,hybrid_front_v1,T2_aline_vneck,waist,76.0,75.97,-0.03,-0.04,user-provided,user
+E_hybrid,hybrid_front_v1,T2_aline_vneck,hip,98.0,102.77,4.77,4.86,user-provided,user
+E_hybrid,hybrid_front_v1,T2_aline_vneck,hem,170.0,169.98,-0.02,-0.01,user-provided,user
+E_hybrid,hybrid_front_v1,T2_aline_vneck,shoulder_width,36.0,36.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_v1,T2_aline_vneck,neck_width,16.0,14.52,-1.48,-9.24,inferred (photo/default),photo (HPS peaks)
+E_hybrid,hybrid_front_v1,T2_aline_vneck,front_neck_drop,15.0,12.89,-2.11,-14.03,inferred (photo/default),photo (luminance edge)
+E_hybrid,hybrid_front_v1,T2_aline_vneck,back_neck_drop,3.0,3.6,0.6,20.04,inferred (photo/default),photo (top contour dip)
+E_hybrid,hybrid_front_v1,T2_aline_vneck,armhole_depth,20.0,16.73,-3.27,-16.36,inferred (photo/default),photo (underarm row)
+E_hybrid,hybrid_front_v1,T2_aline_vneck,waist_position,38.0,34.73,-3.27,-8.61,inferred (photo/default),photo (min torso width row)
+E_hybrid,hybrid_front_v1,T3_fitflare_shortsleeve,dress_length,92.0,91.88,-0.12,-0.13,user-provided,user
+E_hybrid,hybrid_front_v1,T3_fitflare_shortsleeve,bust,88.0,87.89,-0.11,-0.13,user-provided,user
+E_hybrid,hybrid_front_v1,T3_fitflare_shortsleeve,waist,70.0,70.0,0.0,0.01,user-provided,user
+E_hybrid,hybrid_front_v1,T3_fitflare_shortsleeve,hip,120.0,122.17,2.17,1.81,user-provided,user
+E_hybrid,hybrid_front_v1,T3_fitflare_shortsleeve,hem,210.0,209.86,-0.14,-0.07,user-provided,user
+E_hybrid,hybrid_front_v1,T3_fitflare_shortsleeve,shoulder_width,37.0,37.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_v1,T3_fitflare_shortsleeve,neck_width,17.0,15.82,-1.18,-6.91,inferred (photo/default),photo (HPS peaks)
+E_hybrid,hybrid_front_v1,T3_fitflare_shortsleeve,front_neck_drop,10.0,8.46,-1.54,-15.44,inferred (photo/default),photo (luminance edge)
+E_hybrid,hybrid_front_v1,T3_fitflare_shortsleeve,back_neck_drop,2.5,2.78,0.28,11.14,inferred (photo/default),photo (top contour dip)
+E_hybrid,hybrid_front_v1,T3_fitflare_shortsleeve,armhole_depth,19.0,17.88,-1.12,-5.9,inferred (photo/default),photo (underarm row)
+E_hybrid,hybrid_front_v1,T3_fitflare_shortsleeve,sleeve_length,20.0,20.01,0.01,0.04,user-provided,user
+E_hybrid,hybrid_front_v1,T3_fitflare_shortsleeve,upper_arm,32.0,31.96,-0.04,-0.11,user-provided,user
+E_hybrid,hybrid_front_v1,T3_fitflare_shortsleeve,cuff,31.0,31.0,-0.0,-0.0,user-provided,user
+E_hybrid,hybrid_front_v1,T3_fitflare_shortsleeve,waist_position,37.0,34.38,-2.62,-7.09,inferred (photo/default),photo (min torso width row)
+E_hybrid,hybrid_front_v1,T4_straight_longsleeve_square,dress_length,105.0,104.8,-0.2,-0.19,user-provided,user
+E_hybrid,hybrid_front_v1,T4_straight_longsleeve_square,bust,100.0,99.91,-0.09,-0.09,user-provided,user
+E_hybrid,hybrid_front_v1,T4_straight_longsleeve_square,waist,94.0,93.98,-0.02,-0.02,user-provided,user
+E_hybrid,hybrid_front_v1,T4_straight_longsleeve_square,hip,104.0,105.38,1.38,1.32,user-provided,user
+E_hybrid,hybrid_front_v1,T4_straight_longsleeve_square,hem,112.0,111.99,-0.01,-0.01,user-provided,user
+E_hybrid,hybrid_front_v1,T4_straight_longsleeve_square,shoulder_width,39.0,39.0,-0.0,-0.0,user-provided,user
+E_hybrid,hybrid_front_v1,T4_straight_longsleeve_square,neck_width,20.0,19.46,-0.54,-2.68,inferred (photo/default),photo (HPS peaks)
+E_hybrid,hybrid_front_v1,T4_straight_longsleeve_square,front_neck_drop,11.0,10.02,-0.98,-8.9,inferred (photo/default),photo (luminance edge)
+E_hybrid,hybrid_front_v1,T4_straight_longsleeve_square,back_neck_drop,2.5,2.7,0.2,7.92,inferred (photo/default),photo (top contour dip)
+E_hybrid,hybrid_front_v1,T4_straight_longsleeve_square,armhole_depth,22.0,23.7,1.7,7.74,inferred (photo/default),photo (underarm row)
+E_hybrid,hybrid_front_v1,T4_straight_longsleeve_square,sleeve_length,60.0,60.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_v1,T4_straight_longsleeve_square,upper_arm,34.0,33.99,-0.01,-0.02,user-provided,user
+E_hybrid,hybrid_front_v1,T4_straight_longsleeve_square,cuff,24.0,24.0,-0.0,-0.0,user-provided,user
+E_hybrid,hybrid_front_v1,T4_straight_longsleeve_square,waist_position,42.0,37.7,-4.3,-10.23,inferred (photo/default),photo (min torso width row)
+E_hybrid,hybrid_front,T1_straight_sleeveless,dress_length,90.0,89.82,-0.18,-0.2,user-provided,user
+E_hybrid,hybrid_front,T1_straight_sleeveless,bust,96.0,95.95,-0.05,-0.05,user-provided,user
+E_hybrid,hybrid_front,T1_straight_sleeveless,waist,92.0,91.97,-0.03,-0.04,user-provided,user
+E_hybrid,hybrid_front,T1_straight_sleeveless,hip,100.0,99.69,-0.31,-0.31,user-provided,user
+E_hybrid,hybrid_front,T1_straight_sleeveless,hem,102.0,101.99,-0.01,-0.01,user-provided,user
+E_hybrid,hybrid_front,T1_straight_sleeveless,shoulder_width,37.0,37.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front,T1_straight_sleeveless,neck_width,18.0,17.33,-0.67,-3.74,inferred (photo/default),photo (HPS peaks)
+E_hybrid,hybrid_front,T1_straight_sleeveless,front_neck_drop,8.0,6.43,-1.57,-19.63,inferred (photo/default),photo (shaded neck opening)
+E_hybrid,hybrid_front,T1_straight_sleeveless,back_neck_drop,2.0,2.62,0.62,30.77,inferred (photo/default),photo (top contour dip)
+E_hybrid,hybrid_front,T1_straight_sleeveless,armhole_depth,21.0,18.2,-2.8,-13.34,inferred (photo/default),photo (underarm row)
+E_hybrid,hybrid_front,T1_straight_sleeveless,waist_position,40.0,40.7,0.7,1.75,inferred (photo/default),default
+E_hybrid,hybrid_front,T2_aline_vneck,dress_length,100.0,99.78,-0.22,-0.22,user-provided,user
+E_hybrid,hybrid_front,T2_aline_vneck,bust,90.0,89.94,-0.06,-0.07,user-provided,user
+E_hybrid,hybrid_front,T2_aline_vneck,waist,76.0,75.97,-0.03,-0.04,user-provided,user
+E_hybrid,hybrid_front,T2_aline_vneck,hip,98.0,102.77,4.77,4.86,user-provided,user
+E_hybrid,hybrid_front,T2_aline_vneck,hem,170.0,169.98,-0.02,-0.01,user-provided,user
+E_hybrid,hybrid_front,T2_aline_vneck,shoulder_width,36.0,36.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front,T2_aline_vneck,neck_width,16.0,14.52,-1.48,-9.24,inferred (photo/default),photo (HPS peaks)
+E_hybrid,hybrid_front,T2_aline_vneck,front_neck_drop,15.0,12.89,-2.11,-14.03,inferred (photo/default),photo (shaded neck opening)
+E_hybrid,hybrid_front,T2_aline_vneck,back_neck_drop,3.0,3.6,0.6,20.04,inferred (photo/default),photo (top contour dip)
+E_hybrid,hybrid_front,T2_aline_vneck,armhole_depth,20.0,16.73,-3.27,-16.36,inferred (photo/default),photo (underarm row)
+E_hybrid,hybrid_front,T2_aline_vneck,waist_position,38.0,34.73,-3.27,-8.61,inferred (photo/default),photo (min torso width row)
+E_hybrid,hybrid_front,T3_fitflare_shortsleeve,dress_length,92.0,91.88,-0.12,-0.13,user-provided,user
+E_hybrid,hybrid_front,T3_fitflare_shortsleeve,bust,88.0,87.89,-0.11,-0.13,user-provided,user
+E_hybrid,hybrid_front,T3_fitflare_shortsleeve,waist,70.0,70.0,0.0,0.01,user-provided,user
+E_hybrid,hybrid_front,T3_fitflare_shortsleeve,hip,120.0,122.17,2.17,1.81,user-provided,user
+E_hybrid,hybrid_front,T3_fitflare_shortsleeve,hem,210.0,209.86,-0.14,-0.07,user-provided,user
+E_hybrid,hybrid_front,T3_fitflare_shortsleeve,shoulder_width,37.0,37.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front,T3_fitflare_shortsleeve,neck_width,17.0,15.82,-1.18,-6.91,inferred (photo/default),photo (HPS peaks)
+E_hybrid,hybrid_front,T3_fitflare_shortsleeve,front_neck_drop,10.0,8.46,-1.54,-15.44,inferred (photo/default),photo (shaded neck opening)
+E_hybrid,hybrid_front,T3_fitflare_shortsleeve,back_neck_drop,2.5,2.78,0.28,11.14,inferred (photo/default),photo (top contour dip)
+E_hybrid,hybrid_front,T3_fitflare_shortsleeve,armhole_depth,19.0,17.88,-1.12,-5.9,inferred (photo/default),photo (underarm row)
+E_hybrid,hybrid_front,T3_fitflare_shortsleeve,sleeve_length,20.0,20.0,0.0,0.02,user-provided,user
+E_hybrid,hybrid_front,T3_fitflare_shortsleeve,upper_arm,32.0,31.97,-0.03,-0.09,user-provided,user
+E_hybrid,hybrid_front,T3_fitflare_shortsleeve,cuff,31.0,31.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front,T3_fitflare_shortsleeve,waist_position,37.0,34.38,-2.62,-7.09,inferred (photo/default),photo (min torso width row)
+E_hybrid,hybrid_front,T4_straight_longsleeve_square,dress_length,105.0,104.8,-0.2,-0.19,user-provided,user
+E_hybrid,hybrid_front,T4_straight_longsleeve_square,bust,100.0,99.94,-0.06,-0.06,user-provided,user
+E_hybrid,hybrid_front,T4_straight_longsleeve_square,waist,94.0,93.97,-0.03,-0.03,user-provided,user
+E_hybrid,hybrid_front,T4_straight_longsleeve_square,hip,104.0,103.57,-0.43,-0.41,user-provided,user
+E_hybrid,hybrid_front,T4_straight_longsleeve_square,hem,112.0,111.99,-0.01,-0.01,user-provided,user
+E_hybrid,hybrid_front,T4_straight_longsleeve_square,shoulder_width,39.0,39.0,-0.0,-0.0,user-provided,user
+E_hybrid,hybrid_front,T4_straight_longsleeve_square,neck_width,20.0,19.47,-0.53,-2.67,inferred (photo/default),photo (HPS peaks)
+E_hybrid,hybrid_front,T4_straight_longsleeve_square,front_neck_drop,11.0,10.02,-0.98,-8.89,inferred (photo/default),photo (shaded neck opening)
+E_hybrid,hybrid_front,T4_straight_longsleeve_square,back_neck_drop,2.5,2.7,0.2,7.93,inferred (photo/default),photo (top contour dip)
+E_hybrid,hybrid_front,T4_straight_longsleeve_square,armhole_depth,22.0,23.71,1.71,7.75,inferred (photo/default),photo (underarm row)
+E_hybrid,hybrid_front,T4_straight_longsleeve_square,sleeve_length,60.0,60.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front,T4_straight_longsleeve_square,upper_arm,34.0,33.98,-0.02,-0.05,user-provided,user
+E_hybrid,hybrid_front,T4_straight_longsleeve_square,cuff,24.0,24.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front,T4_straight_longsleeve_square,waist_position,42.0,43.21,1.21,2.87,inferred (photo/default),default
+E_hybrid,hybrid_frontback,T1_straight_sleeveless,dress_length,90.0,89.82,-0.18,-0.2,user-provided,user
+E_hybrid,hybrid_frontback,T1_straight_sleeveless,bust,96.0,95.95,-0.05,-0.05,user-provided,user
+E_hybrid,hybrid_frontback,T1_straight_sleeveless,waist,92.0,91.97,-0.03,-0.04,user-provided,user
+E_hybrid,hybrid_frontback,T1_straight_sleeveless,hip,100.0,99.69,-0.31,-0.31,user-provided,user
+E_hybrid,hybrid_frontback,T1_straight_sleeveless,hem,102.0,101.99,-0.01,-0.01,user-provided,user
+E_hybrid,hybrid_frontback,T1_straight_sleeveless,shoulder_width,37.0,37.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_frontback,T1_straight_sleeveless,neck_width,18.0,17.33,-0.67,-3.74,inferred (photo/default),photo (HPS peaks)
+E_hybrid,hybrid_frontback,T1_straight_sleeveless,front_neck_drop,8.0,6.43,-1.57,-19.63,inferred (photo/default),photo (shaded neck opening)
+E_hybrid,hybrid_frontback,T1_straight_sleeveless,back_neck_drop,2.0,2.62,0.62,30.77,inferred (photo/default),photo (top contour dip)
+E_hybrid,hybrid_frontback,T1_straight_sleeveless,armhole_depth,21.0,18.2,-2.8,-13.34,inferred (photo/default),photo (underarm row)
+E_hybrid,hybrid_frontback,T1_straight_sleeveless,waist_position,40.0,40.7,0.7,1.75,inferred (photo/default),default
+E_hybrid,hybrid_frontback,T2_aline_vneck,dress_length,100.0,99.78,-0.22,-0.22,user-provided,user
+E_hybrid,hybrid_frontback,T2_aline_vneck,bust,90.0,89.94,-0.06,-0.07,user-provided,user
+E_hybrid,hybrid_frontback,T2_aline_vneck,waist,76.0,75.97,-0.03,-0.04,user-provided,user
+E_hybrid,hybrid_frontback,T2_aline_vneck,hip,98.0,102.77,4.77,4.86,user-provided,user
+E_hybrid,hybrid_frontback,T2_aline_vneck,hem,170.0,169.98,-0.02,-0.01,user-provided,user
+E_hybrid,hybrid_frontback,T2_aline_vneck,shoulder_width,36.0,36.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_frontback,T2_aline_vneck,neck_width,16.0,14.52,-1.48,-9.24,inferred (photo/default),photo (HPS peaks)
+E_hybrid,hybrid_frontback,T2_aline_vneck,front_neck_drop,15.0,12.89,-2.11,-14.03,inferred (photo/default),photo (shaded neck opening)
+E_hybrid,hybrid_frontback,T2_aline_vneck,back_neck_drop,3.0,3.6,0.6,20.04,inferred (photo/default),photo (top contour dip)
+E_hybrid,hybrid_frontback,T2_aline_vneck,armhole_depth,20.0,16.73,-3.27,-16.36,inferred (photo/default),photo (underarm row)
+E_hybrid,hybrid_frontback,T2_aline_vneck,waist_position,38.0,34.73,-3.27,-8.61,inferred (photo/default),photo (min torso width row)
+E_hybrid,hybrid_frontback,T3_fitflare_shortsleeve,dress_length,92.0,91.88,-0.12,-0.13,user-provided,user
+E_hybrid,hybrid_frontback,T3_fitflare_shortsleeve,bust,88.0,87.89,-0.11,-0.13,user-provided,user
+E_hybrid,hybrid_frontback,T3_fitflare_shortsleeve,waist,70.0,70.0,0.0,0.01,user-provided,user
+E_hybrid,hybrid_frontback,T3_fitflare_shortsleeve,hip,120.0,122.17,2.17,1.81,user-provided,user
+E_hybrid,hybrid_frontback,T3_fitflare_shortsleeve,hem,210.0,209.86,-0.14,-0.07,user-provided,user
+E_hybrid,hybrid_frontback,T3_fitflare_shortsleeve,shoulder_width,37.0,37.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_frontback,T3_fitflare_shortsleeve,neck_width,17.0,15.82,-1.18,-6.91,inferred (photo/default),photo (HPS peaks)
+E_hybrid,hybrid_frontback,T3_fitflare_shortsleeve,front_neck_drop,10.0,8.46,-1.54,-15.44,inferred (photo/default),photo (shaded neck opening)
+E_hybrid,hybrid_frontback,T3_fitflare_shortsleeve,back_neck_drop,2.5,2.78,0.28,11.14,inferred (photo/default),photo (top contour dip)
+E_hybrid,hybrid_frontback,T3_fitflare_shortsleeve,armhole_depth,19.0,17.88,-1.12,-5.9,inferred (photo/default),photo (underarm row)
+E_hybrid,hybrid_frontback,T3_fitflare_shortsleeve,sleeve_length,20.0,20.0,0.0,0.02,user-provided,user
+E_hybrid,hybrid_frontback,T3_fitflare_shortsleeve,upper_arm,32.0,31.97,-0.03,-0.09,user-provided,user
+E_hybrid,hybrid_frontback,T3_fitflare_shortsleeve,cuff,31.0,31.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_frontback,T3_fitflare_shortsleeve,waist_position,37.0,34.38,-2.62,-7.09,inferred (photo/default),photo (min torso width row)
+E_hybrid,hybrid_frontback,T4_straight_longsleeve_square,dress_length,105.0,104.8,-0.2,-0.19,user-provided,user
+E_hybrid,hybrid_frontback,T4_straight_longsleeve_square,bust,100.0,99.94,-0.06,-0.06,user-provided,user
+E_hybrid,hybrid_frontback,T4_straight_longsleeve_square,waist,94.0,93.97,-0.03,-0.03,user-provided,user
+E_hybrid,hybrid_frontback,T4_straight_longsleeve_square,hip,104.0,103.57,-0.43,-0.41,user-provided,user
+E_hybrid,hybrid_frontback,T4_straight_longsleeve_square,hem,112.0,111.99,-0.01,-0.01,user-provided,user
+E_hybrid,hybrid_frontback,T4_straight_longsleeve_square,shoulder_width,39.0,39.0,-0.0,-0.0,user-provided,user
+E_hybrid,hybrid_frontback,T4_straight_longsleeve_square,neck_width,20.0,19.47,-0.53,-2.67,inferred (photo/default),photo (HPS peaks)
+E_hybrid,hybrid_frontback,T4_straight_longsleeve_square,front_neck_drop,11.0,10.02,-0.98,-8.89,inferred (photo/default),photo (shaded neck opening)
+E_hybrid,hybrid_frontback,T4_straight_longsleeve_square,back_neck_drop,2.5,2.7,0.2,7.93,inferred (photo/default),photo (top contour dip)
+E_hybrid,hybrid_frontback,T4_straight_longsleeve_square,armhole_depth,22.0,23.71,1.71,7.75,inferred (photo/default),photo (underarm row)
+E_hybrid,hybrid_frontback,T4_straight_longsleeve_square,sleeve_length,60.0,60.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_frontback,T4_straight_longsleeve_square,upper_arm,34.0,33.98,-0.02,-0.05,user-provided,user
+E_hybrid,hybrid_frontback,T4_straight_longsleeve_square,cuff,24.0,24.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_frontback,T4_straight_longsleeve_square,waist_position,42.0,43.21,1.21,2.87,inferred (photo/default),default
+E_hybrid,hybrid_front_fullprotocol,T1_straight_sleeveless,dress_length,90.0,89.8,-0.2,-0.22,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T1_straight_sleeveless,bust,96.0,95.95,-0.05,-0.05,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T1_straight_sleeveless,waist,92.0,91.96,-0.04,-0.04,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T1_straight_sleeveless,hip,100.0,99.96,-0.04,-0.04,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T1_straight_sleeveless,hem,102.0,101.99,-0.01,-0.01,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T1_straight_sleeveless,shoulder_width,37.0,37.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T1_straight_sleeveless,neck_width,18.0,18.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T1_straight_sleeveless,front_neck_drop,8.0,8.0,-0.0,-0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T1_straight_sleeveless,back_neck_drop,2.0,2.0,-0.0,-0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T1_straight_sleeveless,armhole_depth,21.0,21.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T1_straight_sleeveless,waist_position,40.0,40.5,0.5,1.25,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T2_aline_vneck,dress_length,100.0,99.8,-0.2,-0.2,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T2_aline_vneck,bust,90.0,89.95,-0.05,-0.06,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T2_aline_vneck,waist,76.0,75.98,-0.02,-0.02,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T2_aline_vneck,hip,98.0,97.92,-0.08,-0.08,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T2_aline_vneck,hem,170.0,169.98,-0.02,-0.01,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T2_aline_vneck,shoulder_width,36.0,36.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T2_aline_vneck,neck_width,16.0,16.0,-0.0,-0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T2_aline_vneck,front_neck_drop,15.0,15.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T2_aline_vneck,back_neck_drop,3.0,3.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T2_aline_vneck,armhole_depth,20.0,20.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T2_aline_vneck,waist_position,38.0,37.5,-0.5,-1.32,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T3_fitflare_shortsleeve,dress_length,92.0,91.94,-0.06,-0.06,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T3_fitflare_shortsleeve,bust,88.0,87.88,-0.12,-0.14,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T3_fitflare_shortsleeve,waist,70.0,70.01,0.01,0.02,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T3_fitflare_shortsleeve,hip,120.0,119.57,-0.43,-0.36,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T3_fitflare_shortsleeve,hem,210.0,209.86,-0.14,-0.07,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T3_fitflare_shortsleeve,shoulder_width,37.0,37.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T3_fitflare_shortsleeve,neck_width,17.0,17.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T3_fitflare_shortsleeve,front_neck_drop,10.0,10.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T3_fitflare_shortsleeve,back_neck_drop,2.5,2.5,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T3_fitflare_shortsleeve,armhole_depth,19.0,19.0,-0.0,-0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T3_fitflare_shortsleeve,sleeve_length,20.0,20.01,0.01,0.03,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T3_fitflare_shortsleeve,upper_arm,32.0,32.0,-0.0,-0.01,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T3_fitflare_shortsleeve,cuff,31.0,31.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T3_fitflare_shortsleeve,waist_position,37.0,37.5,0.5,1.35,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T4_straight_longsleeve_square,dress_length,105.0,104.79,-0.21,-0.2,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T4_straight_longsleeve_square,bust,100.0,99.94,-0.06,-0.06,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T4_straight_longsleeve_square,waist,94.0,93.95,-0.05,-0.05,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T4_straight_longsleeve_square,hip,104.0,103.95,-0.05,-0.05,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T4_straight_longsleeve_square,hem,112.0,111.99,-0.01,-0.01,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T4_straight_longsleeve_square,shoulder_width,39.0,39.0,-0.0,-0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T4_straight_longsleeve_square,neck_width,20.0,20.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T4_straight_longsleeve_square,front_neck_drop,11.0,11.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T4_straight_longsleeve_square,back_neck_drop,2.5,2.5,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T4_straight_longsleeve_square,armhole_depth,22.0,22.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T4_straight_longsleeve_square,sleeve_length,60.0,60.0,0.0,0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T4_straight_longsleeve_square,upper_arm,34.0,33.99,-0.01,-0.03,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T4_straight_longsleeve_square,cuff,24.0,24.0,-0.0,-0.0,user-provided,user
+E_hybrid,hybrid_front_fullprotocol,T4_straight_longsleeve_square,waist_position,42.0,42.0,0.0,0.0,user-provided,user
+A_triposr,bbox_aligned,T1_straight_sleeveless,bust,96.0,115.24,19.24,20.05,n/a (no measurements used; scaled to GT height),
+A_triposr,bbox_aligned,T1_straight_sleeveless,waist,92.0,115.79,23.79,25.86,n/a (no measurements used; scaled to GT height),
+A_triposr,bbox_aligned,T1_straight_sleeveless,hip,100.0,118.98,18.98,18.98,n/a (no measurements used; scaled to GT height),
+A_triposr,bbox_aligned,T1_straight_sleeveless,hem,102.0,74.31,-27.69,-27.15,n/a (no measurements used; scaled to GT height),hem measured 1 cm above lowest point (closed solid has no hem edge)
+A_triposr,icp_aligned,T1_straight_sleeveless,bust,96.0,117.2,21.2,22.09,n/a (no measurements used; scaled to GT height),
+A_triposr,icp_aligned,T1_straight_sleeveless,waist,92.0,114.8,22.8,24.78,n/a (no measurements used; scaled to GT height),
+A_triposr,icp_aligned,T1_straight_sleeveless,hip,100.0,117.4,17.4,17.4,n/a (no measurements used; scaled to GT height),
+A_triposr,icp_aligned,T1_straight_sleeveless,hem,102.0,117.34,15.34,15.04,n/a (no measurements used; scaled to GT height),hem measured 1 cm above lowest point (closed solid has no hem edge)
+A_triposr,bbox_aligned,T2_aline_vneck,bust,90.0,91.84,1.84,2.05,n/a (no measurements used; scaled to GT height),
+A_triposr,bbox_aligned,T2_aline_vneck,waist,76.0,83.38,7.38,9.71,n/a (no measurements used; scaled to GT height),
+A_triposr,bbox_aligned,T2_aline_vneck,hip,98.0,105.91,7.91,8.07,n/a (no measurements used; scaled to GT height),
+A_triposr,bbox_aligned,T2_aline_vneck,hem,170.0,57.56,-112.44,-66.14,n/a (no measurements used; scaled to GT height),hem measured 1 cm above lowest point (closed solid has no hem edge)
+A_triposr,icp_aligned,T2_aline_vneck,bust,90.0,98.42,8.42,9.35,n/a (no measurements used; scaled to GT height),
+A_triposr,icp_aligned,T2_aline_vneck,waist,76.0,89.09,13.09,17.23,n/a (no measurements used; scaled to GT height),
+A_triposr,icp_aligned,T2_aline_vneck,hip,98.0,113.3,15.3,15.61,n/a (no measurements used; scaled to GT height),
+A_triposr,icp_aligned,T2_aline_vneck,hem,170.0,,,,n/a (no measurements used; scaled to GT height),no section
+A_triposr,bbox_aligned,T3_fitflare_shortsleeve,bust,88.0,88.52,0.52,0.59,n/a (no measurements used; scaled to GT height),
+A_triposr,bbox_aligned,T3_fitflare_shortsleeve,waist,70.0,71.56,1.56,2.23,n/a (no measurements used; scaled to GT height),
+A_triposr,bbox_aligned,T3_fitflare_shortsleeve,hip,120.0,108.3,-11.7,-9.75,n/a (no measurements used; scaled to GT height),
+A_triposr,bbox_aligned,T3_fitflare_shortsleeve,hem,210.0,87.58,-122.42,-58.29,n/a (no measurements used; scaled to GT height),hem measured 1 cm above lowest point (closed solid has no hem edge)
+A_triposr,icp_aligned,T3_fitflare_shortsleeve,bust,88.0,82.4,-5.6,-6.36,n/a (no measurements used; scaled to GT height),
+A_triposr,icp_aligned,T3_fitflare_shortsleeve,waist,70.0,79.47,9.47,13.53,n/a (no measurements used; scaled to GT height),
+A_triposr,icp_aligned,T3_fitflare_shortsleeve,hip,120.0,118.58,-1.42,-1.18,n/a (no measurements used; scaled to GT height),
+A_triposr,icp_aligned,T3_fitflare_shortsleeve,hem,210.0,,,,n/a (no measurements used; scaled to GT height),no section
+A_triposr,bbox_aligned,T4_straight_longsleeve_square,bust,100.0,101.31,1.31,1.31,n/a (no measurements used; scaled to GT height),
+A_triposr,bbox_aligned,T4_straight_longsleeve_square,waist,94.0,98.69,4.69,4.99,n/a (no measurements used; scaled to GT height),
+A_triposr,bbox_aligned,T4_straight_longsleeve_square,hip,104.0,102.45,-1.55,-1.49,n/a (no measurements used; scaled to GT height),
+A_triposr,bbox_aligned,T4_straight_longsleeve_square,hem,112.0,99.31,-12.69,-11.33,n/a (no measurements used; scaled to GT height),hem measured 1 cm above lowest point (closed solid has no hem edge)
+A_triposr,icp_aligned,T4_straight_longsleeve_square,bust,100.0,137.24,37.24,37.24,n/a (no measurements used; scaled to GT height),
+A_triposr,icp_aligned,T4_straight_longsleeve_square,waist,94.0,98.64,4.64,4.94,n/a (no measurements used; scaled to GT height),
+A_triposr,icp_aligned,T4_straight_longsleeve_square,hip,104.0,102.67,-1.33,-1.28,n/a (no measurements used; scaled to GT height),
+A_triposr,icp_aligned,T4_straight_longsleeve_square,hem,112.0,101.7,-10.3,-9.2,n/a (no measurements used; scaled to GT height),hem measured 1 cm above lowest point (closed solid has no hem edge)

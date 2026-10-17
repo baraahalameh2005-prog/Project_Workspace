@@ -1,0 +1,244 @@
+{
+  "runtime_s": 8.3,
+  "style_inferred": {
+    "silhouette": "straight",
+    "neckline": "square",
+    "sleeve": "long"
+  },
+  "style_gt": {
+    "silhouette": "straight",
+    "sleeve": "long",
+    "neckline": "square"
+  },
+  "dimensions": [
+    {
+      "measurement": "dress_length",
+      "target_cm": 105.0,
+      "measured_cm": 104.79,
+      "abs_err_cm": -0.21,
+      "pct_err": -0.2,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "bust",
+      "target_cm": 100.0,
+      "measured_cm": 99.94,
+      "abs_err_cm": -0.06,
+      "pct_err": -0.06,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "waist",
+      "target_cm": 94.0,
+      "measured_cm": 93.95,
+      "abs_err_cm": -0.05,
+      "pct_err": -0.05,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "hip",
+      "target_cm": 104.0,
+      "measured_cm": 103.95,
+      "abs_err_cm": -0.05,
+      "pct_err": -0.05,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "hem",
+      "target_cm": 112.0,
+      "measured_cm": 111.99,
+      "abs_err_cm": -0.01,
+      "pct_err": -0.01,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "shoulder_width",
+      "target_cm": 39.0,
+      "measured_cm": 39.0,
+      "abs_err_cm": -0.0,
+      "pct_err": -0.0,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "neck_width",
+      "target_cm": 20.0,
+      "measured_cm": 20.0,
+      "abs_err_cm": 0.0,
+      "pct_err": 0.0,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "front_neck_drop",
+      "target_cm": 11.0,
+      "measured_cm": 11.0,
+      "abs_err_cm": 0.0,
+      "pct_err": 0.0,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "back_neck_drop",
+      "target_cm": 2.5,
+      "measured_cm": 2.5,
+      "abs_err_cm": 0.0,
+      "pct_err": 0.0,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "armhole_depth",
+      "target_cm": 22.0,
+      "measured_cm": 22.0,
+      "abs_err_cm": 0.0,
+      "pct_err": 0.0,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "sleeve_length",
+      "target_cm": 60.0,
+      "measured_cm": 60.0,
+      "abs_err_cm": 0.0,
+      "pct_err": 0.0,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "upper_arm",
+      "target_cm": 34.0,
+      "measured_cm": 33.99,
+      "abs_err_cm": -0.01,
+      "pct_err": -0.03,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "cuff",
+      "target_cm": 24.0,
+      "measured_cm": 24.0,
+      "abs_err_cm": -0.0,
+      "pct_err": -0.0,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "waist_position",
+      "target_cm": 42.0,
+      "measured_cm": 42.0,
+      "abs_err_cm": 0.0,
+      "pct_err": 0.0,
+      "input": "user-provided",
+      "inferred_source": "user"
+    }
+  ],
+  "silhouette_iou": {
+    "front": 0.9705,
+    "right": 1.0,
+    "back": 0.9706,
+    "left": 1.0
+  },
+  "chamfer": {
+    "chamfer_mean_cm": 0.45036763084825226,
+    "recon_to_gt_p95_cm": 0.9221342927806317,
+    "gt_to_recon_p95_cm": 0.9153852217124617,
+    "hausdorff_cm": 1.7116880388571902
+  },
+  "deltaE_pixelwise": {
+    "front": 15.55,
+    "back": 16.37
+  },
+  "deltaE_mean_colour": {
+    "front": 6.41,
+    "back": 7.12
+  },
+  "integrity": {
+    "vertices": 10874,
+    "faces": 21296,
+    "glb_bytes": 697244,
+    "winding_consistent": true,
+    "non_manifold_edges": 0,
+    "boundary_loops": 4
+  },
+  "report": {
+    "style": {
+      "silhouette": "straight",
+      "neckline": "square",
+      "sleeve": "long"
+    },
+    "style_source": {
+      "silhouette": "photo",
+      "neckline": "photo",
+      "sleeve": "photo"
+    },
+    "measurements_cm": {
+      "dress_length": 105.0,
+      "bust": 100.0,
+      "waist": 94.0,
+      "hip": 104.0,
+      "hem": 112.0,
+      "shoulder_width": 39.0,
+      "sleeve_length": 60.0,
+      "upper_arm": 34.0,
+      "cuff": 24.0,
+      "hip_position": 62.0,
+      "waist_position": 42.0,
+      "armhole_depth": 22.0,
+      "neck_width": 20.0,
+      "front_neck_drop": 11.0,
+      "back_neck_drop": 2.5
+    },
+    "source": {
+      "dress_length": "user",
+      "bust": "user",
+      "waist": "user",
+      "hip": "user",
+      "hem": "user",
+      "shoulder_width": "user",
+      "sleeve_length": "user",
+      "upper_arm": "user",
+      "cuff": "user",
+      "hip_position": "user",
+      "waist_position": "user",
+      "armhole_depth": "user",
+      "neck_width": "user",
+      "front_neck_drop": "user",
+      "back_neck_drop": "user",
+      "sleeve_angle_deg": "photo (line fit through sleeve run centres)"
+    },
+    "photo_features": {
+      "sleeve_detected": 1.0,
+      "underarm_rel": 0.2421259842519685,
+      "sleeve_reach_px": 244.5,
+      "sleeve_end_rel": 0.59251968503937,
+      "sleeve_angle_deg": 59.44447540361787,
+      "neck_width_px": 101.0,
+      "back_neck_drop_rel": 0.027559055118110236,
+      "front_neck_drop_rel": 0.10236220472440945,
+      "neckline_ratio": 1.0,
+      "neckline": "square",
+      "waist_rel": 0.3799212598425197,
+      "waist_contrast": 0.09375,
+      "hem_to_bust_width": 1.0903426791277258,
+      "silhouette": "straight"
+    },
+    "confidence": {
+      "sleeve": "detected from separated sleeve silhouettes",
+      "front_neck_drop": "shaded neck opening, min centre/fabric ratio 0.21",
+      "waist_position": "min torso width, contrast 0.09"
+    },
+    "notes": [],
+    "options": {
+      "fold_count": 0,
+      "fold_amplitude": 0.0,
+      "sleeve_angle_deg": 59.44447540361787
+    },
+    "n_profile_anchors": 17
+  }
+}

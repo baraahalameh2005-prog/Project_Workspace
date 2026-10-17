@@ -1,0 +1,195 @@
+{
+  "suns_0.5": {
+    "folder": "results/garmentcode/dress_suns0.5",
+    "panels": {
+      "right_btorso": {
+        "n_vertices": 13,
+        "bbox_w_cm": 23.83805,
+        "bbox_h_cm": 39.836598011934875,
+        "translation": [
+          0.0,
+          103.895647186128,
+          -25.0
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "right_ftorso": {
+        "n_vertices": 12,
+        "bbox_w_cm": 26.082300000000004,
+        "bbox_h_cm": 43.50559779470363,
+        "translation": [
+          0.0,
+          97.85775552378857,
+          30.0
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "left_btorso": {
+        "n_vertices": 13,
+        "bbox_w_cm": 23.83805,
+        "bbox_h_cm": 39.836598011934875,
+        "translation": [
+          0.0,
+          103.895647186128,
+          -25.0
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "left_ftorso": {
+        "n_vertices": 12,
+        "bbox_w_cm": 26.082300000000004,
+        "bbox_h_cm": 43.50559779470363,
+        "translation": [
+          0.0,
+          97.85775552378857,
+          30.0
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "skirt_back": {
+        "n_vertices": 9,
+        "bbox_w_cm": 95.29783064217142,
+        "bbox_h_cm": 28.667141285203172,
+        "translation": [
+          -18.98177403588254,
+          99.8079554767403,
+          -12.5
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "skirt_front": {
+        "n_vertices": 7,
+        "bbox_w_cm": 95.29783064217142,
+        "bbox_h_cm": 28.667141285203172,
+        "translation": [
+          -18.98177403588254,
+          99.8079554767403,
+          17.5
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "self_intersecting": false
+  },
+  "suns_0.75": {
+    "folder": "results/garmentcode/dress_suns0.75",
+    "panels": {
+      "left_ftorso": {
+        "n_vertices": 12,
+        "bbox_w_cm": 26.082300000000004,
+        "bbox_h_cm": 43.50559779470363,
+        "translation": [
+          0.0,
+          97.85775552378857,
+          30.0
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "left_btorso": {
+        "n_vertices": 13,
+        "bbox_w_cm": 23.83805,
+        "bbox_h_cm": 39.836598011934875,
+        "translation": [
+          0.0,
+          103.895647186128,
+          -25.0
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "right_ftorso": {
+        "n_vertices": 12,
+        "bbox_w_cm": 26.082300000000004,
+        "bbox_h_cm": 43.50559779470363,
+        "translation": [
+          0.0,
+          97.85775552378857,
+          30.0
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "right_btorso": {
+        "n_vertices": 13,
+        "bbox_w_cm": 23.83805,
+        "bbox_h_cm": 39.836598011934875,
+        "translation": [
+          0.0,
+          103.895647186128,
+          -25.0
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "skirt_back": {
+        "n_vertices": 9,
+        "bbox_w_cm": 107.97869417483153,
+        "bbox_h_cm": 15.514545065891996,
+        "translation": [
+          -16.533921975290742,
+          101.40050808741515,
+          -12.5
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "skirt_front": {
+        "n_vertices": 7,
+        "bbox_w_cm": 107.97869417483153,
+        "bbox_h_cm": 15.514545065891996,
+        "translation": [
+          -16.533921975290742,
+          101.40050808741515,
+          17.5
+        ],
+        "rotation": [
+          -0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "self_intersecting": false
+  },
+  "body_used": "<assets.bodies.body_params.BodyParameters object at 0x000002394A97F9B0>"
+}

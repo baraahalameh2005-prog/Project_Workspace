@@ -1,0 +1,54 @@
+# --- environments / dependencies ---
+.venv/
+.venv-*/
+venv/
+node_modules/
+
+# --- Python / tool caches ---
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- local caches, logs, temp (pip/npm/Hugging Face/browser caches live in cache/) ---
+cache/
+experiments/logs/
+*.log
+*.tmp
+Thumbs.db
+.DS_Store
+
+# --- secrets ---
+.env
+.env.*
+*.pem
+*.key
+
+# --- build output (rebuild with: cd prototype/web && npm run build) ---
+prototype/web/dist/
+
+# --- PRIVATE: prototype results embed uploaded photos as textures ---
+prototype/output/
+
+# --- third-party clones (see README for clone commands + commits) ---
+tools/TripoSR/
+tools/GarmentCode/
+
+# --- model weights (never commit; download from the official source) ---
+*.ckpt
+*.safetensors
+*.pth
+*.pt
+*.onnx
+
+# --- duplicate / bulky experiment artefacts (metrics + curated copies are kept) ---
+# per-case meshes, textures and renders; curated copies live in results/models and results/screenshots
+results/hybrid_*/*/*.glb
+results/hybrid_*/*/*.jpg
+results/hybrid_*/*/*.png
+results/triposr/*/*.obj
+results/triposr/*/*.glb
+results/triposr/*/*.png
+results/real_photos*/*/*.glb
+results/real_photos*/*/comparison.png

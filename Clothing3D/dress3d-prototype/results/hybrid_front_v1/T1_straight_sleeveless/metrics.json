@@ -1,0 +1,209 @@
+{
+  "runtime_s": 3.8,
+  "style_inferred": {
+    "silhouette": "straight",
+    "neckline": "round",
+    "sleeve": "none"
+  },
+  "style_gt": {
+    "silhouette": "straight",
+    "sleeve": "none",
+    "neckline": "round"
+  },
+  "dimensions": [
+    {
+      "measurement": "dress_length",
+      "target_cm": 90.0,
+      "measured_cm": 89.82,
+      "abs_err_cm": -0.18,
+      "pct_err": -0.2,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "bust",
+      "target_cm": 96.0,
+      "measured_cm": 95.95,
+      "abs_err_cm": -0.05,
+      "pct_err": -0.05,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "waist",
+      "target_cm": 92.0,
+      "measured_cm": 91.97,
+      "abs_err_cm": -0.03,
+      "pct_err": -0.04,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "hip",
+      "target_cm": 100.0,
+      "measured_cm": 100.21,
+      "abs_err_cm": 0.21,
+      "pct_err": 0.21,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "hem",
+      "target_cm": 102.0,
+      "measured_cm": 101.99,
+      "abs_err_cm": -0.01,
+      "pct_err": -0.01,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "shoulder_width",
+      "target_cm": 37.0,
+      "measured_cm": 37.0,
+      "abs_err_cm": 0.0,
+      "pct_err": 0.0,
+      "input": "user-provided",
+      "inferred_source": "user"
+    },
+    {
+      "measurement": "neck_width",
+      "target_cm": 18.0,
+      "measured_cm": 17.33,
+      "abs_err_cm": -0.67,
+      "pct_err": -3.74,
+      "input": "inferred (photo/default)",
+      "inferred_source": "photo (HPS peaks)"
+    },
+    {
+      "measurement": "front_neck_drop",
+      "target_cm": 8.0,
+      "measured_cm": 6.43,
+      "abs_err_cm": -1.57,
+      "pct_err": -19.63,
+      "input": "inferred (photo/default)",
+      "inferred_source": "photo (luminance edge)"
+    },
+    {
+      "measurement": "back_neck_drop",
+      "target_cm": 2.0,
+      "measured_cm": 2.62,
+      "abs_err_cm": 0.62,
+      "pct_err": 30.76,
+      "input": "inferred (photo/default)",
+      "inferred_source": "photo (top contour dip)"
+    },
+    {
+      "measurement": "armhole_depth",
+      "target_cm": 21.0,
+      "measured_cm": 18.2,
+      "abs_err_cm": -2.8,
+      "pct_err": -13.34,
+      "input": "inferred (photo/default)",
+      "inferred_source": "photo (underarm row)"
+    },
+    {
+      "measurement": "waist_position",
+      "target_cm": 40.0,
+      "measured_cm": 37.7,
+      "abs_err_cm": -2.3,
+      "pct_err": -5.76,
+      "input": "inferred (photo/default)",
+      "inferred_source": "photo (min torso width row)"
+    }
+  ],
+  "silhouette_iou": {
+    "front": 0.9849,
+    "right": 0.9602,
+    "back": 0.9858,
+    "left": 0.9602
+  },
+  "chamfer": {
+    "chamfer_mean_cm": 0.3638184478655422,
+    "recon_to_gt_p95_cm": 0.6536768317681622,
+    "gt_to_recon_p95_cm": 0.6320696339964131,
+    "hausdorff_cm": 2.732984641236143
+  },
+  "deltaE_pixelwise": {
+    "front": 27.41,
+    "back": 28.05
+  },
+  "deltaE_mean_colour": {
+    "front": 6.09,
+    "back": 7.06
+  },
+  "integrity": {
+    "vertices": 4321,
+    "faces": 8270,
+    "glb_bytes": 527740,
+    "winding_consistent": true,
+    "non_manifold_edges": 0,
+    "boundary_loops": 4
+  },
+  "report": {
+    "style": {
+      "silhouette": "straight",
+      "neckline": "round",
+      "sleeve": "none"
+    },
+    "style_source": {
+      "silhouette": "photo",
+      "neckline": "photo",
+      "sleeve": "photo"
+    },
+    "measurements_cm": {
+      "dress_length": 90.0,
+      "bust": 96.0,
+      "waist": 92.0,
+      "hip": 100.0,
+      "hem": 102.0,
+      "shoulder_width": 37.0,
+      "armhole_depth": 18.19797702224159,
+      "waist_position": 38.139472801105136,
+      "neck_width": 17.32621764393062,
+      "front_neck_drop": 6.429225415043438,
+      "back_neck_drop": 2.615278134932923,
+      "hip_position": 58.139472801105136
+    },
+    "source": {
+      "dress_length": "user",
+      "bust": "user",
+      "waist": "user",
+      "hip": "user",
+      "hem": "user",
+      "shoulder_width": "user",
+      "armhole_depth": "photo (underarm row)",
+      "waist_position": "photo (min torso width row)",
+      "neck_width": "photo (HPS peaks)",
+      "front_neck_drop": "photo (luminance edge)",
+      "back_neck_drop": "photo (top contour dip)",
+      "hip_position": "default"
+    },
+    "photo_features": {
+      "sleeve_detected": 0.0,
+      "neck_width_px": 159.0,
+      "back_neck_drop_rel": 0.03145478374836173,
+      "front_neck_drop_rel": 0.07732634338138926,
+      "neckline_ratio": 0.9152542372881355,
+      "neckline": "round",
+      "underarm_rel": 0.21887287024901703,
+      "waist_rel": 0.45871559633027525,
+      "waist_contrast": 0.06874999999999998,
+      "hem_to_bust_width": 1.0318471337579618,
+      "silhouette": "straight"
+    },
+    "confidence": {
+      "sleeve": "no separated sleeve; top/bust width ratio 1.08",
+      "front_neck_drop": "shaded neck opening, min centre/fabric ratio 0.04",
+      "armhole_depth": "estimated: 98 % width-recovery row below the armhole scoop (sleeveless)",
+      "waist_position": "min torso width, contrast 0.07"
+    },
+    "notes": [
+      "hip_position: not provided, assumed 58.1 cm (waist + 20 cm)"
+    ],
+    "options": {
+      "fold_count": 0,
+      "fold_amplitude": 0.0
+    },
+    "n_profile_anchors": 14
+  }
+}

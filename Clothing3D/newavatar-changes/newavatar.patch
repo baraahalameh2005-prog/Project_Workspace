@@ -1,0 +1,856 @@
+diff --git a/backend/api.py b/backend/api.py
+index e17193c..185c623 100644
+--- a/backend/api.py
++++ b/backend/api.py
+@@ -14,7 +14,7 @@ from fastapi.exceptions import RequestValidationError
+ from fastapi.responses import JSONResponse
+ from fastapi.staticfiles import StaticFiles
+ from fastapi.middleware.cors import CORSMiddleware
+-from pydantic import BaseModel, Field, field_validator
++from pydantic import BaseModel, Field, field_validator, model_validator
+ from starlette.exceptions import HTTPException
+ 
+ from app.config import apply_environment, settings
+@@ -23,7 +23,7 @@ from app.config import apply_environment, settings
+ apply_environment(settings)
+ 
+ import fit_to_measurements as ftm
+-from fit_to_measurements import fit_body, normalize_gender
++from fit_to_measurements import normalize_gender
+ from generate_avatar import (
+     DEFAULT_SKIN_TONE,
+     _replace_file,
+@@ -38,6 +38,16 @@ from appearance import (
+     export_appearance_avatar,
+     normalize_eye_color,
+ )
++from body_style import (
++    ATHLETIC_MAX_WEIGHT_ERROR_KG,
++    BODY_STYLES,
++    DEFAULT_BODY_STYLE,
++    STANDARD,
++    FitError,
++    fit_athletic,
++    fit_body,
++    normalize_body_style,
++)
+ 
+ 
+ API_VERSION = 1
+@@ -72,6 +82,8 @@ measurements = None
+ # Anny with the cached 63-label face controls (appearance.FaceModel). Used only
+ # after the fit, to build the exported body with the gender face preset.
+ face_model = None
++# Measurements on the face model's body (athletic body style); made on first use.
++face_measurements = None
+ 
+ _model_lock = threading.Lock()
+ _face_model_lock = threading.Lock()
+@@ -82,16 +94,18 @@ _generate_lock = threading.Lock()
+ 
+ 
+ def get_model():
++    """The model the body is fitted on: the face model's Anny (with every
++    control at 0 its body equals the plain model's), so only one Anny model
++    is loaded."""
+     global model, measurements
+ 
++    face = get_face_model()
++
+     with _model_lock:
+         if model is None:
+-            import anny
+             from measurements import BodyMeasurements
+ 
+-            print("Loading Anny...")
+-
+-            model = anny.Anny()
++            model = face.model
+             measurements = BodyMeasurements(model)
+ 
+             print("Anny loaded successfully!")
+@@ -113,10 +127,13 @@ def get_face_model():
+     return face_model
+ 
+ 
++def get_face_measurements():
++    return get_model()[1]
++
++
+ @asynccontextmanager
+ async def lifespan(app):
+     get_model()
+-    get_face_model()
+     yield
+ 
+ 
+@@ -188,6 +205,7 @@ class AvatarRequest(BaseModel):
+     hip: float = _measurement_field("hip")
+     skin_tone: Optional[str] = None
+     eye_color: Optional[str] = None
++    body_style: Optional[str] = DEFAULT_BODY_STYLE
+ 
+     @field_validator("gender")
+     @classmethod
+@@ -210,6 +228,18 @@ class AvatarRequest(BaseModel):
+ 
+         return value
+ 
++    @field_validator("body_style")
++    @classmethod
++    def check_body_style(cls, value):
++        return normalize_body_style(value) if value is not None else DEFAULT_BODY_STYLE
++
++    @model_validator(mode="after")
++    def check_body_style_gender(self):
++        if self.body_style == "athletic" and self.gender != "female":
++            raise ValueError("body_style 'athletic' is available for gender 'female' only.")
++
++        return self
++
+ 
+ # ===============================
+ # STATIC FILES
+@@ -325,6 +355,14 @@ def avatar_options():
+             "default": DEFAULT_EYE_COLOR,
+             "case_insensitive": True,
+         },
++        "body_style": {
++            "required": False,
++            "values": list(BODY_STYLES),
++            "default": DEFAULT_BODY_STYLE,
++            "case_insensitive": True,
++            "notes": "athletic: adult, toned female body (female only); the bust is part "
++                     "of the shape, so the chest can come out larger than requested.",
++        },
+         "appearance": {
+             "automatic": [
+                 "gender face preset (female: narrower mouth, softer cheeks; male: stronger jaw and chin)",
+@@ -375,7 +413,8 @@ def _tolerance(name):
+     if name == "weight":
+         return ftm.WEIGHT_TOLERANCE_KG, "absolute"
+ 
+-    return ftm.GOOD_ENOUGH_RELATIVE_ERROR * 100.0, "percent"
++    # The fit's stopping tolerance for circumferences (body_style.STANDARD).
++    return STANDARD["female"].good_enough * 100.0, "percent"
+ 
+ 
+ def accuracy_warnings(accuracy):
+@@ -441,16 +480,60 @@ def generate_avatar(data: AvatarRequest):
+ 
+         start_time = time.perf_counter()
+ 
+-        fitted = fit_body(
+-            model=model,
+-            measurements=measurements,
+-            gender=data.gender,
+-            height_cm=data.height,
+-            weight_kg=data.weight,
+-            waist_cm=data.waist,
+-            chest_cm=data.chest,
+-            hip_cm=data.hip,
+-        )
++        body_style = data.body_style
++        fitted = None
++
++        if body_style == "athletic":
++            try:
++                fitted = fit_athletic(
++                    model=get_face_model().model,
++                    measurements=get_face_measurements(),
++                    height_cm=data.height,
++                    weight_kg=data.weight,
++                    waist_cm=data.waist,
++                    chest_cm=data.chest,
++                    hip_cm=data.hip,
++                )
++                weight_error = fitted["accuracy"]["weight"]["absolute_error"]
++                if weight_error is None or weight_error > ATHLETIC_MAX_WEIGHT_ERROR_KG:
++                    raise ValueError(f"weight missed by {weight_error} kg")
++            except (RuntimeError, ValueError) as exc:
++                print(f"Athletic body not used: {exc}")
++                warnings.append(
++                    "body_style: the athletic body cannot reach these measurements "
++                    "(usually the weight), so the standard body was used."
++                )
++                body_style = "standard"
++                fitted = None
++
++        if fitted is None:
++            try:
++                fitted = fit_body(
++                    model=model,
++                    measurements=measurements,
++                    gender=data.gender,
++                    height_cm=data.height,
++                    weight_kg=data.weight,
++                    waist_cm=data.waist,
++                    chest_cm=data.chest,
++                    hip_cm=data.hip,
++                )
++            except FitError as exc:
++                return JSONResponse(
++                    status_code=422,
++                    content={"detail": [{"loc": ["body"], "msg": f"{exc} Check that the measurements "
++                                                                "belong to one adult body.", "type": "fit_failed"}]},
++                )
++
++        # Anny's body model has a weight range per height and age; say so
++        # plainly when the fitted weight is at its limit.
++        if fitted["parameters"]["weight"] >= ftm.PARAM_MAX - 1e-3 and (
++            (fitted["accuracy"]["weight"].get("absolute_error") or 0) > 1.0
++        ):
++            warnings.append(
++                "weight: this weight is beyond what Anny's body model can reach at this height; "
++                "the avatar is as heavy as the model allows."
++            )
+ 
+         fit_time = time.perf_counter() - start_time
+ 
+@@ -473,7 +556,11 @@ def generate_avatar(data: AvatarRequest):
+         face = get_face_model()
+ 
+         output = build(
+-            model=face.controls(appearance.face_controls),
++            model=face.controls(
++                appearance.face_controls,
++                body_controls=fitted.get("body_controls"),
++                phenotypes=fitted.get("body_phenotype"),
++            ),
+             gender=1.0 if params["gender"] == "female" else 0.0,
+             height=params["height"],
+             weight=params["weight"],
+@@ -526,6 +613,11 @@ def generate_avatar(data: AvatarRequest):
+ 
+         "parameters": params,
+ 
++        # "standard" (production fit) or "athletic", and the body shape used.
++        "body_style": body_style,
++        "body_controls": fitted.get("body_controls", {}),
++        "body_phenotype": fitted.get("body_phenotype", {}),
++
+         # Appearance actually applied to this avatar.
+         "appearance": appearance.summary(),
+ 
+diff --git a/backend/appearance.py b/backend/appearance.py
+index 2a10a6a..0eefe58 100644
+--- a/backend/appearance.py
++++ b/backend/appearance.py
+@@ -181,7 +181,10 @@ class FaceModel:
+         import anny
+         from anny.face_segmentation import get_face_segmentation_mask
+ 
+-        self.model = anny.Anny(local_changes=FACE_MODEL_LABELS)
++        # phenotypes="all" also exposes cup size and firmness (used by the
++        # athletic body style); at their default 0.5 the body is identical
++        # to the default phenotypes (checked: max vertex difference 0.0).
++        self.model = anny.Anny(local_changes=FACE_MODEL_LABELS, phenotypes="all")
+         self.labels = list(self.model.local_change_labels)
+         self.faces = self.model.faces.detach().cpu().numpy()
+         n = int(self.model.template_vertices.shape[-2])
+@@ -192,14 +195,24 @@ class FaceModel:
+         self.lip_raw = _lip_weights(self.model, self.faces, n, mask_path)
+         self.lip_raw[self.eye_index] = 0.0
+ 
+-    def controls(self, face_controls):
++    def controls(self, face_controls, body_controls=None, phenotypes=None):
++        """The model with the face controls (names without l-/r-), plus exact
++        body local changes and phenotype values (body styles)."""
+         values = {label: 0.0 for label in self.labels}
++        for label, value in (body_controls or {}).items():
++            if label not in values:
++                raise KeyError(f"body control {label} is not in the face model")
++            values[label] = float(value)
+         for name, value in face_controls.items():
+             hits = [label for label in self.labels if label == name or label in (f"l-{name}", f"r-{name}")]
+             if not hits:
+                 raise KeyError(f"face control {name} is not in the face model")
+             for label in hits:
+                 values[label] = float(value)
++        if phenotypes:
++            from body_style import StyledModel
++
++            return StyledModel(self.model, values, phenotypes)
+         return _Controlled(self.model, values)
+ 
+ 
+diff --git a/backend/measurements.py b/backend/measurements.py
+index 9eba5b0..f60fb05 100644
+--- a/backend/measurements.py
++++ b/backend/measurements.py
+@@ -13,8 +13,20 @@ import trimesh
+ CHEST_TARGET_OFFSET = 0.145
+ CHEST_OFFSETS = np.arange(0.135, 0.151, 0.001)
+ 
+-# Hip plane offset below the waist, as a fraction of body height.
++# Hip plane offset below the waist, as a fraction of body height. Since the
++# tape-style hip measurement this is only the default height reported when
++# no hip loop is found; the hip is the largest tape loop in HIP_SCAN.
+ HIP_OFFSET = 0.10
++# The hip is searched from this far below the waist (fraction of height)...
++HIP_SCAN_TOP = 0.04
++# ...down to the hip joints (upperleg01 heads) less this much, above the crotch.
++HIP_SCAN_BELOW_JOINT = 0.02
++HIP_SCAN_STEP = 0.004
++
++# A cross-section point belongs to an arm or hand when the skinning weights of
++# these bones add up to more than ARM_WEIGHT (tape measurements leave them out).
++ARM_BONES = ("upperarm", "lowerarm", "wrist", "finger", "metacarpal")
++ARM_WEIGHT = 0.5
+ 
+ # The upper-arm loop's centre must lie within this distance of the arm bone.
+ UPPER_ARM_MAX_OFFSET = 0.06
+@@ -50,6 +62,15 @@ class BodyMeasurements:
+             for index, label in enumerate(model.bone_labels)
+         }
+ 
++        # Per face: does it belong to an arm or a hand (mean vertex weight)?
++        arm_bones = np.array(
++            [any(label.startswith(k) for k in ARM_BONES) for label in model.bone_labels]
++        )
++        indices = model.vertex_bone_indices.detach().cpu().numpy()
++        weights = model.vertex_bone_weights.detach().cpu().numpy()
++        arm_weight = (weights * arm_bones[indices]).sum(axis=1)
++        self._arm_face = arm_weight[self._faces].mean(axis=1) > ARM_WEIGHT
++
+     # ============================================================
+     # SHARED CONTEXT
+     # ============================================================
+@@ -319,6 +340,87 @@ class BodyMeasurements:
+             "points": None,
+         }
+ 
++    def _tape_loop(self, mesh, z, max_center_offset=0.1):
++        """
++        A horizontal tape at height z: the convex outline of the body's
++        cross-section with the arms and hands left out (by skinning weight),
++        as a tape measure lies across the cleavage, the small of the back and
++        under the arms. Returns {z, circumference, width, depth} or None.
++        """
++
++        from trimesh.intersections import mesh_plane
++        from scipy.spatial import ConvexHull
++
++        segments, face_index = mesh_plane(
++            mesh,
++            plane_normal=[0.0, 0.0, 1.0],
++            plane_origin=[0.0, 0.0, z],
++            return_faces=True,
++        )
++
++        if len(segments) == 0:
++            return None
++
++        points = segments[~self._arm_face[face_index]].reshape(-1, 3)[:, :2]
++
++        if len(points) < 12 or abs(float(points[:, 0].mean())) > max_center_offset:
++            return None
++
++        try:
++            hull = points[ConvexHull(points).vertices]
++        except Exception:
++            return None
++
++        return {
++            "z": float(z),
++            "circumference": self._perimeter(hull),
++            "width": float(np.ptp(hull[:, 0])),
++            "depth": float(np.ptp(hull[:, 1])),
++        }
++
++    def _tape_chest(self, rest_vertices, rest_bone_poses, context=None):
++        """Chest: the tape loop at the chest height of _chest_section, which
++        also works when the arms touch the chest (the old loop then included
++        the arms and was rejected)."""
++
++        if context is None:
++            context = self._context(rest_vertices)
++
++        z = context["waist_z"] + context["height"] * CHEST_TARGET_OFFSET
++
++        return self._tape_loop(context["mesh"], z, max_center_offset=0.05)
++
++    def _tape_hip(self, rest_vertices, rest_bone_poses, context=None):
++        """Hip: the largest tape loop between just below the waist and the
++        hip joints (above the crotch), i.e. around the fullest part of the
++        buttocks, instead of one fixed height."""
++
++        if context is None:
++            context = self._context(rest_vertices)
++
++        height = context["height"]
++        top = context["waist_z"] - height * HIP_SCAN_TOP
++        joints = [
++            self._bone_origin(rest_bone_poses, self._bone_index[f"upperleg01{side}"])[2]
++            for side in (".L", ".R")
++            if f"upperleg01{side}" in self._bone_index
++        ]
++        bottom = (
++            float(np.mean(joints)) - height * HIP_SCAN_BELOW_JOINT
++            if joints
++            else context["waist_z"] - height * HIP_OFFSET
++        )
++
++        best = None
++
++        for z in np.arange(top, bottom, -height * HIP_SCAN_STEP):
++            loop = self._tape_loop(context["mesh"], z)
++
++            if loop and (best is None or loop["circumference"] > best["circumference"]):
++                best = loop
++
++        return best
++
+     def _hip_section(self, rest_vertices, context=None):
+         if context is None:
+             context = self._context(rest_vertices)
+@@ -758,13 +860,15 @@ class BodyMeasurements:
+             - vertices[waist_indices, 0].min()
+         )
+ 
+-        chest = self._chest_section(
++        chest = self._tape_chest(
+             rest_vertices,
++            rest_bone_poses,
+             context=context,
+         )
+ 
+-        hip = self._hip_section(
++        hip = self._tape_hip(
+             rest_vertices,
++            rest_bone_poses,
+             context=context,
+         )
+ 
+diff --git a/backend/tests/test_avatar.py b/backend/tests/test_avatar.py
+index 3d6ac2a..6a700d6 100644
+--- a/backend/tests/test_avatar.py
++++ b/backend/tests/test_avatar.py
+@@ -550,8 +550,9 @@ class ApiContractTests(unittest.TestCase):
+             {
+                 "height": entry(170.0, 170.005),
+                 "weight": entry(60.0, 60.5, "kg"),
+-                "chest": entry(90.0, 90.1),
+-                "hip": entry(100.0, 100.5),
++                # Circumference tolerance: 1 % (body_style.STANDARD.good_enough).
++                "chest": entry(90.0, 90.5),
++                "hip": entry(100.0, 101.5),
+             }
+         )
+ 
+diff --git a/docs/API.md b/docs/API.md
+index f29134b..dae7ec2 100644
+--- a/docs/API.md
++++ b/docs/API.md
+@@ -7,24 +7,29 @@ marked **Module:** below.
+ 
+ ## Run
+ 
+-Run from `D:\BarahaAvatarModule\backend` (tested; the server loads the plain Anny model and the
+-cached face model at startup):
++Easiest: double-click `start_avatar.bat` in the repository root. It starts the backend and the
++frontend in their own windows, waits until the backend is ready and opens `http://127.0.0.1:5173/`.
++Close the two windows to stop them.
++
++By hand, from `backend\`:
+ 
+ ```powershell
+-..\.venv\Scripts\python.exe api.py
++..\.venv\Scripts\python.exe -B api.py
+ ```
+ 
+-**Status (2026-10-12):** the server is **not running**. Claude Code stopped it (and the Vite frontend)
+-because the system was critically low on memory. The code and saved verification outputs remain in
+-place; start it again with the command above. It loads two Anny models at startup, so it needs more
+-memory than the plain-model version.
++The server loads one Anny model (the face model, with local changes and cup size) at startup:
++about 1.3 GB of memory; leave about 2 GB free. The first start on a new machine builds Anny's cache
++(several minutes); later starts take seconds.
++
++Environment: `pip install -r requirements.txt -c constraints-production.txt --extra-index-url
++https://download.pytorch.org/whl/cpu` with Python 3.12, or `-c constraints-py311.txt` with Python 3.11.
+ 
+ Host and port come from `backend/app/config.py` (127.0.0.1:8002; override with
+ `AVATAR_HOST` / `AVATAR_PORT`).
+ 
+-The Anny model loads once at server startup (a few seconds). Generation requests
+-are processed one at a time; a request takes roughly the fitting time (about 10-15 s
+-measured for one female case on this machine, more for other bodies).
++Generation requests are processed one at a time; a request takes roughly the fitting time:
++about 3-15 s for most bodies, up to about 60 s for bodies the model cannot match exactly
++(measured 2026-10-16 on the six baseline cases).
+ 
+ **Module:** generated GLBs are written to `var/generated/`; the Anny, Warp and PyTorch
+ caches to `var/cache/anny`, `var/cache/warp` and `var/cache/torchinductor`. Each can be
+@@ -33,13 +38,16 @@ moved with `AVATAR_OUTPUT_DIR`, `ANNY_CACHE_DIR`, `WARP_CACHE_PATH` or
+ 
+ ## Tests
+ 
+-From `D:\BarahaAvatarModule\backend`:
++From `backend\`:
+ 
+ ```powershell
+ $env:AVATAR_SKIP_MODEL_TESTS = "1"
+-..\.venv\Scripts\python.exe -B -m unittest tests.test_config tests.test_avatar
++..\.venv\Scripts\python.exe -B -m unittest tests.test_config tests.test_avatar tests.test_appearance tests.test_body_style
+ ```
+ 
++`tools\fit_check.py <label> [old]` fits the six baseline inputs and writes the errors, parameters
++and times to `var/fit_check/` (with `old`, also the earlier fit, for comparison).
++
+ `AVATAR_SKIP_MODEL_TESTS=1` skips the tests that load the real model.
+ The tests never write `var/generated/` or a shared `generated_avatar.glb`.
+ 
+@@ -59,9 +67,21 @@ Request (JSON):
+ | `gender` | string | no (default `"female"`) | `"female"` or `"male"`, case-insensitive |
+ | `skin_tone` | string | no (default `"#c8997e"`) | `"#RRGGBB"` (sRGB) |
+ | `eye_color` | string | no (default `"brown"`) | `"brown"`, `"hazel"`, `"green"`, `"blue"`, `"gray"`, case-insensitive |
++| `body_style` | string | no (default `"standard"`) | `"standard"` or `"athletic"` (female only), case-insensitive |
+ 
+ Other fields are ignored and do not change the avatar.
+-Invalid input returns **422** with a `detail` list.
++Invalid input returns **422** with a `detail` list; so does a body that cannot be fitted at all
++(`"type": "fit_failed"`).
++
++**How the body is fitted** (`backend/body_style.py`, 2026-10-16). Height and weight are solved
++directly. Waist, chest and hip are fitted with Anny's age, muscle and proportions **plus** its bust,
++waist and hip circumference controls (within ±0.6). Age is kept adult (0.67-0.85; the earlier fit
++allowed 0.5, half-way to Anny's child shape), and women's muscle is capped at 0.8 (the earlier fit
++pushed light female bodies to 0.94-0.99, which looks male). The fit stops when every target is within
++1 %. `athletic` (women only) is an adult, toned body: narrower shoulders, slimmer hips and legs, firm
++buttocks, flat stomach, natural bust (cup size 0.62); its bust is part of the shape, so the chest can
++come out larger than requested. If the athletic body misses the weight by more than 1.5 kg, the
++standard body is used and `warnings` says so. The earlier fit stays in `fit_to_measurements.fit_body`.
+ 
+ Response (200):
+ 
+@@ -71,7 +91,10 @@ Response (200):
+   "avatar_url": "/models/generated/<avatar_id>.glb",   // unique for this generation
+   "avatar_id": "<32 hex chars>",
+   "legacy_avatar_url": null,                           // Module: always null (see below)
+-  "parameters": { "gender": "female", "height": 0.5, "weight": 0.6, "age": 0.55, "muscle": 0.65, "proportions": 0.62 },
++  "parameters": { "gender": "female", "height": 0.5, "weight": 0.6, "age": 0.70, "muscle": 0.52, "proportions": 0.6 },
++  "body_style": "standard",                            // the style actually used
++  "body_controls": { "measure-waist-circ-incr": 0.12, "...": "..." },  // Anny local changes of the body
++  "body_phenotype": {},                                // athletic: {"cupsize": 0.62, "firmness": 0.65}
+   "appearance": { "gender_style": "female", "skin_tone": "#c8997e", "eye_color": "brown",
+                   "face_controls": { "mouth-scale-horiz-incr": -0.35, "...": "..." },
+                   "features": ["eye_texture", "eyebrows", "face_preset", "lip_tint"], "not_available": ["hair"] },
+@@ -93,8 +116,14 @@ Response (200):
+   not tape measurements. They are reported, not controlled.
+ - `accuracy` uses `abs(actual - requested) / abs(requested) * 100`.
+ - `warnings` lists targets that were not reached within the fitting tolerance
+-  (height 0.01 cm, weight 0.01 kg, circumferences 0.2%) or could not be measured.
+-  Waist and hip errors of a few percent are a known limitation of the current model setup.
++  (height 0.01 cm, weight 0.01 kg, circumferences 1 %) or could not be measured, and says when a
++  weight is beyond what Anny can reach at that height (for example a 1.60 m woman of 75 kg).
++- **Chest and hip are tape-style measurements** (since 2026-10-16): the convex outline of the
++  horizontal cross-section with the arms and hands left out (by Anny's skinning weights), as a tape
++  lies across the cleavage and under the arms. Chest: at 0.145 × height above the waist. Hip: the
++  largest such loop between just below the waist and the hip joints. The earlier perimeters could
++  include the arms or hands (the chest was then rejected and reported as failed; the hip read
++  1.5-6 cm too large).
+ 
+ ### Loading the avatar in three.js
+ 
+@@ -142,4 +171,9 @@ Other files (source code, `.git`, subfolders, hidden files) return 404.
+ - Generated files in `generated/` are not deleted automatically. Each is about 0.5-1 MB.
+ - `avatar_id` is random but not secret: anyone who knows a URL can load that avatar.
+ - Requests are processed one at a time; a second request waits for the first.
+-- Hair and extra body controls are not available. Face shape follows gender automatically (not adjustable).
++- Hair is not available. Face shape follows gender automatically (not adjustable).
++- `shoulder_width_m` is the distance between the shoulder joints, not a tape measurement, and is
++  not fitted.
++- Anny has a weight range per height and age: very heavy or very light bodies for their height
++  cannot be reached (see `warnings`).
++- The rest pose has the arms about 40° out; the pose for clothing is not agreed yet.
+diff --git a/frontend/src/App.tsx b/frontend/src/App.tsx
+index d1e6c95..3611b1e 100644
+--- a/frontend/src/App.tsx
++++ b/frontend/src/App.tsx
+@@ -73,6 +73,12 @@ interface LinkedAvatar {
+   glbUrl: string;
+ }
+ 
++// The clothing module's server (NewAvatar/clothing/backend/server.py); its
++// try-on page loads the avatar by id from var/generated/.
++const CLOTHING_URL = import.meta.env.VITE_CLOTHING_URL ?? "http://127.0.0.1:8010";
++// Baraah's Dress3D prototype (the clothes repo): a dress from its photo and
++// measurements, on its own in 3D.
++const DRESS3D_URL = import.meta.env.VITE_DRESS3D_URL ?? "http://127.0.0.1:8765";
+ const LINKED_AVATAR_PATTERN = /^\/models\/generated\/([0-9a-f]{32})\.glb$/;
+ 
+ // Temporary face preview: existing face-sweep GLBs copied into frontend/public, served by Vite itself.
+@@ -97,6 +103,45 @@ function readLinkedAvatar(): { linked: LinkedAvatar | null; error: string | null
+   return { linked: { avatarId: match[1], path: raw, glbUrl: resolveApiUrl(raw) }, error: null };
+ }
+ 
++// Arabic-Indic (٠-٩) and Persian (۰-۹) digits and the Arabic decimal mark, as typed on
++// an Arabic keyboard, read as ordinary numbers.
++function toLatinDigits(text: string) {
++  return text
++    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
++    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
++    .replace(/٫/g, ".");
++}
++
++/**
++ * Notes about measurements that rarely belong to one adult body (usually a typo or
++ * two swapped fields). They do not block generation: the fit would match them and
++ * give an odd body, so the user should look first.
++ */
++function plausibilityNotes(values: Record<MeasurementName, string>): string[] {
++  const n = (name: MeasurementName) => Number(toLatinDigits(values[name]).trim());
++  const height = n("height"), weight = n("weight"), waist = n("waist"), chest = n("chest"), hip = n("hip");
++  if (![height, weight, waist, chest, hip].every((v) => Number.isFinite(v) && v > 0)) return [];
++
++  const notes: string[] = [];
++  const bmi = weight / (height / 100) ** 2;
++  if (waist > chest && waist > hip) {
++    notes.push("Waist is larger than both chest and hip. Check that waist and chest are not swapped.");
++  }
++  if (chest < height * 0.45) {
++    notes.push(`Chest ${chest} cm is very small for a height of ${height} cm (usually at least ${Math.round(height * 0.47)} cm).`);
++  }
++  if (hip < height * 0.48) {
++    notes.push(`Hip ${hip} cm is very small for a height of ${height} cm (usually at least ${Math.round(height * 0.5)} cm).`);
++  }
++  if (bmi < 20 && waist > height * 0.5) {
++    notes.push(`Waist ${waist} cm is large for ${weight} kg at ${height} cm; the avatar will get a belly.`);
++  }
++  if (bmi < 16 || bmi > 40) {
++    notes.push(`Weight ${weight} kg is unusual for ${height} cm (BMI ${bmi.toFixed(1)}); check both values.`);
++  }
++  return notes;
++}
++
+ function fmt(value: number | null | undefined, digits = 2) {
+   return value === null || value === undefined || !Number.isFinite(value) ? "—" : value.toFixed(digits);
+ }
+@@ -111,6 +156,8 @@ export default function App() {
+   const [skinTone, setSkinTone] = useState(FALLBACK_SKIN_TONE);
+   const [skinToneTouched, setSkinToneTouched] = useState(false);
+   const [eyeColor, setEyeColor] = useState(FALLBACK_EYE_COLOR);
++  // Athletic is the default for women; it does not apply to men.
++  const [bodyStyle, setBodyStyle] = useState("athletic");
+   const [fieldErrors, setFieldErrors] = useState<Partial<Record<MeasurementName, string>>>({});
+ 
+   const [pending, setPending] = useState<{ requestNumber: number; startedAt: number } | null>(null);
+@@ -132,6 +179,10 @@ export default function App() {
+   const genders = options?.gender.values ?? FALLBACK_GENDERS;
+   // Only offered when the backend advertises eye colours (/avatar-options).
+   const eyeColors = options?.eye_color?.values ?? null;
++  // Only offered when the backend advertises body styles, and only for women.
++  const bodyStyles = options?.body_style?.values ?? null;
++  const offerBodyStyle = bodyStyles !== null && gender === "female";
++  const measurementNotes = plausibilityNotes(values);
+ 
+   // Backend readiness: poll /health; load /avatar-options once it answers.
+   useEffect(() => {
+@@ -191,7 +242,7 @@ export default function App() {
+     const parsed = {} as Record<MeasurementName, number>;
+ 
+     for (const name of MEASUREMENT_NAMES) {
+-      const raw = values[name].trim();
++      const raw = toLatinDigits(values[name]).trim();
+       const value = Number(raw);
+       const { minimum, maximum, unit } = limits[name];
+       if (raw === "" || !Number.isFinite(value)) {
+@@ -206,7 +257,13 @@ export default function App() {
+     setFieldErrors(errors);
+     if (Object.keys(errors).length > 0) return null;
+ 
+-    return { gender, ...parsed, skin_tone: skinTone, ...(eyeColors ? { eye_color: eyeColor } : {}) };
++    return {
++      gender,
++      ...parsed,
++      skin_tone: skinTone,
++      ...(eyeColors ? { eye_color: eyeColor } : {}),
++      ...(offerBodyStyle ? { body_style: bodyStyle } : {}),
++    };
+   }
+ 
+   async function onSubmit(event: FormEvent) {
+@@ -290,6 +347,24 @@ export default function App() {
+                 </select>
+               </label>
+ 
++              {offerBodyStyle && (
++                <label className="field">
++                  <span>Body style</span>
++                  <select value={bodyStyle} onChange={(e) => setBodyStyle(e.target.value)}>
++                    {bodyStyles!.map((s) => (
++                      <option key={s} value={s}>
++                        {s === "athletic" ? "athletic (adult, toned)" : s}
++                      </option>
++                    ))}
++                  </select>
++                  <small className="hint">
++                    {bodyStyle === "athletic"
++                      ? "Athletic: an adult, toned body for display (slimmer hips and legs, natural bust). Less exact for sizing."
++                      : "Standard: the body follows your measurements as they are. Best for sizing clothes."}
++                  </small>
++                </label>
++              )}
++
+               {MEASUREMENT_NAMES.map((name) => {
+                 const { minimum, maximum, unit } = limits[name];
+                 return (
+@@ -298,11 +373,10 @@ export default function App() {
+                       {LABELS[name]} <small>({unit}, {minimum}–{maximum})</small>
+                     </span>
+                     <input
+-                      type="number"
++                      // Text, not number: a number input drops Arabic-Indic digits.
++                      type="text"
+                       inputMode="decimal"
+-                      step="any"
+-                      min={minimum}
+-                      max={maximum}
++                      dir="ltr"
+                       value={values[name]}
+                       aria-invalid={fieldErrors[name] ? true : undefined}
+                       onChange={(e) => setValues((v) => ({ ...v, [name]: e.target.value }))}
+@@ -369,6 +443,18 @@ export default function App() {
+               </p>
+             </fieldset>
+ 
++            {measurementNotes.length > 0 && (
++              <div className="notice warning">
++                <strong>Please check these measurements</strong>
++                <ul>
++                  {measurementNotes.map((note) => (
++                    <li key={note}>{note}</li>
++                  ))}
++                </ul>
++                You can still generate; the avatar will follow the numbers as entered.
++              </div>
++            )}
++
+             <div className="actions">
+               <button type="submit" disabled={pending !== null || backend === "unreachable"}>
+                 {pending ? "Generating…" : "Generate avatar"}
+@@ -459,6 +545,17 @@ export default function App() {
+                   </a>
+                 </dd>
+               </dl>
++              <p>
++                <a
++                  className="try-on"
++                  href={`${CLOTHING_URL}/viewer/?avatar=${encodeURIComponent(result.response.avatar_id)}`}
++                >
++                  👗 جرّبي الملابس
++                </a>{" "}
++                <a className="try-on alt" href={DRESS3D_URL} target="_blank" rel="noreferrer">
++                  🧵 شوفي الفستان 3D
++                </a>
++              </p>
+ 
+               {result.response.warnings.length > 0 ? (
+                 <div className="notice warning">
+@@ -511,6 +608,12 @@ export default function App() {
+                   <dl>
+                     <dt>Face style</dt>
+                     <dd>{result.response.appearance.gender_style}</dd>
++                    {result.response.body_style && (
++                      <>
++                        <dt>Body style</dt>
++                        <dd>{result.response.body_style}</dd>
++                      </>
++                    )}
+                     <dt>Skin tone</dt>
+                     <dd>
+                       <span className="swatch inline" style={{ background: result.response.appearance.skin_tone }} />{" "}
+diff --git a/frontend/src/AvatarViewer.tsx b/frontend/src/AvatarViewer.tsx
+index b5dfa71..388db1e 100644
+--- a/frontend/src/AvatarViewer.tsx
++++ b/frontend/src/AvatarViewer.tsx
+@@ -127,7 +127,16 @@ export default function AvatarViewer({ url, view, onStatus }: Props) {
+       renderer.render(scene, camera);
+     });
+ 
++    // Low on memory, the browser can drop the WebGL context and the canvas goes
++    // blank. preventDefault lets it be restored; three.js then redraws the scene.
++    const onContextLost = (event: Event) => {
++      event.preventDefault();
++      console.warn("WebGL context lost; waiting for the browser to restore it.");
++    };
++    renderer.domElement.addEventListener("webglcontextlost", onContextLost);
++
+     return () => {
++      renderer.domElement.removeEventListener("webglcontextlost", onContextLost);
+       renderer.setAnimationLoop(null);
+       observer.disconnect();
+       controls.dispose();
+diff --git a/frontend/src/api.ts b/frontend/src/api.ts
+index 49b45b9..f447804 100644
+--- a/frontend/src/api.ts
++++ b/frontend/src/api.ts
+@@ -26,6 +26,8 @@ export interface AvatarOptions {
+   // Present from the appearance version of the backend on.
+   eye_color?: { required: boolean; values: string[]; default: string; case_insensitive: boolean };
+   appearance?: { automatic: string[]; not_available: string[] };
++  // Present from the body-style version of the backend on.
++  body_style?: { required: boolean; values: string[]; default: string; case_insensitive: boolean; notes: string };
+   notes: string[];
+ }
+ 
+@@ -52,6 +54,7 @@ export interface AvatarRequest {
+   hip: number;
+   skin_tone?: string;
+   eye_color?: string;
++  body_style?: string;
+ }
+ 
+ export interface AccuracyEntry {
+@@ -70,6 +73,7 @@ export interface AvatarResponse {
+   legacy_avatar_url: string | null;
+   parameters: Record<string, unknown>;
+   appearance?: AppliedAppearance;
++  body_style?: string;
+   measurements: Record<string, number>;
+   failed_measurements: string[];
+   accuracy: Record<string, AccuracyEntry>;
+diff --git a/frontend/src/main.tsx b/frontend/src/main.tsx
+index 693ac2e..3ce2446 100644
+--- a/frontend/src/main.tsx
++++ b/frontend/src/main.tsx
+@@ -1,10 +1,13 @@
+ import { StrictMode } from "react";
+ import { createRoot } from "react-dom/client";
+ import App from "./App";
++import { ErrorBoundary } from "./ErrorBoundary";
+ import "./styles.css";
+ 
+ createRoot(document.getElementById("root")!).render(
+   <StrictMode>
+-    <App />
++    <ErrorBoundary>
++      <App />
++    </ErrorBoundary>
+   </StrictMode>,
+ );
+diff --git a/frontend/src/styles.css b/frontend/src/styles.css
+index 67d274e..a2ea8b2 100644
+--- a/frontend/src/styles.css
++++ b/frontend/src/styles.css
+@@ -361,3 +361,19 @@ td {
+     min-height: 50vh;
+   }
+ }
++
++.try-on {
++  display: inline-block;
++  padding: 8px 14px;
++  border-radius: 8px;
++  background: #2d2a32;
++  color: #fff;
++  text-decoration: none;
++  font-weight: 600;
++}
++
++.try-on.alt {
++  background: #fff;
++  color: #2d2a32;
++  border: 1px solid #2d2a32;
++}

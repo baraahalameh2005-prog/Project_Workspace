@@ -1,0 +1,29 @@
+{
+  "load_s": 296.51128578186035,
+  "mc_resolution": 256,
+  "torch": "2.14.1+cpu",
+  "device": "cpu",
+  "threads": 12,
+  "cases": {
+    "T1_straight_sleeveless": {
+      "encode_s": 33.8,
+      "extract_s": 59.8,
+      "rss_mb": 181,
+      "vertices": 57309,
+      "faces": 114616,
+      "watertight": false,
+      "bounds": [
+        [
+          -0.233,
+          -0.2215,
+          -0.5184
+        ],
+        [
+          0.2711,
+          0.2247,
+          0.5023
+        ]
+      ]
+    }
+  }
+}
