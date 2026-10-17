@@ -1,0 +1,12 @@
+{
+  "user_id": "demo-user-2",
+  "source": "manual",
+  "unit": "in",
+  "measurements": {
+    "height": 67.7,
+    "chest": 36.2,
+    "waist": 31.5,
+    "hip": 37.8,
+    "shoulder_width": 17.3
+  }
+}

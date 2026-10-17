@@ -1,0 +1,160 @@
+{
+  "engine_version": "0.2.0",
+  "garment_id": "JN-204",
+  "garment_name": "جينز سكيني",
+  "category": "pants",
+  "fit_type": "slim",
+  "stretch": "medium",
+  "body_source": "manual",
+  "user_id": "demo-user-4",
+  "disclaimer": {
+    "code": "disclaimer",
+    "message_ar": "هذه توصية تقديرية مبنية على مقارنة رقمية للقياسات ونطاقات راحة افتراضية، ولم يتم التحقق من دقتها على ملابس حقيقية بعد. لا تضمن ملاءمة مثالية.",
+    "message_en": "This is an estimate based on numeric comparison and default ease ranges. It has not been validated on real garments yet and does not guarantee a perfect fit."
+  },
+  "all_sizes": [
+    {
+      "size": "28",
+      "score": null,
+      "acceptable": false,
+      "incomplete_primary": [],
+      "overall_fit": "insufficient_data",
+      "statuses": {
+        "waist": "missing_body",
+        "hip": "missing_body",
+        "thigh": "missing_body",
+        "inseam": "missing_body"
+      }
+    },
+    {
+      "size": "30",
+      "score": null,
+      "acceptable": false,
+      "incomplete_primary": [],
+      "overall_fit": "insufficient_data",
+      "statuses": {
+        "waist": "missing_body",
+        "hip": "missing_body",
+        "thigh": "missing_body",
+        "inseam": "missing_body"
+      }
+    },
+    {
+      "size": "32",
+      "score": null,
+      "acceptable": false,
+      "incomplete_primary": [],
+      "overall_fit": "insufficient_data",
+      "statuses": {
+        "waist": "missing_body",
+        "hip": "missing_body",
+        "thigh": "missing_body",
+        "inseam": "missing_body"
+      }
+    },
+    {
+      "size": "34",
+      "score": null,
+      "acceptable": false,
+      "incomplete_primary": [],
+      "overall_fit": "insufficient_data",
+      "statuses": {
+        "waist": "missing_body",
+        "hip": "missing_body",
+        "thigh": "missing_body",
+        "inseam": "missing_body"
+      }
+    }
+  ],
+  "missing_measurements": {
+    "body": [
+      "waist",
+      "hip",
+      "thigh",
+      "inseam"
+    ],
+    "garment": []
+  },
+  "status": "insufficient_data",
+  "recommended_size": null,
+  "closest_size": null,
+  "overall_fit": "insufficient_data",
+  "overall_fit_ar": "معلومات غير كافية",
+  "overall_fit_en": "insufficient data",
+  "confidence": "none",
+  "alternative_size": null,
+  "comparisons": [
+    {
+      "measurement": "waist",
+      "body_measurement": "waist",
+      "name_ar": "محيط الخصر",
+      "name_en": "waist",
+      "importance": "primary",
+      "body_cm": null,
+      "garment_cm": 72.0,
+      "status": "missing_body",
+      "ease_cm": null,
+      "target_ease_cm": null,
+      "label_ar": "قياس الجسم غير متوفر",
+      "label_en": "body measurement missing"
+    },
+    {
+      "measurement": "hip",
+      "body_measurement": "hip",
+      "name_ar": "محيط الورك",
+      "name_en": "hip",
+      "importance": "primary",
+      "body_cm": null,
+      "garment_cm": 88.0,
+      "status": "missing_body",
+      "ease_cm": null,
+      "target_ease_cm": null,
+      "label_ar": "قياس الجسم غير متوفر",
+      "label_en": "body measurement missing"
+    },
+    {
+      "measurement": "thigh",
+      "body_measurement": "thigh",
+      "name_ar": "محيط الفخذ",
+      "name_en": "thigh",
+      "importance": "secondary",
+      "body_cm": null,
+      "garment_cm": 50.0,
+      "status": "missing_body",
+      "ease_cm": null,
+      "target_ease_cm": null,
+      "label_ar": "قياس الجسم غير متوفر",
+      "label_en": "body measurement missing"
+    },
+    {
+      "measurement": "inseam",
+      "body_measurement": "inseam",
+      "name_ar": "طول الساق الداخلي",
+      "name_en": "inseam",
+      "importance": "secondary",
+      "body_cm": null,
+      "garment_cm": 78.0,
+      "status": "missing_body",
+      "ease_cm": null,
+      "target_ease_cm": null,
+      "label_ar": "قياس الجسم غير متوفر",
+      "label_en": "body measurement missing"
+    }
+  ],
+  "not_compared": [],
+  "issues": [],
+  "reasons": [
+    {
+      "code": "insufficient_primary",
+      "message_ar": "لا يمكن إصدار توصية موثوقة: القياسات الأساسية لهذا النوع (محيط الخصر، محيط الورك) غير متوفرة للمقارنة.",
+      "message_en": "Cannot give a reliable recommendation: key measurements for this type (waist, hip) are unavailable."
+    }
+  ],
+  "warnings": [
+    {
+      "code": "weight_ignored",
+      "message_ar": "الوزن لا يُستخدم لتحديد المقاس؛ النظام يعتمد على قياسات الجسم فقط.",
+      "message_en": "Weight is not used to choose a size; only body measurements are used."
+    }
+  ]
+}

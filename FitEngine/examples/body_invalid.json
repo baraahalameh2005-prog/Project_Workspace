@@ -1,0 +1,8 @@
+{
+  "unit": "cm",
+  "measurements": {
+    "chest": 38,
+    "waist": "abc",
+    "hip": -5
+  }
+}

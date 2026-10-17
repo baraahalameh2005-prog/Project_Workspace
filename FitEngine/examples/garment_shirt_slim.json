@@ -1,0 +1,16 @@
+{
+  "garment_id": "SH-033",
+  "name": "قميص رسمي",
+  "category": "shirt",
+  "fit_type": "slim",
+  "stretch": "none",
+  "unit": "cm",
+  "ease_overrides": {
+    "sleeve_length": [-1, 3]
+  },
+  "sizes": [
+    {"label": "S",  "measurements": {"chest": 96,  "waist": 88,  "shoulder_width": 43, "sleeve_length": 61, "length": 74}},
+    {"label": "M",  "measurements": {"chest": 102, "waist": 94,  "shoulder_width": 45, "sleeve_length": 62, "length": 76}},
+    {"label": "L",  "measurements": {"chest": 108, "waist": 100, "shoulder_width": 47, "sleeve_length": 63, "length": 78}}
+  ]
+}

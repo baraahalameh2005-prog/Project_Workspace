@@ -1,0 +1,15 @@
+{
+  "garment_id": "DR-010",
+  "name": "فستان مطرّز بقصة مستقيمة",
+  "category": "dress",
+  "fit_type": "regular",
+  "stretch": "none",
+  "measurement_type": "circumference",
+  "unit": "cm",
+  "sizes": [
+    {"label": "S",  "measurements": {"chest": 90,  "waist": 74, "hip": 96,  "shoulder_width": 38, "length": 120}},
+    {"label": "M",  "measurements": {"chest": 96,  "waist": 80, "hip": 102, "shoulder_width": 39, "length": 122}},
+    {"label": "L",  "measurements": {"chest": 102, "waist": 86, "hip": 108, "shoulder_width": 40, "length": 124}},
+    {"label": "XL", "measurements": {"chest": 108, "waist": 92, "hip": 114, "shoulder_width": 41, "length": 126}}
+  ]
+}

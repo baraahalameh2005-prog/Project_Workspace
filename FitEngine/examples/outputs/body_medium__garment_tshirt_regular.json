@@ -1,0 +1,195 @@
+{
+  "engine_version": "0.2.0",
+  "garment_id": "TS-001",
+  "garment_name": "تيشيرت قطن كلاسيك",
+  "category": "t_shirt",
+  "fit_type": "regular",
+  "stretch": "low",
+  "body_source": "manual",
+  "user_id": "demo-user-1",
+  "disclaimer": {
+    "code": "disclaimer",
+    "message_ar": "هذه توصية تقديرية مبنية على مقارنة رقمية للقياسات ونطاقات راحة افتراضية، ولم يتم التحقق من دقتها على ملابس حقيقية بعد. لا تضمن ملاءمة مثالية.",
+    "message_en": "This is an estimate based on numeric comparison and default ease ranges. It has not been validated on real garments yet and does not guarantee a perfect fit."
+  },
+  "all_sizes": [
+    {
+      "size": "S",
+      "score": 1.961,
+      "acceptable": false,
+      "incomplete_primary": [],
+      "overall_fit": "tight",
+      "statuses": {
+        "chest": "too_tight",
+        "shoulder_width": "slightly_tight",
+        "waist": "good",
+        "hip": "too_tight"
+      }
+    },
+    {
+      "size": "M",
+      "score": 0.0094,
+      "acceptable": true,
+      "incomplete_primary": [],
+      "overall_fit": "good",
+      "statuses": {
+        "chest": "good",
+        "shoulder_width": "good",
+        "waist": "good",
+        "hip": "good"
+      }
+    },
+    {
+      "size": "L",
+      "score": 0.0329,
+      "acceptable": true,
+      "incomplete_primary": [],
+      "overall_fit": "good",
+      "statuses": {
+        "chest": "good",
+        "shoulder_width": "good",
+        "waist": "good",
+        "hip": "good"
+      }
+    },
+    {
+      "size": "XL",
+      "score": 4.2795,
+      "acceptable": false,
+      "incomplete_primary": [],
+      "overall_fit": "loose",
+      "statuses": {
+        "chest": "too_loose",
+        "shoulder_width": "slightly_loose",
+        "waist": "too_loose",
+        "hip": "good"
+      }
+    }
+  ],
+  "missing_measurements": {
+    "body": [],
+    "garment": []
+  },
+  "status": "ok",
+  "recommended_size": "M",
+  "closest_size": "M",
+  "overall_fit": "good",
+  "overall_fit_ar": "مناسب",
+  "overall_fit_en": "good fit",
+  "confidence": "high",
+  "alternative_size": {
+    "size": "L",
+    "direction": "larger",
+    "code": "alt_larger",
+    "message_ar": "المقاس L بديل لمن يفضّل قصة أوسع وأكثر راحة.",
+    "message_en": "Size L is an alternative for a roomier, more relaxed fit."
+  },
+  "comparisons": [
+    {
+      "measurement": "chest",
+      "body_measurement": "chest",
+      "name_ar": "محيط الصدر",
+      "name_en": "chest",
+      "importance": "primary",
+      "body_cm": 92.0,
+      "garment_cm": 100.0,
+      "status": "good",
+      "ease_cm": 8.0,
+      "target_ease_cm": [
+        3.24,
+        16.0
+      ],
+      "ease_source": "default",
+      "penalty": 0.0032,
+      "label_ar": "مناسب",
+      "label_en": "good fit"
+    },
+    {
+      "measurement": "shoulder_width",
+      "body_measurement": "shoulder_width",
+      "name_ar": "عرض الكتفين",
+      "name_en": "shoulder width",
+      "importance": "primary",
+      "body_cm": 44.0,
+      "garment_cm": 44.0,
+      "status": "good",
+      "ease_cm": 0.0,
+      "target_ease_cm": [
+        -1.0,
+        3.0
+      ],
+      "ease_source": "default",
+      "penalty": 0.0125,
+      "label_ar": "مناسب",
+      "label_en": "good fit"
+    },
+    {
+      "measurement": "waist",
+      "body_measurement": "waist",
+      "name_ar": "محيط الخصر",
+      "name_en": "waist",
+      "importance": "secondary",
+      "body_cm": 80.0,
+      "garment_cm": 96.0,
+      "status": "good",
+      "ease_cm": 16.0,
+      "target_ease_cm": [
+        1.6,
+        24.0
+      ],
+      "ease_source": "default",
+      "penalty": 0.0041,
+      "label_ar": "مناسب",
+      "label_en": "good fit"
+    },
+    {
+      "measurement": "hip",
+      "body_measurement": "hip",
+      "name_ar": "محيط الورك",
+      "name_en": "hip",
+      "importance": "secondary",
+      "body_cm": 96.0,
+      "garment_cm": 98.0,
+      "status": "good",
+      "ease_cm": 2.0,
+      "target_ease_cm": [
+        -0.88,
+        24.0
+      ],
+      "ease_source": "default",
+      "penalty": 0.0295,
+      "label_ar": "مناسب",
+      "label_en": "good fit"
+    }
+  ],
+  "not_compared": [
+    {
+      "measurement": "length",
+      "garment_cm": 70.0,
+      "code": "not_compared",
+      "message_ar": "طول القطعة للقطعة لا يقابله قياس جسم مباشر؛ يُعرض للمعلومة فقط.",
+      "message_en": "Garment garment length has no direct body counterpart; shown for information only."
+    },
+    {
+      "measurement": "sleeve_length",
+      "garment_cm": 20.0,
+      "code": "not_relevant",
+      "message_ar": "طول الكم غير مهم لتحديد المقاس في هذا النوع من الملابس ولم يدخل في المقارنة.",
+      "message_en": "sleeve length does not drive sizing for this garment type and was not compared."
+    }
+  ],
+  "issues": [],
+  "reasons": [
+    {
+      "code": "reason_all_good",
+      "message_ar": "المقاس M: كل القياسات المقارنة ضمن نطاق الراحة المطلوب لهذه القصة.",
+      "message_en": "Size M: every compared measurement is within the target ease for this fit."
+    },
+    {
+      "code": "stretch_note",
+      "message_ar": "القماش مطاطي (low)، لذلك يُسمح بأن تكون القطعة أصغر من الجسم بحدود 3% في المحيطات.",
+      "message_en": "Fabric is stretchy (low); garment circumferences may be up to 3% smaller than the body."
+    }
+  ],
+  "warnings": []
+}

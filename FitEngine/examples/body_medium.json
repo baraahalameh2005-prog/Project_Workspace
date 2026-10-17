@@ -1,0 +1,15 @@
+{
+  "user_id": "demo-user-1",
+  "source": "manual",
+  "unit": "cm",
+  "measurements": {
+    "height": 172,
+    "chest": 92,
+    "waist": 80,
+    "hip": 96,
+    "shoulder_width": 44,
+    "arm_length": 60,
+    "inseam": 79,
+    "thigh": 56
+  }
+}
