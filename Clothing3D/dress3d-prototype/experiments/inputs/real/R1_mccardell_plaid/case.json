@@ -1,0 +1,14 @@
+{
+  "assumed_measurements_cm": {
+    "dress_length": 105,
+    "bust": 88,
+    "waist": 66,
+    "hip": 100,
+    "hem": 220,
+    "shoulder_width": 36,
+    "sleeve_length": 45,
+    "upper_arm": 28,
+    "cuff": 24
+  },
+  "warning": "ASSUMED values - no published measurements"
+}

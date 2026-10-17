@@ -1,0 +1,58 @@
+{
+  "case": "T1_straight_sleeveless",
+  "ground_truth": {
+    "style": {
+      "silhouette": "straight",
+      "sleeve": "none",
+      "neckline": "round"
+    },
+    "measurements": {
+      "dress_length": 90,
+      "bust": 96,
+      "waist": 92,
+      "hip": 100,
+      "hem": 102,
+      "shoulder_width": 37,
+      "neck_width": 18,
+      "front_neck_drop": 8,
+      "back_neck_drop": 2,
+      "armhole_depth": 21,
+      "waist_position": 40,
+      "hip_position": 60
+    },
+    "options": {
+      "depth_ratio": 0.68,
+      "fold_count": 0,
+      "fold_amplitude": 0
+    },
+    "measurements_resolved_cm": {
+      "dress_length": 90.0,
+      "bust": 96.0,
+      "waist": 92.0,
+      "hip": 100.0,
+      "hem": 102.0,
+      "shoulder_width": 37.0,
+      "neck_width": 18.0,
+      "front_neck_drop": 8.0,
+      "back_neck_drop": 2.0,
+      "armhole_depth": 21.0,
+      "waist_position": 40.0,
+      "hip_position": 60.0
+    }
+  },
+  "camera": {
+    "size": [
+      600,
+      900
+    ],
+    "fov_deg": 25,
+    "elev": 3,
+    "center": [
+      0.0,
+      41.66113312284428,
+      0.0
+    ],
+    "extent": 101.65316481974003
+  },
+  "label": "SYNTHETIC reference image rendered from a procedural ground-truth mesh"
+}

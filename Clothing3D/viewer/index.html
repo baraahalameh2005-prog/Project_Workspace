@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>غرفة القياس</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M24 6h16l-3 10 9 34H18l9-34z' fill='%238c2f39'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f1ea; --panel: #fffdf9; --ink: #2b2420; --muted: #7a6e66; --line: #e6dccf;
+      --accent: #8c2f39; --accent-ink: #fff; --accent-soft: #f4e3e3; --olive: #556b2f; --warn: #a15c00;
+      --warn-soft: #fff3df; --err: #b3261e; --err-soft: #fdeceb; --ok: #2e7d32; --stage: #ece5dc;
+      --radius: 14px; --shadow: 0 6px 24px rgba(60, 40, 20, .08);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink);
+      font-family: "IBM Plex Sans Arabic", system-ui, sans-serif; font-size: 15px; }
+    button, input, select { font: inherit; color: inherit; }
+    a { color: inherit; }
+
+    .app { display: grid; grid-template-columns: 420px 1fr 260px; grid-template-rows: 60px 1fr; height: 100vh; }
+    header { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; padding: 0 20px;
+      border-bottom: 1px solid var(--line); background: var(--panel); }
+    header h1 { font-size: 19px; margin: 0; font-weight: 700; }
+    header h1 span { color: var(--accent); }
+    header .grow { flex: 1; }
+    header .who { color: var(--muted); font-size: 13px; }
+    .link-btn { text-decoration: none; padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; font-size: 14px; }
+    .link-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Wizard */
+    .wizard { overflow: auto; padding: 18px; border-left: 1px solid var(--line); background: var(--panel); }
+    .steps { display: flex; gap: 6px; margin-bottom: 16px; }
+    .steps button { flex: 1; border: 0; background: transparent; padding: 8px 2px 10px; font-size: 13px; color: var(--muted);
+      border-bottom: 3px solid var(--line); cursor: pointer; }
+    .steps button.on { color: var(--accent); border-color: var(--accent); font-weight: 600; }
+    .steps button.done { color: var(--ink); border-color: var(--olive); }
+    .steps button:disabled { cursor: default; opacity: .5; }
+    .step { display: none; }
+    .step.on { display: block; }
+    h2 { font-size: 17px; margin: 0 0 4px; }
+    .sub { color: var(--muted); font-size: 13px; margin: 0 0 14px; line-height: 1.7; }
+
+    .kinds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .kind { border: 1.5px solid var(--line); background: #fff; border-radius: var(--radius); padding: 14px 6px 10px; cursor: pointer;
+      text-align: center; transition: .15s; }
+    .kind:hover { border-color: var(--accent); transform: translateY(-1px); }
+    .kind.on { border-color: var(--accent); background: var(--accent-soft); }
+    .kind .ic { color: var(--accent); line-height: 0; }
+    .kind.on .ic { color: var(--accent); }
+    .kind .nm { font-size: 13px; font-weight: 600; margin-top: 4px; }
+    .acc-kinds { margin-top: 12px; display: none; }
+    .acc-kinds.on { display: block; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 12px; cursor: pointer; font-size: 14px; }
+    .chip.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+
+    .guide { display: grid; grid-template-columns: 96px 1fr; gap: 12px; align-items: center; background: #fbf6ef; border: 1px dashed var(--line);
+      border-radius: var(--radius); padding: 10px 12px; margin-bottom: 12px; font-size: 13px; line-height: 1.8; }
+    .guide ul { margin: 0; padding-inline-start: 18px; }
+    .drop { border: 2px dashed #d6c8b6; border-radius: var(--radius); padding: 18px; text-align: center; background: #fff; cursor: pointer; transition: .15s; }
+    .drop.over { border-color: var(--accent); background: var(--accent-soft); }
+    .drop .big { font-weight: 600; }
+    .drop .row { justify-content: center; margin-top: 10px; }
+    .row { display: flex; gap: 8px; align-items: center; }
+    .btn { border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 8px 14px; cursor: pointer; }
+    .btn:hover { border-color: var(--accent); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+    .btn.primary:hover { filter: brightness(1.08); }
+    .btn.wide { width: 100%; padding: 12px; font-size: 16px; margin-top: 14px; }
+    .btn:disabled { opacity: .45; cursor: default; filter: none; }
+
+    .photos { display: grid; gap: 10px; margin-top: 12px; }
+    .photo { display: grid; grid-template-columns: 74px 1fr auto; gap: 10px; align-items: center; border: 1px solid var(--line);
+      border-radius: 12px; padding: 8px; background: #fff; }
+    .photo img { width: 74px; height: 74px; object-fit: cover; border-radius: 8px; background: var(--stage); }
+    .photo select { width: 100%; padding: 5px 6px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    .photo .st { font-size: 12.5px; margin-top: 4px; line-height: 1.6; }
+    .st.busy { color: var(--muted); }
+    .st.ok { color: var(--ok); }
+    .st.err { color: var(--err); }
+    .x { border: 0; background: transparent; font-size: 18px; cursor: pointer; color: var(--muted); padding: 4px 8px; }
+    .x:hover { color: var(--err); }
+
+    .measure-view { position: relative; border-radius: var(--radius); overflow: hidden; background: var(--stage); margin-bottom: 12px; }
+    .measure-view img { display: block; width: 100%; }
+    .measure-view svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .measure-view .tabs { position: absolute; top: 8px; inset-inline-start: 8px; display: flex; gap: 6px; }
+    .measure-view .tabs button { border: 0; border-radius: 999px; padding: 4px 10px; background: rgba(255,255,255,.9); cursor: pointer; font-size: 12.5px; }
+    .measure-view .tabs button.on { background: var(--accent); color: #fff; }
+    .fields { display: grid; gap: 6px; }
+    .field { display: grid; grid-template-columns: 1fr 96px 22px; gap: 8px; align-items: center; padding: 5px 8px; border-radius: 10px; }
+    .field:hover, .field.hl { background: var(--accent-soft); }
+    .field label { font-size: 14px; }
+    .field label small { display: block; color: var(--muted); font-size: 11.5px; }
+    .field input { width: 100%; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; text-align: center; background: #fff; }
+    .field input.changed { border-color: var(--olive); background: #f3f7ec; }
+    .field .flag { font-size: 14px; text-align: center; }
+    details.more { margin-top: 6px; }
+    details.more summary { cursor: pointer; color: var(--muted); font-size: 13px; padding: 6px 8px; }
+    .notes { display: grid; gap: 6px; margin-top: 10px; }
+    .note { font-size: 13px; line-height: 1.7; padding: 8px 10px; border-radius: 10px; background: var(--warn-soft); color: var(--warn); }
+    .note.err { background: var(--err-soft); color: var(--err); }
+    .note.info { background: #eef3f8; color: #2d4f6b; }
+    .scale-box { display: none; border: 1px solid var(--line); background: #fbf6ef; border-radius: var(--radius);
+      padding: 12px; margin-bottom: 12px; font-size: 14px; line-height: 1.8; }
+    .scale-box.on { display: block; }
+    .scale-box .row { flex-wrap: wrap; margin-top: 6px; }
+    .scale-box select, .scale-box input { padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    .scale-box input { width: 80px; text-align: center; }
+    .scale-box .or { color: var(--muted); font-size: 13px; margin: 8px 0 2px; }
+    .opts { display: grid; gap: 6px; margin-top: 10px; font-size: 14px; }
+    .opts label { display: flex; gap: 8px; align-items: center; }
+
+    .progress { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; margin: 12px 0 6px; }
+    .progress div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), #c0505c); transition: width .5s linear; }
+    .status { font-size: 13.5px; color: var(--muted); min-height: 22px; }
+    .status.err { color: var(--err); }
+
+    /* Stage */
+    .stage { position: relative; background: radial-gradient(ellipse at 50% 40%, #fbf7f1 0%, var(--stage) 70%); overflow: hidden; }
+    #three { position: absolute; inset: 0; }
+    .stage-tools { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px;
+      background: rgba(255,255,255,.92); padding: 6px; border-radius: 999px; box-shadow: var(--shadow); }
+    .stage-tools button { border: 0; background: transparent; border-radius: 999px; padding: 7px 12px; cursor: pointer; font-size: 13.5px; white-space: nowrap; }
+    .stage-tools button:hover, .stage-tools button.on { background: var(--accent-soft); color: var(--accent); }
+    .stage-msg { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,.92);
+      padding: 7px 14px; border-radius: 999px; font-size: 13px; box-shadow: var(--shadow); white-space: nowrap; }
+    .stage-msg.err { color: var(--err); }
+
+    /* Wardrobe */
+    .wardrobe { overflow: auto; padding: 18px 14px; border-right: 1px solid var(--line); background: var(--panel); }
+    .wardrobe h2 { display: flex; justify-content: space-between; align-items: center; }
+    .items { display: grid; gap: 10px; margin-top: 10px; }
+    .item { display: grid; grid-template-columns: 52px 1fr auto; gap: 8px; align-items: center; border: 1px solid var(--line);
+      border-radius: 12px; padding: 6px; background: #fff; }
+    .item.off { opacity: .55; }
+    .item img { width: 52px; height: 52px; object-fit: contain; border-radius: 8px; background: var(--stage); }
+    .item .nm { font-size: 13.5px; font-weight: 600; }
+    .item .meta { font-size: 11.5px; color: var(--muted); }
+    .item .acts { display: flex; flex-direction: column; }
+    .empty { color: var(--muted); font-size: 13px; line-height: 1.8; text-align: center; padding: 20px 6px; border: 1px dashed var(--line); border-radius: 12px; }
+
+    #camera { position: fixed; inset: 0; background: rgba(20,14,10,.88); display: none; flex-direction: column; align-items: center;
+      justify-content: center; gap: 12px; z-index: 10; }
+    #camera video { max-width: 92vw; max-height: 74vh; border-radius: 12px; background: #000; }
+    #camera .hint { color: #fff; font-size: 14px; }
+
+    @media (max-width: 1100px) {
+      .app { grid-template-columns: 1fr; grid-template-rows: 60px 55vh auto auto; height: auto; }
+      .stage { grid-row: 2; min-height: 55vh; }
+      .wizard { grid-row: 3; border: 0; }
+      .wardrobe { grid-row: 4; border: 0; border-top: 1px solid var(--line); }
+      header .who { display: none; }
+    }
+  </style>
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+    } }
+  </script>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>غرفة <span>القياس</span></h1>
+    <div class="grow"></div>
+    <div class="who" id="who"></div>
+    <a class="link-btn" href="http://127.0.0.1:8765/" target="_blank" rel="noreferrer" title="مشروع Dress3D: فستان من صورته ومقاساته، لحاله 3D">🧵 الفستان لحاله 3D</a>
+    <a class="link-btn" href="http://127.0.0.1:5173/">→ صفحة الأفاتار</a>
+  </header>
+
+  <!-- Wizard -->
+  <section class="wizard">
+    <nav class="steps">
+      <button data-go="1" class="on">١ · القطعة</button>
+      <button data-go="2" disabled>٢ · الصور</button>
+      <button data-go="3" disabled>٣ · القياسات</button>
+      <button data-go="4" disabled>٤ · لبّسي</button>
+    </nav>
+
+    <div class="step on" data-step="1">
+      <h2>شو بدك تجرّبي؟</h2>
+      <p class="sub">اختاري نوع القطعة. بنقيسها من صورتها ولحالنا، وإنتِ بتراجعي القياسات بعدين.</p>
+      <div class="kinds" id="kinds"></div>
+      <div class="acc-kinds" id="accKinds">
+        <p class="sub" style="margin:12px 0 8px">أي إكسسوار؟</p>
+        <div class="chips" id="accChips"></div>
+      </div>
+      <button class="btn primary wide" id="toPhotos" disabled>التالي: الصور</button>
+    </div>
+
+    <div class="step" data-step="2">
+      <h2>صوّري القطعة</h2>
+      <div class="guide">
+        <svg viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
+          <rect x="2" y="2" width="92" height="92" rx="10" fill="#d9cdbd"/>
+          <path d="M30 14 L48 18 L66 14 L76 30 L66 36 L66 82 L30 82 L30 36 L20 30 Z" fill="#8c2f39"/>
+        </svg>
+        <ul id="guideTips"></ul>
+      </div>
+      <div class="drop" id="drop">
+        <div class="big">اسحبي الصور لهون أو اضغطي لتختاري</div>
+        <div class="sub" style="margin:4px 0 0">أكتر من صورة: أمام، خلف، وصور تفاصيل (اختياري)</div>
+        <div class="row">
+          <button class="btn" id="pickBtn">📁 من الجهاز</button>
+          <button class="btn" id="camBtn">📷 كاميرا</button>
+        </div>
+      </div>
+      <div class="photos" id="photos"></div>
+      <div class="notes" id="photoNotes"></div>
+      <button class="btn primary wide" id="toMeasures" disabled>التالي: راجعي القياسات</button>
+    </div>
+
+    <div class="step" data-step="3">
+      <h2>راجعي القياسات</h2>
+      <p class="sub">هاي القياسات مقاسة من الصورة بالسنتيمتر، وكل العروض والقطعة <b>ممدودة</b>، متل ما بتقيسي بالمتر. الخطوط على الصورة بتورجيكِ وين انقاس كل واحد؛ إذا في رقم غلط عدّليه.</p>
+      <div class="scale-box" id="scaleBox"></div>
+      <div class="measure-view" id="measureView">
+        <img id="measureImg" alt="">
+        <svg id="measureSvg"></svg>
+        <div class="tabs" id="measureTabs"></div>
+      </div>
+      <div class="fields" id="fields"></div>
+      <details class="more" id="moreBox"><summary>قياسات زيادة</summary><div class="fields" id="moreFields"></div></details>
+      <div class="opts" id="opts"></div>
+      <div class="notes" id="measureNotes"></div>
+      <button class="btn primary wide" id="toWear">التالي: لبّسي الأفاتار</button>
+    </div>
+
+    <div class="step" data-step="4">
+      <h2>على الأفاتار</h2>
+      <p class="sub" id="wearSub"></p>
+      <button class="btn primary wide" id="wearBtn">👗 لبّسي</button>
+      <div class="progress"><div id="bar"></div></div>
+      <div class="status" id="wearStatus"></div>
+      <div class="notes" id="fitNotes"></div>
+      <button class="btn wide" id="again" style="display:none">➕ قطعة جديدة</button>
+    </div>
+  </section>
+
+  <!-- 3D -->
+  <section class="stage">
+    <div id="three"></div>
+    <div class="stage-msg" id="stageMsg">جاري تحميل الأفاتار…</div>
+    <div class="stage-tools">
+      <button id="spinBtn">⟳ دوران</button>
+      <button id="frontBtn">أمام</button>
+      <button id="sideBtn">جنب</button>
+      <button id="backBtn">ظهر</button>
+      <button id="soloBtn" title="خبّي الأفاتار وشوفي اللبس لحاله">👗 القطعة لحالها</button>
+      <button id="shotBtn">📸 صورة</button>
+    </div>
+  </section>
+
+  <!-- Wardrobe -->
+  <aside class="wardrobe">
+    <h2>خزانتي <button class="btn" id="clearAll" style="padding:4px 10px;font-size:12px">شلحي الكل</button></h2>
+    <div class="items" id="items"></div>
+  </aside>
+</div>
+
+<div id="camera">
+  <div class="hint">خلّي القطعة كلها بالصورة، وصوّري من فوق</div>
+  <video autoplay playsinline muted></video>
+  <div class="row"><button class="btn primary" id="shoot">📸 صوّري</button><button class="btn" id="cancel">إلغاء</button></div>
+</div>
+<input id="filePick" type="file" accept="image/jpeg,image/png" multiple hidden>
+
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+// ------------------------------------------------------------------ data
+const KINDS = [
+  { id: "dress", svg: '<path d="M24 6h16l-3 10 9 34H18l9-34z M27 6l5 6 5-6"/>', ic: "👗", nm: "فستان / عباية" },
+  { id: "top", svg: '<path d="M22 8l10 4 10-4 12 8-5 9-6-3v30H21V22l-6 3-5-9z"/>', ic: "👚", nm: "بلوزة / قميص" },
+  { id: "skirt", svg: '<path d="M22 12h20l8 38H14z M22 18h20"/>', ic: "🩱", nm: "تنورة" },
+  { id: "pants", svg: '<path d="M20 8h24l3 46h-11l-4-30-4 30H17z M20 14h24"/>', ic: "👖", nm: "بنطلون" },
+  { id: "scarf", svg: '<path d="M18 12c8 6 20 6 28 0l-4 10c-6 3-14 3-20 0z M24 22l-4 32h8l3-30 M40 22l2 28h-8"/>', ic: "🧣", nm: "شال" },
+  { id: "accessory", svg: '<path d="M16 24h32l-3 28H19z M24 24v-6a8 8 0 0116 0v6"/>', ic: "👜", nm: "إكسسوار" },
+];
+const ACCESSORIES = [
+  { id: "bag", nm: "👜 شنطة" }, { id: "belt", nm: "➰ حزام" }, { id: "hat", nm: "👒 قبعة" },
+  { id: "glasses", nm: "🕶️ نظارة" }, { id: "necklace", nm: "📿 عقد" },
+];
+const KIND_NAME = Object.fromEntries(KINDS.map((k) => [k.id, k.nm]));
+const ACC_NAME = Object.fromEntries(ACCESSORIES.map((a) => [a.id, a.nm.split(" ").slice(1).join(" ")]));
+// Fields per kind: [name, label, hint]; the first group shows, the rest under "more".
+// Girths are shown and typed as the width laid flat (half the girth), the way
+// a tape measures a garment on a table; the server gets the girth.
+const GIRTHS = new Set(["bust", "waist", "hip", "hem", "upper_arm", "cuff", "thigh", "opening"]);
+const FIELDS = {
+  dress: [
+    [["dress_length", "طول القطعة", "من الكتف جنب الرقبة لآخرها"], ["bust", "عرض الصدر", "ممدودة، تحت الإبط"],
+     ["waist", "عرض الخصر", "ممدودة، أضيق مكان"], ["hip", "عرض الورك", "ممدودة"],
+     ["hem", "عرض الذيل", "ممدودة، على طول الطرف"], ["shoulder_width", "عرض الأكتاف", "من درزة لدرزة"],
+     ["sleeve_length", "طول الكم", "من درزة الكتف (مش من الرقبة)"]],
+    [["length_from_shoulder", "الطول من درزة الكتف"], ["neck_width", "عرض فتحة الرقبة"], ["armhole_depth", "عمق الإبط"],
+     ["waist_position", "الخصر تحت الكتف بـ"], ["hip_position", "الورك تحت الكتف بـ"],
+     ["upper_arm", "عرض الزند", "ممدود"], ["cuff", "عرض فتحة الكم", "ممدودة"]],
+  ],
+  skirt: [[["waist", "عرض الخصر", "ممدودة"], ["hip", "عرض الورك", "ممدودة"], ["length", "الطول"],
+           ["hem", "عرض الذيل", "ممدودة، على طول الطرف"]], []],
+  pants: [[["waist", "عرض الخصر", "ممدود"], ["hip", "عرض الورك", "ممدود"], ["inseam", "طول الرجل من جوّا"],
+           ["outseam", "الطول من برّا"], ["rise", "طول الحِجر"]],
+          [["thigh", "عرض الفخذ", "ممدود"], ["opening", "عرض فتحة الرجل", "ممدودة"]]],
+  scarf: [[["length", "الطول"], ["width", "العرض"]], []],
+  accessory: [[["width", "العرض"], ["height", "الارتفاع"]], []],
+};
+const shown = (name, cm) => GIRTHS.has(name) ? cm / 2 : cm;  // girth -> flat width
+const stored = (name, v) => GIRTHS.has(name) ? v * 2 : v;     // flat width -> girth
+FIELDS.top = FIELDS.dress;
+const PHOTO_ERRORS = {
+  garment_area: "القطعة مش واضحة: صوّري على شرشف أو أرضية سادة، وخلّي القطعة تعبّي معظم الصورة.",
+  garment_border: "القطعة واصلة لطرف الصورة: ارجعي لورا شوي لتطلع كلها ومعها مسافة حواليها.",
+  armpit: "ما قدرت ألاقي الإبط: بعّدي الأكمام شوي عن جسم القطعة.",
+  sleeve: "ما لقيت الكم: افردي الأكمام منيح.",
+  crotch: "ما لقيت مكان الحِجر: بعّدي الرجلين عن بعض شوي.",
+  waistband: "ما لقيت الخصر: افردي البنطلون منيح والرجلين مستقيمات.",
+  no_garment: "ما لقيت قطعة بالصورة.",
+  shape: "ما قدرت أقرا شكل القطعة: افرديها مستقيمة وصوّري من فوق بالزبط.",
+  internal: "صار خطأ عندنا، جرّبي كمان مرة.",
+};
+const TIPS = {
+  default: ["افردي القطعة على أرضية أو شرشف سادة", "صوّري من فوق، بلا فلاش", "خلّي القطعة كلها بالصورة"],
+  dress: ["افردي القطعة، والأكمام بعيدة شوي عن الجسم", "صوّري من فوق، بلا فلاش، والقطعة كلها بالصورة", "صورة أمام وصورة خلف"],
+  pants: ["افردي البنطلون، والرجلين متباعدين شوي", "صوّري من فوق، بلا فلاش، والقطعة كلها بالصورة", "صورة أمام وصورة خلف"],
+  scarf: ["افردي الشال كامل (مش مطوي)", "صوّري من فوق، بلا فلاش", "الشال كله بالصورة"],
+  accessory: ["حطي القطعة على أرضية سادة", "صوّري من فوق، بلا فلاش", "القطعة كلها بالصورة"],
+};
+TIPS.top = TIPS.dress;
+const SECONDS = { flat: 32, dress3d: 20, skirt: 13, pants: 25, scarf: 8 };
+
+const params = new URLSearchParams(location.search);
+const avatarId = /^[0-9a-f]{32}$/.test(params.get("avatar") || "") ? params.get("avatar") : null;
+const store = { key: `wardrobe:${avatarId || "test"}`,
+  load() { try { return JSON.parse(localStorage.getItem(this.key)) || []; } catch { return []; } },
+  save(items) { try { localStorage.setItem(this.key, JSON.stringify(items)); } catch {} } };
+
+const $ = (id) => document.getElementById(id);
+const el = (tag, attrs = {}, ...kids) => {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") n.className = v; else if (k.startsWith("on")) n.addEventListener(k.slice(2), v); else n.setAttribute(k, v);
+  }
+  kids.flat().forEach((k) => n.append(k));
+  return n;
+};
+const ar = (n) => String(n).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d]);
+const latin = (s) => String(s).trim().replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
+  .replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/[٫,]/g, ".");
+
+// ------------------------------------------------------------------ 3D stage
+const host = $("three");
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setClearColor(0x000000, 0);  // the stage's own background shows through
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.95;
+renderer.shadowMap.enabled = true;
+host.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.add(new THREE.HemisphereLight(0xfffaf2, 0x8a7d70, 1.15));
+const key = new THREE.DirectionalLight(0xffffff, 1.7);
+key.position.set(1.4, 3, 2.4); key.castShadow = true; key.shadow.mapSize.set(1024, 1024);
+scene.add(key);
+const rim = new THREE.DirectionalLight(0xffe6d0, 0.8); rim.position.set(-2, 1.8, -2); scene.add(rim);
+const floor = new THREE.Mesh(new THREE.CircleGeometry(1.1, 64), new THREE.ShadowMaterial({ opacity: 0.18 }));
+floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+const camera = new THREE.PerspectiveCamera(30, 1, 0.05, 50);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.minDistance = 0.8; controls.maxDistance = 7;
+let view = { center: new THREE.Vector3(0, 0.85, 0), dist: 4.2 };
+function look(angle) {
+  camera.position.set(view.center.x + Math.sin(angle) * view.dist, view.center.y + 0.1, view.center.z + Math.cos(angle) * view.dist);
+  controls.target.copy(view.center);
+  controls.update();
+}
+look(0);
+function resize() {
+  const r = host.getBoundingClientRect();
+  renderer.setSize(r.width, r.height); camera.aspect = r.width / r.height; camera.updateProjectionMatrix(); redraw();
+}
+new ResizeObserver(resize).observe(host);
+// Draw only when something changed (orbiting, a garment added, a resize):
+// an idle page then leaves the processor to the server's measuring and cloth.
+let dirty = true;
+function redraw() { dirty = true; }
+controls.addEventListener("change", redraw);
+renderer.setAnimationLoop(() => {
+  controls.update();  // fires "change" while turning or settling
+  if (!dirty) return;
+  dirty = false;
+  renderer.render(scene, camera);
+});
+renderer.domElement.addEventListener("webglcontextlost", (e) => { e.preventDefault(); stageMsg("انقطع العرض ثلاثي الأبعاد؛ حدّثي الصفحة.", true); });
+
+function stageMsg(text, error = false) {
+  const m = $("stageMsg"); m.textContent = text; m.hidden = !text; m.className = "stage-msg" + (error ? " err" : "");
+}
+$("spinBtn").onclick = (e) => { controls.autoRotate = !controls.autoRotate; e.target.classList.toggle("on", controls.autoRotate); };
+$("frontBtn").onclick = () => look(0);
+$("sideBtn").onclick = () => look(Math.PI / 2);
+$("backBtn").onclick = () => look(Math.PI);
+$("soloBtn").onclick = (e) => {
+  if (!avatarObj) return;
+  avatarObj.visible = !avatarObj.visible;
+  e.target.classList.toggle("on", !avatarObj.visible);
+  e.target.textContent = avatarObj.visible ? "👗 القطعة لحالها" : "🧍 رجّعي الأفاتار";
+  redraw();
+};
+$("shotBtn").onclick = () => {
+  const a = el("a", { download: "avatar.png", href: renderer.domElement.toDataURL("image/png") }); a.click();
+};
+
+const loader = new GLTFLoader();
+const shadowed = (obj) => { obj.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } }); return obj; };
+let frame = null;  // where accessories go (from the server)
+let avatarObj = null;
+const avatarUrl = avatarId ? `/avatars/${avatarId}.glb` : "../output/avatar.glb";
+loader.loadAsync(avatarUrl).then((gltf) => {
+  avatarObj = shadowed(gltf.scene);
+  scene.add(avatarObj);
+  redraw();
+  const box = new THREE.Box3().setFromObject(gltf.scene);
+  view.center = box.getCenter(new THREE.Vector3());
+  view.dist = box.getSize(new THREE.Vector3()).y * 2.5;
+  look(0);
+  stageMsg("");
+  $("who").textContent = avatarId ? "الأفاتار تبعك" : "أفاتار تجريبي (افتحي الصفحة من زر «جرّبي الملابس» بصفحة الأفاتار)";
+  renderWardrobe();
+}).catch(() => stageMsg(avatarId ? "ما لقيت الأفاتار تبعك؛ ارجعي لصفحة الأفاتار واعمليه من جديد." : "ما قدرت أحمّل الأفاتار.", true));
+if (avatarId) fetch(`/api/avatar-frame/${avatarId}`).then((r) => r.ok ? r.json() : null).then((f) => { frame = f; renderWardrobe(); });
+
+// ------------------------------------------------------------------ wizard state
+const state = { step: 1, kind: null, acc: null, photos: [], cm: {}, edited: {}, view: "front" };
+
+function go(step) {
+  state.step = step;
+  document.querySelectorAll(".step").forEach((s) => s.classList.toggle("on", +s.dataset.step === step));
+  document.querySelectorAll(".steps button").forEach((b) => {
+    const n = +b.dataset.go;
+    b.classList.toggle("on", n === step);
+    b.classList.toggle("done", n < step);
+  });
+  if (step === 3) renderMeasures();
+  if (step === 4) renderWear();
+}
+document.querySelectorAll(".steps button").forEach((b) => b.onclick = () => { if (!b.disabled) go(+b.dataset.go); });
+function unlock() {
+  const measured = mainPhotos().some((p) => p.result);
+  const btns = document.querySelectorAll(".steps button");
+  btns[1].disabled = !state.kind || (state.kind === "accessory" && !state.acc);
+  btns[2].disabled = btns[3].disabled = !measured;
+  $("toPhotos").disabled = btns[1].disabled;
+  $("toMeasures").disabled = !measured || mainPhotos().some((p) => p.busy);
+}
+
+// Step 1
+function icon(path) {
+  const d = el("div", { class: "ic" });
+  d.innerHTML = `<svg viewBox="0 0 64 64" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">${path}</svg>`;
+  return d;
+}
+$("kinds").append(...KINDS.map((k) => el("button", { class: "kind", "data-kind": k.id, onclick: () => pickKind(k.id) },
+  icon(k.svg), el("div", { class: "nm" }, k.nm))));
+$("accChips").append(...ACCESSORIES.map((a) => el("button", { class: "chip", "data-acc": a.id, onclick: () => pickAcc(a.id) }, a.nm)));
+function pickKind(kind) {
+  const changed = state.kind && state.kind !== kind;
+  state.kind = kind;
+  document.querySelectorAll(".kind").forEach((b) => b.classList.toggle("on", b.dataset.kind === kind));
+  $("accKinds").classList.toggle("on", kind === "accessory");
+  $("guideTips").replaceChildren(...(TIPS[kind] || TIPS.default).map((t) => el("li", {}, t)));
+  if (changed) remeasureAll();
+  unlock();
+}
+function pickAcc(acc) {
+  state.acc = acc;
+  document.querySelectorAll(".chip").forEach((b) => b.classList.toggle("on", b.dataset.acc === acc));
+  unlock();
+}
+$("toPhotos").onclick = () => go(2);
+
+// Step 2: photos
+const ROLES = { front: "أمام", back: "خلف", detail: "تفصيلة (لون/نقشة)" };
+let photoSeq = 0;
+const mainPhotos = () => state.photos.filter((p) => p.role !== "detail");
+function addPhoto(dataUrl) {
+  const taken = new Set(state.photos.map((p) => p.role));
+  const role = !taken.has("front") ? "front" : (!taken.has("back") && state.kind !== "accessory" && state.kind !== "scarf") ? "back" : "detail";
+  const p = { id: ++photoSeq, dataUrl, role, busy: false, result: null, error: null };
+  state.photos.push(p);
+  measurePhoto(p);
+  renderPhotos();
+}
+async function measurePhoto(p) {
+  p.busy = true; p.error = null; p.result = null; renderPhotos();
+  const kind = state.kind === "accessory" ? "accessory" : state.kind;
+  try {
+    const res = await fetch("/api/measure", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ photo: p.dataUrl, kind, measure: p.role !== "detail" }) });
+    const body = await res.json();
+    if (!res.ok) p.error = PHOTO_ERRORS[body.code] || body.error || "ما زبطت الصورة.";
+    else p.result = body;
+  } catch {
+    p.error = "السيرفر مش شغّال؛ شغّلي start_avatar.bat.";
+  }
+  p.busy = false;
+  state.edited = {};
+  renderPhotos();
+}
+function remeasureAll() { state.photos.filter((p) => p.role !== "detail").forEach(measurePhoto); }
+function renderPhotos() {
+  $("photos").replaceChildren(...state.photos.map((p) => {
+    const select = el("select", { onchange: (e) => {
+      const old = p.role; p.role = e.target.value;
+      if ((old === "detail") !== (p.role === "detail")) measurePhoto(p); else renderPhotos();
+    } }, ...Object.entries(ROLES).map(([v, t]) => { const o = el("option", { value: v }, t); if (v === p.role) o.selected = true; return o; }));
+    let st;
+    if (p.busy) st = el("div", { class: "st busy" }, "⏳ عم يقيس…");
+    else if (p.error) st = el("div", { class: "st err" }, "⚠ " + p.error);
+    else if (p.role === "detail") st = el("div", { class: "st ok" }, "✓ محفوظة");
+    else if (p.result) st = el("div", { class: "st ok" }, "✓ انقاست");
+    else st = el("div", { class: "st" }, "");
+    return el("div", { class: "photo" }, el("img", { src: p.result?.cutoutUrl || p.dataUrl, alt: "" }),
+      el("div", {}, select, st),
+      el("button", { class: "x", title: "شيلي", onclick: () => { state.photos = state.photos.filter((q) => q !== p); renderPhotos(); } }, "✕"));
+  }));
+  // Kind check: the outline may say it is something else.
+  const notes = [];
+  const front = mainPhotos().find((p) => p.result);
+  if (front && state.kind !== "accessory" && front.result.guess && front.result.guess !== state.kind) {
+    notes.push(el("div", { class: "note info" }, `من شكلها، القطعة شكلها ${KIND_NAME[front.result.guess]}. `,
+      el("button", { class: "btn", style: "padding:2px 10px", onclick: () => pickKind(front.result.guess) }, "غيّري النوع")));
+  }
+  if (state.photos.length && !state.photos.some((p) => p.role === "front"))
+    notes.push(el("div", { class: "note" }, "لازم وحدة من الصور تكون «أمام»."));
+  $("photoNotes").replaceChildren(...notes);
+  unlock();
+}
+$("toMeasures").onclick = () => go(3);
+
+// Photo input: files, drag and drop, camera.
+function readFile(file) {
+  const img = new Image();
+  img.onload = () => { addPhoto(shrink(img, img.naturalWidth, img.naturalHeight)); URL.revokeObjectURL(img.src); };
+  img.onerror = () => alert("هاد الملف مش صورة JPEG أو PNG.");
+  img.src = URL.createObjectURL(file);
+}
+function shrink(source, w, h) {
+  const k = Math.min(1, 2400 / Math.max(w, h));
+  const c = el("canvas"); c.width = Math.round(w * k); c.height = Math.round(h * k);
+  c.getContext("2d").drawImage(source, 0, 0, c.width, c.height);
+  return c.toDataURL("image/jpeg", 0.92);
+}
+$("pickBtn").onclick = (e) => { e.stopPropagation(); $("filePick").value = ""; $("filePick").click(); };
+$("drop").onclick = () => { $("filePick").value = ""; $("filePick").click(); };
+$("filePick").onchange = () => [...$("filePick").files].forEach(readFile);
+["dragenter", "dragover"].forEach((t) => $("drop").addEventListener(t, (e) => { e.preventDefault(); $("drop").classList.add("over"); }));
+["dragleave", "drop"].forEach((t) => $("drop").addEventListener(t, (e) => { e.preventDefault(); $("drop").classList.remove("over"); }));
+$("drop").addEventListener("drop", (e) => [...e.dataTransfer.files].filter((f) => f.type.startsWith("image/")).forEach(readFile));
+let stream = null;
+$("camBtn").onclick = async (e) => {
+  e.stopPropagation();
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { ideal: 1920 }, height: { ideal: 1080 } } });
+    $("camera").querySelector("video").srcObject = stream; $("camera").style.display = "flex";
+  } catch (err) { alert("ما قدرت أفتح الكاميرا: " + err.message); }
+};
+function stopCamera() { stream?.getTracks().forEach((t) => t.stop()); stream = null; $("camera").style.display = "none"; }
+$("shoot").onclick = () => { const v = $("camera").querySelector("video"); addPhoto(shrink(v, v.videoWidth, v.videoHeight)); stopCamera(); };
+$("cancel").onclick = stopCamera;
+
+// Step 3: measurements
+function measured() {
+  // Front and back measured separately; the mean, and which ones disagree.
+  const results = mainPhotos().filter((p) => p.result).map((p) => ({ role: p.role, r: p.result }));
+  const cm = {}, differ = {};
+  const names = new Set(results.flatMap((x) => Object.keys(x.r.cm)));
+  for (const n of names) {
+    const vals = results.map((x) => x.r.cm[n]).filter((v) => v != null);
+    cm[n] = Math.round(vals.reduce((a, b) => a + b, 0) / vals.length * 10) / 10;
+    if (vals.length > 1 && Math.max(...vals) - Math.min(...vals) > 2) differ[n] = vals;
+  }
+  return { results, cm, differ };
+}
+const MAIN_LENGTH = ["dress_length", "length_from_shoulder", "length", "outseam", "inseam", "width", "height"];
+function renderTapeBox(results) {
+  const box = $("scaleBox");
+  box.classList.toggle("on", results.length > 0);
+  if (!results.length) return box.replaceChildren();
+  const front = results.find((x) => x.role === "front") || results[0];
+  const exact = front.r.scaleSource === "tape";
+  const fields = (FIELDS[state.kind] || [[], []]).flat().filter(([n]) => front.r.cm[n] != null);
+  const pick = el("select", {}, ...fields.map(([n, label, hint]) => el("option", { value: n }, hint ? `${label} (${hint})` : label)));
+  const value = el("input", { inputmode: "decimal", placeholder: "سم" });
+  const apply = async () => {
+    const v = parseFloat(latin(value.value));
+    if (!(v > 0)) return value.focus();
+    const res = await fetch("/api/scale", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ photoId: front.r.photoId, known: { [pick.value]: stored(pick.value, v) } }) });
+    const body = await res.json();
+    if (!res.ok) return alert(body.error);
+    const photo = mainPhotos().find((p) => p.result?.photoId === front.r.photoId);
+    photo.result = body;
+    // The garment's other photos: the same length as this one.
+    for (const other of mainPhotos().filter((p) => p !== photo && p.result)) {
+      const key = MAIN_LENGTH.find((k) => body.cm[k] && other.result.cm[k]);
+      if (!key) continue;
+      const r2 = await fetch("/api/scale", { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ photoId: other.result.photoId, factor: body.cm[key] / other.result.cm[key] }) });
+      if (r2.ok) other.result = await r2.json();
+    }
+    state.edited = {};
+    renderMeasures();
+  };
+  const pct = Math.round((front.r.uncertainty || 0) * 100);
+  box.replaceChildren(
+    el("b", {}, exact ? "📏 القياسات مظبوطة على قياسك بالمتر." : `📏 القياسات مقاسة لحالها من شكل القطعة (دقتها حوالي ±${ar(pct)}٪).`),
+    el("div", {}, exact ? "بدك تغيّري القياس اللي عطيتيه؟" : "معك متر؟ قيسي إشي واحد بس، وكل الباقي بيصير دقيق (اختياري):"),
+    el("div", { class: "row" }, pick, value, el("button", { class: "btn primary", onclick: apply }, "ظبّطي")),
+  );
+}
+function renderMeasures() {
+  const { results, cm, differ } = measured();
+  renderTapeBox(results);
+  state.cm = { ...cm, ...state.edited };
+  const groups = FIELDS[state.kind] || [[], []];
+  const row = ([name, label, hint]) => {
+    if (cm[name] == null && state.edited[name] == null) return null;
+    const round1 = (v) => Math.round(v * 10) / 10;
+    const input = el("input", { inputmode: "decimal", value: ar(round1(shown(name, state.cm[name]))) });
+    if (state.edited[name] != null) input.classList.add("changed");
+    input.onchange = () => {
+      const v = parseFloat(latin(input.value));
+      if (Number.isFinite(v) && v > 0) { state.edited[name] = stored(name, v); renderMeasures(); }
+      else input.value = ar(round1(shown(name, state.cm[name])));
+    };
+    const photo = cm[name], typed = state.edited[name];
+    const far = typed != null && photo && Math.abs(typed - photo) / photo > 0.15;
+    const flag = far ? el("span", { class: "flag", style: "color:var(--err)", title: `بالصورة: ${round1(shown(name, photo))} سم` }, "⚠")
+      : differ[name] ? el("span", { class: "flag", title: `أمام/خلف: ${differ[name].map((v) => round1(shown(name, v))).join(" / ")}` }, "⚠")
+      : el("span", { class: "flag" }, "");
+    const f = el("div", { class: "field", "data-name": name }, el("label", {}, label, hint ? el("small", {}, hint) : ""), input, flag);
+    f.onmouseenter = () => highlight(name); f.onmouseleave = () => highlight(null);
+    input.onfocus = () => highlight(name);
+    return f;
+  };
+  $("fields").replaceChildren(...groups[0].map(row).filter(Boolean));
+  const more = groups[1].map(row).filter(Boolean);
+  $("moreFields").replaceChildren(...more); $("moreBox").hidden = !more.length;
+
+  // Options: ruffles, ticked when the photo shows a collar / cuffs of another colour.
+  const frontR = (results.find((x) => x.role === "front") || results[0])?.r;
+  if (frontR?.trims && state.trimsFrom !== frontR.photoId) {
+    state.trimsFrom = frontR.photoId;
+    state.collarRuffle = frontR.trims.collar;
+    state.cuffRuffle = frontR.trims.cuff;
+  }
+  const opts = [];
+  if (state.kind === "dress" || state.kind === "top") {
+    for (const [k, t] of [["collarRuffle", "الياقة فيها كشكش (لقيناها بلون تاني بالصورة)"], ["cuffRuffle", "آخر الكم فيه كشكش (لقيناه بلون تاني بالصورة)"]]) {
+      const cb = el("input", { type: "checkbox" }); cb.checked = !!state[k]; cb.onchange = () => state[k] = cb.checked;
+      opts.push(el("label", {}, cb, t));
+    }
+  }
+  $("opts").replaceChildren(...opts);
+
+  // Notes.
+  const notes = [];
+  const front = results.find((x) => x.role === "front") || results[0];
+  for (const n of front?.r.notes || []) {
+    if (n.code === "hip_below_waist") notes.push(el("div", { class: "note info" }, `الورك مقاس ${ar(n.cm)} سم تحت الخصر؛ إذا بتعرفي مقاسه عدّليه.`));
+    if (n.code === "sleeves_differ") notes.push(el("div", { class: "note" }, `الكمّين طلعوا مختلفين (${ar(n.values.join(" و "))} سم): افرديهم مستقيمين وصوّري من جديد، أو عدّلي الرقم.`));
+    if (n.code === "scarf_open") notes.push(el("div", { class: "note info" }, "إذا الشال كان مطوي بالصورة، القياس للمطوي: افرديه كامل."));
+  }
+  const allFields = (FIELDS[state.kind] || [[], []]).flat();
+  for (const [name, label] of allFields) {
+    const photo = cm[name], typed = state.edited[name];
+    if (typed == null || !photo || Math.abs(typed - photo) / photo <= 0.15) continue;
+    const t = Math.round(shown(name, typed) * 10) / 10, ph = Math.round(shown(name, photo) * 10) / 10;
+    let why = "";
+    if (name === "sleeve_length" && typed - photo > 8 && typed - photo < 22) why = " شكلك قستيه من الرقبة؛ طول الكم من درزة الكتف.";
+    if (GIRTHS.has(name) && Math.abs(typed - 2 * photo) / (2 * photo) < 0.15) why = " شكلك كتبتي الدورة كاملة؛ هون بدنا العرض والقطعة ممدودة.";
+    if (GIRTHS.has(name) && Math.abs(typed - photo / 2) / (photo / 2) < 0.15) why = " شكلك كتبتي نص العرض.";
+    notes.push(el("div", { class: "note err" }, `⚠ ${label}: كتبتي ${ar(t)} سم، وبالصورة ${ar(ph)} سم.${why} تأكدي منه.`));
+  }
+  if (Object.keys(differ).length) notes.push(el("div", { class: "note" }, "⚠ الأمام والخلف مش متفقين على بعض القياسات (أكتر من ٢ سم). الرقم هو المعدّل؛ تأكدي منه."));
+  if (!results.some((x) => x.role === "back") && state.kind !== "accessory" && state.kind !== "scarf")
+    notes.push(el("div", { class: "note info" }, "ما في صورة خلف: رح نستعمل صورة الأمام للضهر كمان."));
+  $("measureNotes").replaceChildren(...notes);
+
+  // The photo with its lines.
+  state.view = results.some((x) => x.role === state.view) ? state.view : results[0]?.role;
+  $("measureTabs").replaceChildren(...results.map((x) => el("button", { class: x.role === state.view ? "on" : "",
+    onclick: () => { state.view = x.role; renderMeasures(); } }, ROLES[x.role])));
+  const current = results.find((x) => x.role === state.view);
+  if (current) drawLines(current.r);
+}
+function drawLines(r) {
+  $("measureImg").src = r.flatUrl;
+  const svg = $("measureSvg");
+  svg.setAttribute("viewBox", `0 0 ${r.size[0]} ${r.size[1]}`);
+  const w = r.size[0] / 300;
+  const parts = [];
+  for (const [name, pts] of Object.entries(r.lines)) {
+    const base = name.replace(/_(left|right)$/, "");
+    parts.push(`<polyline data-line="${base}" points="${pts.map((p) => p.join(",")).join(" ")}" fill="none" stroke="#8c2f39" stroke-width="${w * 1.6}" stroke-linecap="round" opacity=".85"/>`);
+  }
+  svg.innerHTML = parts.join("");
+}
+function highlight(name) {
+  $("measureSvg").querySelectorAll("polyline").forEach((l) => {
+    const on = l.dataset.line === name;
+    l.setAttribute("stroke", on ? "#ffcc00" : "#8c2f39");
+    l.setAttribute("opacity", name && !on ? ".35" : ".9");
+  });
+}
+$("toWear").onclick = () => go(4);
+
+// Step 4: wear
+function route() {
+  if (state.kind === "accessory") return "accessory";
+  if (state.kind === "dress" || state.kind === "top") {
+    const front = mainPhotos().find((p) => p.role === "front")?.result;
+    return front?.style?.sleeve !== "none" && state.cm.sleeve_length ? "flat" : "dress3d";
+  }
+  return state.kind;
+}
+function renderWear() {
+  const r = route();
+  $("wearSub").textContent = r === "accessory"
+    ? "الإكسسوار بينعمل بشكل جاهز لنوعه، بالمقاس واللون من صورته، وبيطلع فوراً."
+    : `بنبني القطعة بمقاساتها وقماشها من الصور، وبنخلّي القماش ينزل على الجسم. بتاخد حوالي ${ar(SECONDS[r] || 30)} ثانية.`;
+  $("again").style.display = "none";
+  $("fitNotes").replaceChildren();
+}
+$("wearBtn").onclick = async () => {
+  const r = route();
+  const front = mainPhotos().find((p) => p.role === "front" && p.result);
+  const back = mainPhotos().find((p) => p.role === "back" && p.result);
+  if (!front) return status("لازم صورة «أمام» انقاست.", true);
+  $("wearBtn").disabled = true;
+  if (r === "accessory") {
+    const item = { id: crypto.randomUUID(), type: "accessory", acc: state.acc, cm: state.cm, colour: front.result.colour,
+      cutout: front.result.cutoutUrl, thumb: front.result.cutoutUrl, visible: true, label: ACC_NAME[state.acc] };
+    addItem(item); status("جاهز ✓"); finish([]); return;
+  }
+  const body = { method: "garment", kind: state.kind, frontId: front.result.photoId, backId: back?.result.photoId,
+    measurements: state.cm, avatarId, collarRuffle: !!state.collarRuffle, cuffRuffle: !!state.cuffRuffle };
+  const expected = SECONDS[r] || 30;
+  const started = Date.now();
+  const tick = setInterval(() => {
+    const s = (Date.now() - started) / 1000;
+    $("bar").style.width = Math.min(95, 100 * s / expected) + "%";
+  }, 300);
+  try {
+    status("بنبعت القطعة…");
+    const res = await fetch("/api/jobs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const job = await res.json();
+    if (!res.ok) throw new Error(job.error);
+    for (;;) {
+      await new Promise((ok) => setTimeout(ok, 1500));
+      const st = await (await fetch(`/api/jobs/${job.id}`)).json();
+      const s = Math.round((Date.now() - started) / 1000);
+      if (st.status === "queued") status(`مستنية دورها… (${ar(s)} ث)`);
+      else if (st.status === "running") status(`عم نبني القطعة ونلبّسها… (${ar(s)} ث)`);
+      else if (st.status === "done") {
+        addItem({ id: job.id, type: "glb", kind: state.kind, url: st.dressGlb, thumb: front.result.cutoutUrl, visible: true,
+          label: KIND_NAME[state.kind], cm: state.cm, source: st.info?.modelSource });
+        $("bar").style.width = "100%";
+        status(`جاهز ✓ (${ar(s)} ث)`);
+        finish(fitNotes(state.cm));
+        break;
+      } else throw new Error(PHOTO_ERRORS[st.code] || st.error);
+    }
+  } catch (err) {
+    status("ما زبط: " + err.message, true);
+    $("wearBtn").disabled = false;
+  } finally { clearInterval(tick); }
+};
+function status(t, error = false) { $("wearStatus").textContent = t; $("wearStatus").className = "status" + (error ? " err" : ""); }
+function fitNotes(cm) {
+  const body = frame?.bodyGirthsCm || {};
+  const out = [];
+  for (const [k, nm] of [["bust", "الصدر"], ["waist", "الخصر"], ["hip", "الورك"]]) {
+    if (cm[k] && body[k] && body[k] - cm[k] >= 1)
+      out.push(`⚠ ${nm}: القطعة (${ar(Math.round(cm[k]))} سم) أصغر من الجسم (${ar(Math.round(body[k]))} سم) بـ ${ar(Math.round(body[k] - cm[k]))} سم، يعني رح تكون ضيّقة.`);
+  }
+  return out;
+}
+function finish(notes) {
+  $("fitNotes").replaceChildren(...notes.map((n) => el("div", { class: "note" }, n)));
+  $("again").style.display = "block";
+  $("wearBtn").disabled = false;
+}
+$("again").onclick = () => {
+  Object.assign(state, { kind: null, acc: null, photos: [], cm: {}, edited: {}, collarRuffle: false, cuffRuffle: false, trimsFrom: null });
+  document.querySelectorAll(".kind,.chip").forEach((b) => b.classList.remove("on"));
+  $("accKinds").classList.remove("on"); $("bar").style.width = "0"; status("");
+  renderPhotos(); go(1);
+};
+
+// ------------------------------------------------------------------ wardrobe
+let items = store.load();
+const objects = new Map();  // item id -> THREE.Object3D
+function addItem(item) { items.unshift(item); store.save(items); renderWardrobe(); }
+async function objectFor(item) {
+  if (objects.has(item.id)) return objects.get(item.id);
+  let obj = null;
+  if (item.type === "glb") obj = shadowed((await loader.loadAsync(item.url)).scene);
+  else if (item.type === "accessory") obj = await accessory(item);
+  if (obj) { objects.set(item.id, obj); scene.add(obj); redraw(); }
+  return obj;
+}
+async function renderWardrobe() {
+  $("items").replaceChildren(...(items.length ? items.map((it) => el("div", { class: "item" + (it.visible ? "" : " off") },
+    el("img", { src: it.thumb || "", alt: "" }),
+    el("div", {}, el("div", { class: "nm" }, it.label), el("div", { class: "meta" }, it.type === "accessory" ? "شكل جاهز بمقاسها ولونها" : "من صورها")),
+    el("div", { class: "acts" },
+      el("button", { class: "x", title: it.visible ? "شلحي" : "لبّسي", onclick: () => { it.visible = !it.visible; store.save(items); renderWardrobe(); } }, it.visible ? "👁" : "◌"),
+      el("button", { class: "x", title: "احذفي", onclick: () => { objects.get(it.id)?.removeFromParent(); objects.delete(it.id); redraw();
+        items = items.filter((x) => x !== it); store.save(items); renderWardrobe(); } }, "🗑")),
+  )) : [el("div", { class: "empty" }, "لسا ما في إشي هون. القطع اللي بتجرّبيها بتنحفظ هون، وبتقدري تلبسي أكتر من وحدة مع بعض.")]));
+  for (const it of items) {
+    try {
+      const obj = it.visible || objects.has(it.id) ? await objectFor(it) : null;
+      if (obj) { obj.visible = it.visible; redraw(); }
+    } catch { /* a file from an old session that is gone */ }
+  }
+}
+$("clearAll").onclick = () => { items.forEach((it) => it.visible = false); store.save(items); renderWardrobe(); };
+
+// ------------------------------------------------------------------ accessories
+// Ready-made shapes for each kind, sized from the photo and coloured or
+// textured from it; placed with the avatar's landmarks.
+async function accessory(item) {
+  const f = frame;
+  if (!f) { stageMsg("أماكن الجسم مش جاهزة؛ الإكسسوار بيحتاج الأفاتار تبعك.", true); return null; }
+  const cm = item.cm || {};
+  const colour = new THREE.Color(item.colour || "#555");
+  const mat = new THREE.MeshStandardMaterial({ color: colour, roughness: 0.6, metalness: 0.05 });
+  const g = new THREE.Group();
+  const W = (cm.width || 20) / 100, H = (cm.height || 15) / 100;
+  if (item.acc === "bag") {
+    // On the right hip, its face (the photo) to the front; the strap across
+    // the body to the left shoulder, clear of the chest and back.
+    const tex = await new THREE.TextureLoader().loadAsync(item.cutout);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    const depth = Math.min(0.12, Math.max(0.05, Math.min(W, H) * 0.35));
+    const face = new THREE.MeshStandardMaterial({ map: tex, transparent: true, alphaTest: 0.4, roughness: 0.6 });
+    const bag = new THREE.Mesh(new THREE.BoxGeometry(W, H, depth), [mat, mat, mat, mat, face, mat]);
+    const waistX = Math.max(...f.waistRing.map((p) => Math.abs(p[0])));
+    bag.position.set(-(waistX + W / 2 + 0.02), f.waistY - H / 2, 0.0);
+    const top = new THREE.Vector3(bag.position.x + W * 0.35, bag.position.y + H / 2, 0);
+    const c = f.chest, out = 0.025;
+    const strap = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+      top.clone().setZ(depth / 2), new THREE.Vector3(-c.halfX * 0.6, c.y, c.frontZ + out),
+      new THREE.Vector3(c.halfX * 0.55, f.shoulderY + 0.025, (c.frontZ + c.backZ) / 2),
+      new THREE.Vector3(-c.halfX * 0.6, c.y, c.backZ - out), top.clone().setZ(-depth / 2),
+    ]), 60, 0.006, 6), mat);
+    g.add(bag, strap);
+  } else if (item.acc === "belt") {
+    // A standing band round the waist, a little off the body, with a buckle in front.
+    const width = Math.min(0.07, Math.max(0.02, Math.min(W, H)));
+    const ring = f.waistRing.map(([x, z]) => new THREE.Vector2(x, z));
+    const c = ring.reduce((a, p) => a.add(p), new THREE.Vector2()).divideScalar(ring.length);
+    const pts = ring.map((p) => p.clone().sub(c).multiplyScalar(1.03).add(c));
+    const pos = [], idx = [];
+    pts.forEach((p) => { pos.push(p.x, f.waistY + width / 2, p.y, p.x, f.waistY - width / 2, p.y); });
+    for (let i = 0; i < pts.length; i++) {
+      const j = (i + 1) % pts.length;
+      idx.push(2 * i, 2 * i + 1, 2 * j, 2 * j, 2 * i + 1, 2 * j + 1);
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+    geo.setIndex(idx); geo.computeVertexNormals();
+    g.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: colour, roughness: 0.55, side: THREE.DoubleSide })));
+    const fz = Math.max(...pts.map((p) => p.y)) + 0.005;
+    const buckle = new THREE.Mesh(new THREE.TorusGeometry(width * 0.42, 0.004, 8, 28),
+      new THREE.MeshStandardMaterial({ color: 0xc9a227, metalness: 0.85, roughness: 0.3 }));
+    buckle.position.set(c.x, f.waistY, fz); g.add(buckle);
+  } else if (item.acc === "hat") {
+    const h = f.head, brim = Math.max(h.radius * 2.4, Math.max(W, H)) / 2;
+    const crownR = h.radius * 1.15;
+    const crown = new THREE.Mesh(new THREE.CylinderGeometry(crownR * 0.9, crownR, 0.1, 40), mat);
+    crown.position.set(h.centerX, h.topY - 0.02, h.centerZ);
+    const rim = new THREE.Mesh(new THREE.CylinderGeometry(brim, brim, 0.006, 48), mat);
+    rim.position.set(h.centerX, h.topY - 0.065, h.centerZ);
+    g.add(crown, rim);
+  } else if (item.acc === "glasses") {
+    const h = f.head, width = Math.min(Math.max(W, 0.12), h.radius * 2.3);
+    const y = h.topY - 0.115, z = h.frontZ + 0.012, r = width * 0.2;
+    const frameMat = new THREE.MeshStandardMaterial({ color: colour, roughness: 0.3, metalness: 0.4 });
+    for (const s of [-1, 1]) {
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.0025, 8, 32), frameMat);
+      ring.position.set(h.centerX + s * width * 0.25, y, z); g.add(ring);
+      const lens = new THREE.Mesh(new THREE.CircleGeometry(r, 32), new THREE.MeshStandardMaterial({ color: 0x222222, transparent: true, opacity: 0.35 }));
+      lens.position.copy(ring.position); g.add(lens);
+      const arm = new THREE.Mesh(new THREE.BoxGeometry(0.003, 0.003, 0.11), frameMat);
+      arm.position.set(h.centerX + s * width * 0.48, y, z - 0.055); g.add(arm);
+    }
+    const bridge = new THREE.Mesh(new THREE.BoxGeometry(width * 0.1, 0.003, 0.003), frameMat);
+    bridge.position.set(h.centerX, y + r * 0.3, z); g.add(bridge);
+  } else if (item.acc === "necklace") {
+    // Beads round the base of the neck, dipping onto the chest in front.
+    const ring = f.neckRing;
+    const cx = ring.reduce((a, p) => a + p[0], 0) / ring.length, cz = ring.reduce((a, p) => a + p[1], 0) / ring.length;
+    const front = Math.max(...ring.map((p) => p[1]));
+    const pts = ring.map(([x, z]) => {
+      const t = Math.max(0, (z - cz) / (front - cz));  // 0 at the sides/back, 1 at the front
+      return new THREE.Vector3(cx + (x - cx) * 1.25, f.shoulderY - 0.005 - 0.06 * t * t, cz + (z - cz) * 1.25 + 0.012 * t);
+    });
+    const curve = new THREE.CatmullRomCurve3(pts, true);
+    const bead = new THREE.SphereGeometry(0.0045, 10, 8);
+    const beadMat = new THREE.MeshStandardMaterial({ color: colour, metalness: 0.6, roughness: 0.3 });
+    const n = 90;
+    for (let i = 0; i < n; i++) { const b = new THREE.Mesh(bead, beadMat); b.position.copy(curve.getPointAt(i / n)); g.add(b); }
+  }
+  return shadowed(g);
+}
+
+// ------------------------------------------------------------------ start
+$("guideTips").replaceChildren(...TIPS.default.map((t) => el("li", {}, t)));
+renderPhotos();
+</script>
+</body>
+</html>

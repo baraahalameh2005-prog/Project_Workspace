@@ -1,0 +1,132 @@
+{
+  "scale_applied": 97.10252826114967,
+  "icp_cost": 5.87416765941483,
+  "bbox_aligned": {
+    "silhouette_iou": {
+      "front": 0.9229,
+      "right": 0.8546,
+      "back": 0.9454,
+      "left": 0.855
+    },
+    "chamfer": {
+      "chamfer_mean_cm": 1.8208390000668073,
+      "recon_to_gt_p95_cm": 5.019509202275416,
+      "gt_to_recon_p95_cm": 3.653243804122557,
+      "hausdorff_cm": 14.660252760987055
+    },
+    "dimensions": [
+      {
+        "measurement": "bust",
+        "target_cm": 100.0,
+        "measured_cm": 101.31,
+        "abs_err_cm": 1.31,
+        "pct_err": 1.31,
+        "hull_cm": 100.9,
+        "encloses_axis": true,
+        "note": ""
+      },
+      {
+        "measurement": "waist",
+        "target_cm": 94.0,
+        "measured_cm": 98.69,
+        "abs_err_cm": 4.69,
+        "pct_err": 4.99,
+        "hull_cm": 98.52,
+        "encloses_axis": true,
+        "note": ""
+      },
+      {
+        "measurement": "hip",
+        "target_cm": 104.0,
+        "measured_cm": 102.45,
+        "abs_err_cm": -1.55,
+        "pct_err": -1.49,
+        "hull_cm": 102.35,
+        "encloses_axis": true,
+        "note": ""
+      },
+      {
+        "measurement": "hem",
+        "target_cm": 112.0,
+        "measured_cm": 99.31,
+        "abs_err_cm": -12.69,
+        "pct_err": -11.33,
+        "hull_cm": 98.34,
+        "encloses_axis": true,
+        "note": "hem measured 1 cm above lowest point (closed solid has no hem edge)"
+      }
+    ],
+    "dress_length": "NOT MEASURABLE: closed solid, no neck/HPS landmark",
+    "openings": 0,
+    "components": 1,
+    "watertight": true
+  },
+  "icp_aligned": {
+    "silhouette_iou": {
+      "front": 0.9437,
+      "right": 0.8497,
+      "back": 0.9568,
+      "left": 0.8479
+    },
+    "chamfer": {
+      "chamfer_mean_cm": 1.526457329087116,
+      "recon_to_gt_p95_cm": 4.473672377903136,
+      "gt_to_recon_p95_cm": 3.098541349046848,
+      "hausdorff_cm": 14.652447613828059
+    },
+    "dimensions": [
+      {
+        "measurement": "bust",
+        "target_cm": 100.0,
+        "measured_cm": 137.24,
+        "abs_err_cm": 37.24,
+        "pct_err": 37.24,
+        "hull_cm": 122.39,
+        "encloses_axis": true,
+        "note": ""
+      },
+      {
+        "measurement": "waist",
+        "target_cm": 94.0,
+        "measured_cm": 98.64,
+        "abs_err_cm": 4.64,
+        "pct_err": 4.94,
+        "hull_cm": 98.46,
+        "encloses_axis": true,
+        "note": ""
+      },
+      {
+        "measurement": "hip",
+        "target_cm": 104.0,
+        "measured_cm": 102.67,
+        "abs_err_cm": -1.33,
+        "pct_err": -1.28,
+        "hull_cm": 102.55,
+        "encloses_axis": true,
+        "note": ""
+      },
+      {
+        "measurement": "hem",
+        "target_cm": 112.0,
+        "measured_cm": 101.7,
+        "abs_err_cm": -10.3,
+        "pct_err": -9.2,
+        "hull_cm": 101.05,
+        "encloses_axis": true,
+        "note": "hem measured 1 cm above lowest point (closed solid has no hem edge)"
+      }
+    ],
+    "dress_length": "NOT MEASURABLE: closed solid, no neck/HPS landmark",
+    "openings": 0,
+    "components": 1,
+    "watertight": true
+  },
+  "deltaE_pixelwise": {
+    "front": 22.7,
+    "back": 29.72
+  },
+  "deltaE_mean_colour": {
+    "front": 12.01,
+    "back": 19.78
+  }
+}

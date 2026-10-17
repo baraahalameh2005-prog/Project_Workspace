@@ -1,0 +1,334 @@
+{
+  "hybrid_front/T1_straight_sleeveless": {
+    "topology": {
+      "vertices": 4313,
+      "faces": 8254,
+      "non_manifold_edges": 0,
+      "boundary_loops": 4,
+      "components": 1,
+      "winding_consistent": true
+    },
+    "quality": {
+      "min_angle_p1_deg": 10.629722810064283,
+      "min_angle_median_deg": 44.79031671038183,
+      "aspect_p99": 6.0075180625676765,
+      "edge_mean_cm": 1.5897633970864058,
+      "edge_cv": 0.2953123582914133,
+      "degenerate_faces": 0
+    },
+    "pattern_strain": {
+      "front": {
+        "strain_median_pct": 0.08810716772763572,
+        "strain_p95_pct": 12.95759462396499,
+        "strain_max_pct": 559.6382089729636
+      },
+      "back": {
+        "strain_median_pct": 0.08945584693833553,
+        "strain_p95_pct": 20.94178325087077,
+        "strain_max_pct": 555.2712841687879
+      }
+    },
+    "sleeve_penetration": null
+  },
+  "hybrid_front/T2_aline_vneck": {
+    "topology": {
+      "vertices": 5050,
+      "faces": 9620,
+      "non_manifold_edges": 0,
+      "boundary_loops": 4,
+      "components": 1,
+      "winding_consistent": true
+    },
+    "quality": {
+      "min_angle_p1_deg": 11.178578715198626,
+      "min_angle_median_deg": 42.55498515795239,
+      "aspect_p99": 6.151322470778278,
+      "edge_mean_cm": 1.6312642021197052,
+      "edge_cv": 0.2901998032650801,
+      "degenerate_faces": 0
+    },
+    "pattern_strain": {
+      "front": {
+        "strain_median_pct": 2.302424861979402,
+        "strain_p95_pct": 24.344053698962114,
+        "strain_max_pct": 519.3469023690814
+      },
+      "back": {
+        "strain_median_pct": 2.2915941401305706,
+        "strain_p95_pct": 24.670207192972576,
+        "strain_max_pct": 555.0023020367489
+      }
+    },
+    "sleeve_penetration": null
+  },
+  "hybrid_front/T3_fitflare_shortsleeve": {
+    "topology": {
+      "vertices": 6297,
+      "faces": 12044,
+      "non_manifold_edges": 0,
+      "boundary_loops": 4,
+      "components": 1,
+      "winding_consistent": true
+    },
+    "quality": {
+      "min_angle_p1_deg": 9.60839216504288,
+      "min_angle_median_deg": 35.335987374933765,
+      "aspect_p99": 7.5828573640973875,
+      "edge_mean_cm": 1.5612830804906497,
+      "edge_cv": 0.36988886694305073,
+      "degenerate_faces": 0
+    },
+    "pattern_strain": {
+      "front": {
+        "strain_median_pct": 3.7287674251456515,
+        "strain_p95_pct": 37.97825091201815,
+        "strain_max_pct": 547.8495907634023
+      },
+      "back": {
+        "strain_median_pct": 3.6454608154858237,
+        "strain_p95_pct": 38.75638451845729,
+        "strain_max_pct": 532.2156018289973
+      }
+    },
+    "sleeve_penetration": {
+      "sleeve_vertices": 1408,
+      "inside_torso": 106
+    }
+  },
+  "hybrid_front/T4_straight_longsleeve_square": {
+    "topology": {
+      "vertices": 11135,
+      "faces": 21814,
+      "non_manifold_edges": 0,
+      "boundary_loops": 4,
+      "components": 1,
+      "winding_consistent": true
+    },
+    "quality": {
+      "min_angle_p1_deg": 8.778827271007387,
+      "min_angle_median_deg": 16.538214813947555,
+      "aspect_p99": 7.20280121184146,
+      "edge_mean_cm": 1.348836170302877,
+      "edge_cv": 0.4517503239562151,
+      "degenerate_faces": 0
+    },
+    "pattern_strain": {
+      "front": {
+        "strain_median_pct": 0.13120734065066308,
+        "strain_p95_pct": 9.99913981975289,
+        "strain_max_pct": 573.9279005045322
+      },
+      "back": {
+        "strain_median_pct": 0.14294763732685123,
+        "strain_p95_pct": 16.042501439391593,
+        "strain_max_pct": 552.5452784366435
+      }
+    },
+    "sleeve_penetration": {
+      "sleeve_vertices": 6192,
+      "inside_torso": 46
+    }
+  },
+  "hybrid_front_fullprotocol/T1_straight_sleeveless": {
+    "topology": {
+      "vertices": 4282,
+      "faces": 8162,
+      "non_manifold_edges": 0,
+      "boundary_loops": 4,
+      "components": 1,
+      "winding_consistent": true
+    },
+    "quality": {
+      "min_angle_p1_deg": 12.743239383713103,
+      "min_angle_median_deg": 44.79456784873517,
+      "aspect_p99": 5.856466653164821,
+      "edge_mean_cm": 1.5883939249281906,
+      "edge_cv": 0.2952601479204095,
+      "degenerate_faces": 0
+    },
+    "pattern_strain": {
+      "front": {
+        "strain_median_pct": 0.08805360370712778,
+        "strain_p95_pct": 12.63645055450029,
+        "strain_max_pct": 564.1445439218492
+      },
+      "back": {
+        "strain_median_pct": 0.09189815889892872,
+        "strain_p95_pct": 21.462701763787006,
+        "strain_max_pct": 520.8630378970362
+      }
+    },
+    "sleeve_penetration": null
+  },
+  "hybrid_front_fullprotocol/T2_aline_vneck": {
+    "topology": {
+      "vertices": 4966,
+      "faces": 9418,
+      "non_manifold_edges": 0,
+      "boundary_loops": 4,
+      "components": 1,
+      "winding_consistent": true
+    },
+    "quality": {
+      "min_angle_p1_deg": 10.887318436467888,
+      "min_angle_median_deg": 42.618631996215925,
+      "aspect_p99": 6.354469646538501,
+      "edge_mean_cm": 1.6265263658138547,
+      "edge_cv": 0.29363402625005164,
+      "degenerate_faces": 0
+    },
+    "pattern_strain": {
+      "front": {
+        "strain_median_pct": 2.0717004543962525,
+        "strain_p95_pct": 26.567461088079597,
+        "strain_max_pct": 586.5540013860558
+      },
+      "back": {
+        "strain_median_pct": 2.0679279901478775,
+        "strain_p95_pct": 27.679193922253692,
+        "strain_max_pct": 586.5540013860083
+      }
+    },
+    "sleeve_penetration": null
+  },
+  "hybrid_front_fullprotocol/T3_fitflare_shortsleeve": {
+    "topology": {
+      "vertices": 6225,
+      "faces": 11880,
+      "non_manifold_edges": 0,
+      "boundary_loops": 4,
+      "components": 1,
+      "winding_consistent": true
+    },
+    "quality": {
+      "min_angle_p1_deg": 8.798221400394782,
+      "min_angle_median_deg": 34.90831277493137,
+      "aspect_p99": 8.17687785902879,
+      "edge_mean_cm": 1.5716658711163722,
+      "edge_cv": 0.3797364625226017,
+      "degenerate_faces": 0
+    },
+    "pattern_strain": {
+      "front": {
+        "strain_median_pct": 3.495462059168508,
+        "strain_p95_pct": 41.13193359377404,
+        "strain_max_pct": 581.4564070881142
+      },
+      "back": {
+        "strain_median_pct": 3.349340154137148,
+        "strain_p95_pct": 41.99640933903596,
+        "strain_max_pct": 581.4564070880652
+      }
+    },
+    "sleeve_penetration": {
+      "sleeve_vertices": 1400,
+      "inside_torso": 106
+    }
+  },
+  "hybrid_front_fullprotocol/T4_straight_longsleeve_square": {
+    "topology": {
+      "vertices": 10874,
+      "faces": 21296,
+      "non_manifold_edges": 0,
+      "boundary_loops": 4,
+      "components": 1,
+      "winding_consistent": true
+    },
+    "quality": {
+      "min_angle_p1_deg": 9.17485380490691,
+      "min_angle_median_deg": 17.41813609726622,
+      "aspect_p99": 6.974889953174685,
+      "edge_mean_cm": 1.3623001129652792,
+      "edge_cv": 0.43759473839160584,
+      "degenerate_faces": 0
+    },
+    "pattern_strain": {
+      "front": {
+        "strain_median_pct": 0.13043876436652502,
+        "strain_p95_pct": 9.581985790371297,
+        "strain_max_pct": 569.2212946640243
+      },
+      "back": {
+        "strain_median_pct": 0.14024793880194064,
+        "strain_p95_pct": 15.877179871653846,
+        "strain_max_pct": 539.6108072448856
+      }
+    },
+    "sleeve_penetration": {
+      "sleeve_vertices": 5904,
+      "inside_torso": 26
+    }
+  },
+  "triposr/T1_straight_sleeveless": {
+    "topology": {
+      "vertices": 57309,
+      "faces": 114616,
+      "non_manifold_edges": 0,
+      "boundary_loops": 0,
+      "components": 2,
+      "winding_consistent": true
+    },
+    "quality": {
+      "min_angle_p1_deg": NaN,
+      "min_angle_median_deg": NaN,
+      "aspect_p99": 72.57618360880419,
+      "edge_mean_cm": 0.5500512831820711,
+      "edge_cv": 0.37432925309567017,
+      "degenerate_faces": 7
+    }
+  },
+  "triposr/T2_aline_vneck": {
+    "topology": {
+      "vertices": 45131,
+      "faces": 90250,
+      "non_manifold_edges": 0,
+      "boundary_loops": 0,
+      "components": 3,
+      "winding_consistent": true
+    },
+    "quality": {
+      "min_angle_p1_deg": 0.8848323848989349,
+      "min_angle_median_deg": 39.59343622686359,
+      "aspect_p99": 66.36169279152645,
+      "edge_mean_cm": 0.6047252341310819,
+      "edge_cv": 0.38740392634220167,
+      "degenerate_faces": 0
+    }
+  },
+  "triposr/T3_fitflare_shortsleeve": {
+    "topology": {
+      "vertices": 53205,
+      "faces": 106396,
+      "non_manifold_edges": 0,
+      "boundary_loops": 0,
+      "components": 6,
+      "winding_consistent": true
+    },
+    "quality": {
+      "min_angle_p1_deg": NaN,
+      "min_angle_median_deg": NaN,
+      "aspect_p99": 70.85968469385689,
+      "edge_mean_cm": 0.5375836103058651,
+      "edge_cv": 0.3887918098880005,
+      "degenerate_faces": 9
+    }
+  },
+  "triposr/T4_straight_longsleeve_square": {
+    "topology": {
+      "vertices": 45622,
+      "faces": 91240,
+      "non_manifold_edges": 0,
+      "boundary_loops": 0,
+      "components": 1,
+      "winding_consistent": true
+    },
+    "quality": {
+      "min_angle_p1_deg": 0.8512450307409906,
+      "min_angle_median_deg": 39.93050617879841,
+      "aspect_p99": 69.22791810597612,
+      "edge_mean_cm": 0.6543314516480803,
+      "edge_cv": 0.3765199155196738,
+      "degenerate_faces": 6
+    }
+  }
+}

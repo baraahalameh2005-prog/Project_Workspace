@@ -1,0 +1,65 @@
+{
+  "case": "T4_straight_longsleeve_square",
+  "ground_truth": {
+    "style": {
+      "silhouette": "straight",
+      "sleeve": "long",
+      "neckline": "square"
+    },
+    "measurements": {
+      "dress_length": 105,
+      "bust": 100,
+      "waist": 94,
+      "hip": 104,
+      "hem": 112,
+      "shoulder_width": 39,
+      "neck_width": 20,
+      "front_neck_drop": 11,
+      "back_neck_drop": 2.5,
+      "armhole_depth": 22,
+      "waist_position": 42,
+      "hip_position": 62,
+      "sleeve_length": 60,
+      "upper_arm": 34,
+      "cuff": 24
+    },
+    "options": {
+      "depth_ratio": 0.7,
+      "fold_count": 0,
+      "fold_amplitude": 0,
+      "sleeve_angle_deg": 58
+    },
+    "measurements_resolved_cm": {
+      "dress_length": 105.0,
+      "bust": 100.0,
+      "waist": 94.0,
+      "hip": 104.0,
+      "hem": 112.0,
+      "shoulder_width": 39.0,
+      "neck_width": 20.0,
+      "front_neck_drop": 11.0,
+      "back_neck_drop": 2.5,
+      "armhole_depth": 22.0,
+      "waist_position": 42.0,
+      "hip_position": 62.0,
+      "sleeve_length": 60.0,
+      "upper_arm": 34.0,
+      "cuff": 24.0
+    }
+  },
+  "camera": {
+    "size": [
+      600,
+      900
+    ],
+    "fov_deg": 25,
+    "elev": 3,
+    "center": [
+      0.0,
+      48.9838054379852,
+      0.0
+    ],
+    "extent": 177.37836403006887
+  },
+  "label": "SYNTHETIC reference image rendered from a procedural ground-truth mesh"
+}

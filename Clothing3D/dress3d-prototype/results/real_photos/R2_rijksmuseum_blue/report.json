@@ -1,0 +1,48 @@
+{
+  "style": {
+    "silhouette": "fit-and-flare",
+    "neckline": "round",
+    "sleeve": "short"
+  },
+  "source": {
+    "dress_length": "user",
+    "bust": "user",
+    "waist": "user",
+    "hip": "user",
+    "hem": "user",
+    "shoulder_width": "user",
+    "sleeve_length": "user",
+    "upper_arm": "user",
+    "cuff": "user",
+    "armhole_depth": "photo (underarm row)",
+    "waist_position": "default (photo cue 18.6 cm rejected as implausible)",
+    "neck_width": "photo (HPS peaks)",
+    "back_neck_drop": "photo (top contour dip)",
+    "sleeve_angle_deg": "photo (line fit through sleeve run centres)",
+    "front_neck_drop": "default",
+    "hip_position": "default"
+  },
+  "photo_features": {
+    "sleeve_detected": 1.0,
+    "underarm_rel": 0.09910802775024777,
+    "sleeve_reach_px": 179.0,
+    "sleeve_end_rel": 0.4370664023785927,
+    "sleeve_angle_deg": 89.78950899009797,
+    "neck_width_px": 173.0,
+    "back_neck_drop_rel": 0.013875123885034688,
+    "waist_rel": 0.13875123885034688,
+    "waist_contrast": 0.4833110814419226,
+    "hem_to_bust_width": 2.227684346701164,
+    "silhouette": "fit-and-flare"
+  },
+  "confidence": {
+    "sleeve": "detected from separated sleeve silhouettes",
+    "front_neck_drop": "neck opening not detected; default used",
+    "waist_position": "min torso width, contrast 0.48"
+  },
+  "options": {
+    "fold_count": 12,
+    "fold_amplitude": 2.5,
+    "sleeve_angle_deg": 85.0
+  }
+}

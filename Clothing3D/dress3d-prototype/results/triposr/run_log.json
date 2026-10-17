@@ -1,0 +1,69 @@
+{
+  "load_s": 17.784343957901,
+  "mc_resolution": 256,
+  "torch": "2.14.1+cpu",
+  "device": "cpu",
+  "threads": 12,
+  "cases": {
+    "T2_aline_vneck": {
+      "encode_s": 22.1,
+      "extract_s": 63.8,
+      "rss_mb": 217,
+      "vertices": 45131,
+      "faces": 90250,
+      "watertight": true,
+      "bounds": [
+        [
+          -0.166,
+          -0.2892,
+          -0.5078
+        ],
+        [
+          0.2755,
+          0.2948,
+          0.5083
+        ]
+      ]
+    },
+    "T3_fitflare_shortsleeve": {
+      "encode_s": 24.7,
+      "extract_s": 63.1,
+      "rss_mb": 81,
+      "vertices": 53205,
+      "faces": 106396,
+      "watertight": false,
+      "bounds": [
+        [
+          -0.1536,
+          -0.3816,
+          -0.5079
+        ],
+        [
+          0.2879,
+          0.3831,
+          0.5148
+        ]
+      ]
+    },
+    "T4_straight_longsleeve_square": {
+      "encode_s": 24.6,
+      "extract_s": 60.5,
+      "rss_mb": 178,
+      "vertices": 45622,
+      "faces": 91240,
+      "watertight": true,
+      "bounds": [
+        [
+          -0.0434,
+          -0.4934,
+          -0.5082
+        ],
+        [
+          0.2523,
+          0.4943,
+          0.5007
+        ]
+      ]
+    }
+  }
+}

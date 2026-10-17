@@ -1,0 +1,58 @@
+{
+  "case": "T2_aline_vneck",
+  "ground_truth": {
+    "style": {
+      "silhouette": "a-line",
+      "sleeve": "none",
+      "neckline": "v"
+    },
+    "measurements": {
+      "dress_length": 100,
+      "bust": 90,
+      "waist": 76,
+      "hip": 98,
+      "hem": 170,
+      "shoulder_width": 36,
+      "neck_width": 16,
+      "front_neck_drop": 15,
+      "back_neck_drop": 3,
+      "armhole_depth": 20,
+      "waist_position": 38,
+      "hip_position": 58
+    },
+    "options": {
+      "depth_ratio": 0.66,
+      "fold_count": 9,
+      "fold_amplitude": 1.8
+    },
+    "measurements_resolved_cm": {
+      "dress_length": 100.0,
+      "bust": 90.0,
+      "waist": 76.0,
+      "hip": 98.0,
+      "hem": 170.0,
+      "shoulder_width": 36.0,
+      "neck_width": 16.0,
+      "front_neck_drop": 15.0,
+      "back_neck_drop": 3.0,
+      "armhole_depth": 20.0,
+      "waist_position": 38.0,
+      "hip_position": 58.0
+    }
+  },
+  "camera": {
+    "size": [
+      600,
+      900
+    ],
+    "fov_deg": 25,
+    "elev": 3,
+    "center": [
+      0.0,
+      45.93397024020723,
+      0.559048509864974
+    ],
+    "extent": 112.07888738610563
+  },
+  "label": "SYNTHETIC reference image rendered from a procedural ground-truth mesh"
+}
