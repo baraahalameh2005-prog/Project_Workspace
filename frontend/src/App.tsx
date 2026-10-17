@@ -25,6 +25,12 @@ const CLOTHING_URL = ((import.meta.env.VITE_CLOTHING_URL as string | undefined) 
 );
 const CLOTHING_CHECK_TIMEOUT_MS = 3_000;
 
+// The size-recommendation module (FitEngine/, Nagham). It receives the measurements
+// the user entered for this avatar and recommends a garment size; it does not use
+// the generated mesh.
+const FIT_URL = ((import.meta.env.VITE_FIT_URL as string | undefined) ?? "http://127.0.0.1:8020").replace(/\/+$/, "");
+const FIT_KEYS = ["height", "chest", "waist", "hip", "shoulder"] as const;
+
 // Used only until /avatar-options has loaded; the backend validates either way.
 const FALLBACK_LIMITS: Record<MeasurementName, MeasurementLimit> = {
   height: { required: true, minimum: 100, maximum: 230, unit: "cm" },
@@ -136,6 +142,31 @@ async function fittingRoomReachable(): Promise<boolean> {
   }
 }
 
+/** Resolves when the size-recommendation server answers. */
+async function fitEngineReachable(): Promise<boolean> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), CLOTHING_CHECK_TIMEOUT_MS);
+  try {
+    await fetch(`${FIT_URL}/health`, { mode: "no-cors", cache: "no-store", signal: controller.signal });
+    return true;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/** FitEngine page with the entered measurements in the query string (cm). */
+function fitEngineUrl(request: AvatarRequest, avatarId: string): string {
+  const params = new URLSearchParams({ avatar_id: avatarId });
+  const entered = request as unknown as Record<string, unknown>;
+  for (const key of FIT_KEYS) {
+    const value = entered[key];
+    if (typeof value === "number" && Number.isFinite(value)) params.set(key, String(value));
+  }
+  return `${FIT_URL}/?${params.toString()}`;
+}
+
 export default function App() {
   // An explicit ?avatar= link wins; otherwise the last generated avatar is restored.
   const [link] = useState(readLinkedAvatar);
@@ -178,6 +209,8 @@ export default function App() {
   );
   const [storageFailed, setStorageFailed] = useState(false);
   const [transferMessage, setTransferMessage] = useState<string | null>(null);
+  const [fitMessage, setFitMessage] = useState<string | null>(null);
+  const [fitChecking, setFitChecking] = useState(false);
   const [transferring, setTransferring] = useState(false);
   const [viewer, setViewer] = useState<ViewerStatus>({ state: "empty" });
   // "?view=face" opens the face framing directly (handy for screenshots).
@@ -385,6 +418,31 @@ export default function App() {
     window.location.assign(fittingRoomUrl(CLOTHING_URL, selected.avatarId));
   }
 
+  // Size recommendation needs the measurements the user entered, which only a
+  // generated (or restored) result carries; a ?avatar= link has the GLB only.
+  function fitBlocker(): string | null {
+    if (pending) return "الأفاتار قيد الإنشاء الآن. انتظر حتى يكتمل الإنشاء.";
+    if (!result) return "لا توجد قياسات بعد. أدخل القياسات واضغط «Generate avatar» أولاً.";
+    return null;
+  }
+
+  async function onRecommendSize() {
+    const blocker = fitBlocker();
+    if (blocker || !result) {
+      setFitMessage(blocker);
+      return;
+    }
+    setFitMessage(null);
+    setFitChecking(true);
+    const reachable = await fitEngineReachable();
+    setFitChecking(false);
+    if (!reachable) {
+      setFitMessage(`خدمة اقتراح المقاس غير متاحة على ${FIT_URL}. شغّلها من مجلد FitEngine: python -m fit_engine serve --port 8020`);
+      return;
+    }
+    window.location.assign(fitEngineUrl(result.request, result.response.avatar_id));
+  }
+
   function onForgetSaved() {
     clearSavedAvatar();
     setResult(null);
@@ -566,6 +624,23 @@ export default function App() {
             {transferMessage && (
               <div className="notice error" role="alert">
                 {transferMessage}
+              </div>
+            )}
+          </div>
+
+          <div className="transfer" dir="rtl" lang="ar">
+            <button
+              type="button"
+              className={`transfer-button ${fitBlocker() ? "blocked" : ""}`}
+              aria-disabled={fitBlocker() !== null || fitChecking}
+              onClick={fitChecking ? undefined : onRecommendSize}
+            >
+              {fitChecking ? "جارٍ التحقق من خدمة المقاسات…" : "اقترح لي مقاسًا"}
+            </button>
+            <p className="hint">تُرسل القياسات التي أدخلتها (الطول، الصدر، الخصر، الورك، والكتفين إن وُجدت)، وليس قياسات الموديل.</p>
+            {fitMessage && (
+              <div className="notice error" role="alert">
+                {fitMessage}
               </div>
             )}
           </div>

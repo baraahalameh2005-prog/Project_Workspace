@@ -29,8 +29,7 @@ python -m unittest discover -s tests -t . -v    -> Ran 89 tests ... OK
 - Link: `http://127.0.0.1:8020/?avatar_id=<id>&height=..&chest=..&waist=..&hip=..&shoulder=..` opens FitEngine with
   the body measurements already filled in.
 - Proposed button for the avatar page («اقترح لي مقاسًا»): `integration/avatar_page_size_button.patch`, with what it
-  changes and how it was tested in `integration/README.md`. It is **not applied**; Baraah decides.
+  changes and how it was tested in `integration/README.md`. Applied on this branch after Baraah approved it (2026-10-17).
 
-Details, the field mapping and what is still open (a one-click button needs an avatar-module change that
-Baraah decides on; there is no size-chart data on the clothing side yet): `docs/INTEGRATION.md` and
+Details, the field mapping and what is still open (there is no size-chart data on the clothing side yet): `docs/INTEGRATION.md` and
 `docs/DATA_MODEL.md`.
