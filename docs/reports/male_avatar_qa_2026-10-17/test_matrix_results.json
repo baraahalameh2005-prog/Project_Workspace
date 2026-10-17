@@ -1,0 +1,2369 @@
+{
+ "criteria": {
+  "height": 1.0,
+  "weight": 1.0,
+  "chest": 2.0,
+  "waist": 2.0,
+  "hip": 2.0,
+  "shoulder": 2.0
+ },
+ "rows": {
+  "short_slim": {
+   "request": {
+    "height": 163,
+    "weight": 55,
+    "chest": 86,
+    "waist": 72,
+    "hip": 87,
+    "shoulder": 37
+   },
+   "seconds": 1.2,
+   "glb": "short_slim.glb",
+   "parameters": {
+    "height": 0.254,
+    "weight": 0.045,
+    "age": 0.78,
+    "muscle": 0.435,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.339,
+    "measure-waist-circ-incr": -0.04,
+    "measure-hips-circ-incr": 0.015,
+    "torso-vshape-incr": -0.126
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 163.0,
+    "weight": 54.29,
+    "chest": 86.01,
+    "waist": 71.98,
+    "hip": 86.86,
+    "shoulder": 36.97
+   },
+   "reported": {
+    "height": 163.0,
+    "weight": 54.27,
+    "chest": 86.01,
+    "waist": 71.98,
+    "hip": 86.86,
+    "shoulder": 36.97
+   },
+   "other_cm": {
+    "upper_arm": 25.17,
+    "forearm": 21.43,
+    "thigh": 44.2,
+    "calf": 36.15,
+    "neck": 38.0,
+    "arm_length": 44.39,
+    "leg_length": 78.88,
+    "shoulder_width": 39.41
+   },
+   "armpit_level_chest_cm": 93.26,
+   "fixed_plane_hip_cm": 90.0,
+   "belly_lead_cm": -0.41,
+   "glb_height_cm": 163.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -0.71,
+    "chest": 0.01,
+    "waist": -0.02,
+    "hip": -0.14,
+    "shoulder": -0.03
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.02,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": []
+  },
+  "short_heavy": {
+   "request": {
+    "height": 165,
+    "weight": 85,
+    "chest": 106,
+    "waist": 98,
+    "hip": 104,
+    "shoulder": 40
+   },
+   "seconds": 1.1,
+   "glb": "short_heavy.glb",
+   "parameters": {
+    "height": 0.238,
+    "weight": 0.999,
+    "age": 0.78,
+    "muscle": 0.7,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": 0.075,
+    "measure-waist-circ-incr": 0.958,
+    "measure-hips-circ-incr": 0.371,
+    "torso-vshape-incr": 0.047
+   },
+   "at_bound": [],
+   "out_of_range": [
+    "weight"
+   ],
+   "warnings": [],
+   "mesh": {
+    "height": 165.0,
+    "weight": 83.13,
+    "chest": 106.2,
+    "waist": 97.96,
+    "hip": 104.0,
+    "shoulder": 40.0
+   },
+   "reported": {
+    "height": 165.0,
+    "weight": 83.11,
+    "chest": 106.2,
+    "waist": 97.96,
+    "hip": 104.0,
+    "shoulder": 40.0
+   },
+   "other_cm": {
+    "upper_arm": 38.65,
+    "forearm": 28.12,
+    "thigh": 57.2,
+    "calf": 40.44,
+    "neck": 42.11,
+    "arm_length": 45.05,
+    "leg_length": 80.17,
+    "shoulder_width": 40.05
+   },
+   "armpit_level_chest_cm": 109.62,
+   "fixed_plane_hip_cm": 109.77,
+   "belly_lead_cm": 1.51,
+   "glb_height_cm": 165.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -1.87,
+    "chest": 0.2,
+    "waist": -0.04,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.02,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Miss (reported)",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": []
+  },
+  "average": {
+   "request": {
+    "height": 175,
+    "weight": 75,
+    "chest": 98,
+    "waist": 85,
+    "hip": 97,
+    "shoulder": 40
+   },
+   "seconds": 0.7,
+   "glb": "average.glb",
+   "parameters": {
+    "height": 0.364,
+    "weight": 0.616,
+    "age": 0.78,
+    "muscle": 0.5,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.113,
+    "measure-waist-circ-incr": 0.007,
+    "measure-hips-circ-incr": -0.013,
+    "torso-vshape-incr": 0.086
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 175.0,
+    "weight": 74.75,
+    "chest": 98.02,
+    "waist": 85.01,
+    "hip": 97.0,
+    "shoulder": 40.0
+   },
+   "reported": {
+    "height": 175.0,
+    "weight": 74.73,
+    "chest": 98.02,
+    "waist": 85.01,
+    "hip": 97.0,
+    "shoulder": 40.0
+   },
+   "other_cm": {
+    "upper_arm": 31.41,
+    "forearm": 24.8,
+    "thigh": 51.53,
+    "calf": 39.15,
+    "neck": 41.54,
+    "arm_length": 47.9,
+    "leg_length": 86.0,
+    "shoulder_width": 42.13
+   },
+   "armpit_level_chest_cm": 106.56,
+   "fixed_plane_hip_cm": 102.05,
+   "belly_lead_cm": -0.02,
+   "glb_height_cm": 175.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -0.25,
+    "chest": 0.02,
+    "waist": 0.01,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.02,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": [],
+   "repeat_max_vertex_diff_mm": 0.0
+  },
+  "average_no_shoulder": {
+   "request": {
+    "height": 175,
+    "weight": 75,
+    "chest": 98,
+    "waist": 85,
+    "hip": 97,
+    "shoulder": null
+   },
+   "seconds": 0.6,
+   "glb": "average_no_shoulder.glb",
+   "parameters": {
+    "height": 0.364,
+    "weight": 0.616,
+    "age": 0.78,
+    "muscle": 0.5,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.084,
+    "measure-waist-circ-incr": 0.003,
+    "measure-hips-circ-incr": -0.008
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 175.0,
+    "weight": 74.69,
+    "chest": 97.95,
+    "waist": 85.0,
+    "hip": 97.04,
+    "shoulder": 39.58
+   },
+   "reported": {
+    "height": 175.0,
+    "weight": 74.66,
+    "chest": 97.95,
+    "waist": 85.0,
+    "hip": 97.04,
+    "shoulder": 39.58
+   },
+   "other_cm": {
+    "upper_arm": 31.41,
+    "forearm": 24.8,
+    "thigh": 51.53,
+    "calf": 39.15,
+    "neck": 41.54,
+    "arm_length": 47.9,
+    "leg_length": 86.0,
+    "shoulder_width": 41.67
+   },
+   "armpit_level_chest_cm": 106.59,
+   "fixed_plane_hip_cm": 102.09,
+   "belly_lead_cm": -0.07,
+   "glb_height_cm": 175.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -0.31,
+    "chest": -0.05,
+    "waist": 0.0,
+    "hip": 0.04,
+    "shoulder": null
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.03,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass"
+   },
+   "silent_misses": []
+  },
+  "tall_slim": {
+   "request": {
+    "height": 188,
+    "weight": 70,
+    "chest": 92,
+    "waist": 78,
+    "hip": 93,
+    "shoulder": 41
+   },
+   "seconds": 0.9,
+   "glb": "tall_slim.glb",
+   "parameters": {
+    "height": 0.483,
+    "weight": 0.001,
+    "age": 0.78,
+    "muscle": 0.301,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.191,
+    "measure-waist-circ-incr": 0.383,
+    "measure-hips-circ-incr": 0.087,
+    "torso-vshape-incr": -0.044
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 188.0,
+    "weight": 70.73,
+    "chest": 92.09,
+    "waist": 77.99,
+    "hip": 93.0,
+    "shoulder": 40.91
+   },
+   "reported": {
+    "height": 188.0,
+    "weight": 70.7,
+    "chest": 92.09,
+    "waist": 77.99,
+    "hip": 93.0,
+    "shoulder": 40.91
+   },
+   "other_cm": {
+    "upper_arm": 25.77,
+    "forearm": 22.05,
+    "thigh": 43.8,
+    "calf": 37.26,
+    "neck": 40.71,
+    "arm_length": 51.89,
+    "leg_length": 93.72,
+    "shoulder_width": 42.7
+   },
+   "armpit_level_chest_cm": 98.16,
+   "fixed_plane_hip_cm": 95.95,
+   "belly_lead_cm": -0.6,
+   "glb_height_cm": 188.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": 0.73,
+    "chest": 0.09,
+    "waist": -0.01,
+    "hip": 0.0,
+    "shoulder": -0.09
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.03,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": []
+  },
+  "tall_heavy": {
+   "request": {
+    "height": 190,
+    "weight": 105,
+    "chest": 114,
+    "waist": 104,
+    "hip": 110,
+    "shoulder": 44
+   },
+   "seconds": 4.4,
+   "glb": "tall_heavy.glb",
+   "parameters": {
+    "height": 0.489,
+    "weight": 0.923,
+    "age": 0.78,
+    "muscle": 0.629,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": 0.182,
+    "measure-waist-circ-incr": 0.975,
+    "measure-hips-circ-incr": 0.255,
+    "torso-vshape-incr": 0.27
+   },
+   "at_bound": [],
+   "out_of_range": [
+    "weight"
+   ],
+   "warnings": [],
+   "mesh": {
+    "height": 190.0,
+    "weight": 106.23,
+    "chest": 114.04,
+    "waist": 104.0,
+    "hip": 110.0,
+    "shoulder": 44.0
+   },
+   "reported": {
+    "height": 190.0,
+    "weight": 106.2,
+    "chest": 114.04,
+    "waist": 104.0,
+    "hip": 110.0,
+    "shoulder": 44.0
+   },
+   "other_cm": {
+    "upper_arm": 37.95,
+    "forearm": 28.12,
+    "thigh": 56.95,
+    "calf": 42.7,
+    "neck": 45.28,
+    "arm_length": 52.41,
+    "leg_length": 94.95,
+    "shoulder_width": 44.69
+   },
+   "armpit_level_chest_cm": null,
+   "fixed_plane_hip_cm": 116.39,
+   "belly_lead_cm": 1.14,
+   "glb_height_cm": 190.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": 1.23,
+    "chest": 0.04,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.03,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Miss (reported)",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": []
+  },
+  "muscular": {
+   "request": {
+    "height": 180,
+    "weight": 88,
+    "chest": 110,
+    "waist": 82,
+    "hip": 98,
+    "shoulder": 44
+   },
+   "seconds": 3.2,
+   "glb": "muscular.glb",
+   "parameters": {
+    "height": 0.391,
+    "weight": 0.998,
+    "age": 0.78,
+    "muscle": 0.637,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.012,
+    "measure-waist-circ-incr": -1.0,
+    "measure-hips-circ-incr": -0.508,
+    "torso-vshape-incr": 0.485
+   },
+   "at_bound": [
+    "measure-waist-circ-incr"
+   ],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 180.0,
+    "weight": 87.39,
+    "chest": 109.89,
+    "waist": 82.27,
+    "hip": 97.98,
+    "shoulder": 43.99
+   },
+   "reported": {
+    "height": 180.0,
+    "weight": 87.37,
+    "chest": 109.89,
+    "waist": 82.27,
+    "hip": 97.98,
+    "shoulder": 43.99
+   },
+   "other_cm": {
+    "upper_arm": 38.23,
+    "forearm": 27.84,
+    "thigh": 56.79,
+    "calf": 41.84,
+    "neck": 43.88,
+    "arm_length": 49.46,
+    "leg_length": 89.03,
+    "shoulder_width": 44.51
+   },
+   "armpit_level_chest_cm": 116.29,
+   "fixed_plane_hip_cm": 104.31,
+   "belly_lead_cm": -1.81,
+   "glb_height_cm": 180.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -0.61,
+    "chest": -0.11,
+    "waist": 0.27,
+    "hip": -0.02,
+    "shoulder": -0.01
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.02,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": []
+  },
+  "big_waist_small_chest": {
+   "request": {
+    "height": 172,
+    "weight": 82,
+    "chest": 98,
+    "waist": 100,
+    "hip": 102,
+    "shoulder": 39
+   },
+   "seconds": 2.2,
+   "glb": "big_waist_small_chest.glb",
+   "parameters": {
+    "height": 0.32,
+    "weight": 0.997,
+    "age": 0.78,
+    "muscle": 0.61,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.363,
+    "measure-waist-circ-incr": 0.95,
+    "measure-hips-circ-incr": 0.108,
+    "torso-vshape-incr": -0.144
+   },
+   "at_bound": [],
+   "out_of_range": [
+    "weight"
+   ],
+   "warnings": [],
+   "mesh": {
+    "height": 172.0,
+    "weight": 83.0,
+    "chest": 98.19,
+    "waist": 99.99,
+    "hip": 101.97,
+    "shoulder": 39.02
+   },
+   "reported": {
+    "height": 172.0,
+    "weight": 82.98,
+    "chest": 98.19,
+    "waist": 99.99,
+    "hip": 101.97,
+    "shoulder": 39.02
+   },
+   "other_cm": {
+    "upper_arm": 36.61,
+    "forearm": 26.4,
+    "thigh": 55.35,
+    "calf": 40.34,
+    "neck": 42.19,
+    "arm_length": 47.08,
+    "leg_length": 84.27,
+    "shoulder_width": 40.2
+   },
+   "armpit_level_chest_cm": 102.91,
+   "fixed_plane_hip_cm": 108.27,
+   "belly_lead_cm": 2.47,
+   "glb_height_cm": 172.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": 1.0,
+    "chest": 0.19,
+    "waist": -0.01,
+    "hip": -0.03,
+    "shoulder": 0.02
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.02,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": []
+  },
+  "big_chest_small_waist": {
+   "request": {
+    "height": 178,
+    "weight": 80,
+    "chest": 108,
+    "waist": 80,
+    "hip": 96,
+    "shoulder": 43
+   },
+   "seconds": 0.9,
+   "glb": "big_chest_small_waist.glb",
+   "parameters": {
+    "height": 0.392,
+    "weight": 0.788,
+    "age": 0.78,
+    "muscle": 0.5,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": 0.237,
+    "measure-waist-circ-incr": -0.846,
+    "measure-hips-circ-incr": -0.454,
+    "torso-vshape-incr": 0.52
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 178.0,
+    "weight": 79.09,
+    "chest": 108.01,
+    "waist": 80.01,
+    "hip": 96.0,
+    "shoulder": 43.0
+   },
+   "reported": {
+    "height": 178.0,
+    "weight": 79.07,
+    "chest": 108.01,
+    "waist": 80.01,
+    "hip": 96.0,
+    "shoulder": 43.0
+   },
+   "other_cm": {
+    "upper_arm": 32.89,
+    "forearm": 24.78,
+    "thigh": 52.33,
+    "calf": 39.72,
+    "neck": 42.06,
+    "arm_length": 48.79,
+    "leg_length": 87.79,
+    "shoulder_width": 44.83
+   },
+   "armpit_level_chest_cm": 116.5,
+   "fixed_plane_hip_cm": 101.52,
+   "belly_lead_cm": -1.43,
+   "glb_height_cm": 178.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -0.91,
+    "chest": 0.01,
+    "waist": 0.01,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.02,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": []
+  },
+  "narrow_hips": {
+   "request": {
+    "height": 176,
+    "weight": 72,
+    "chest": 96,
+    "waist": 84,
+    "hip": 90,
+    "shoulder": 40
+   },
+   "seconds": 1.1,
+   "glb": "narrow_hips.glb",
+   "parameters": {
+    "height": 0.373,
+    "weight": 0.315,
+    "age": 0.78,
+    "muscle": 0.5,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.231,
+    "measure-waist-circ-incr": 0.311,
+    "measure-hips-circ-incr": -0.505,
+    "torso-vshape-incr": 0.113
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 176.0,
+    "weight": 71.28,
+    "chest": 95.83,
+    "waist": 84.01,
+    "hip": 90.0,
+    "shoulder": 40.06
+   },
+   "reported": {
+    "height": 176.0,
+    "weight": 71.25,
+    "chest": 95.83,
+    "waist": 84.01,
+    "hip": 90.0,
+    "shoulder": 40.06
+   },
+   "other_cm": {
+    "upper_arm": 29.29,
+    "forearm": 24.36,
+    "thigh": 49.55,
+    "calf": 39.05,
+    "neck": 41.3,
+    "arm_length": 48.18,
+    "leg_length": 86.6,
+    "shoulder_width": 42.45
+   },
+   "armpit_level_chest_cm": 106.36,
+   "fixed_plane_hip_cm": 94.07,
+   "belly_lead_cm": 0.36,
+   "glb_height_cm": 176.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -0.72,
+    "chest": -0.17,
+    "waist": 0.01,
+    "hip": 0.0,
+    "shoulder": 0.06
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.03,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": []
+  },
+  "wide_hips": {
+   "request": {
+    "height": 174,
+    "weight": 80,
+    "chest": 98,
+    "waist": 88,
+    "hip": 106,
+    "shoulder": 39
+   },
+   "seconds": 2.2,
+   "glb": "wide_hips.glb",
+   "parameters": {
+    "height": 0.348,
+    "weight": 0.999,
+    "age": 0.78,
+    "muscle": 0.546,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.271,
+    "measure-waist-circ-incr": -0.317,
+    "measure-hips-circ-incr": 0.272,
+    "torso-vshape-incr": -0.16
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 174.0,
+    "weight": 79.33,
+    "chest": 97.91,
+    "waist": 88.01,
+    "hip": 106.02,
+    "shoulder": 38.97
+   },
+   "reported": {
+    "height": 174.0,
+    "weight": 79.31,
+    "chest": 97.91,
+    "waist": 88.01,
+    "hip": 106.02,
+    "shoulder": 38.97
+   },
+   "other_cm": {
+    "upper_arm": 35.09,
+    "forearm": 25.07,
+    "thigh": 53.76,
+    "calf": 39.89,
+    "neck": 41.84,
+    "arm_length": 47.63,
+    "leg_length": 85.43,
+    "shoulder_width": 40.56
+   },
+   "armpit_level_chest_cm": 103.98,
+   "fixed_plane_hip_cm": 112.39,
+   "belly_lead_cm": 0.44,
+   "glb_height_cm": 174.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -0.67,
+    "chest": -0.09,
+    "waist": 0.01,
+    "hip": 0.02,
+    "shoulder": -0.03
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.02,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": []
+  },
+  "obese": {
+   "request": {
+    "height": 170,
+    "weight": 115,
+    "chest": 118,
+    "waist": 118,
+    "hip": 116,
+    "shoulder": 42
+   },
+   "seconds": 1.5,
+   "glb": "obese.glb",
+   "parameters": {
+    "height": 0.286,
+    "weight": 0.999,
+    "age": 0.78,
+    "muscle": 0.7,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": 0.608,
+    "measure-waist-circ-incr": 1.0,
+    "measure-hips-circ-incr": 0.923,
+    "torso-vshape-incr": 0.297
+   },
+   "at_bound": [
+    "measure-waist-circ-incr"
+   ],
+   "out_of_range": [
+    "waist",
+    "weight"
+   ],
+   "warnings": [],
+   "mesh": {
+    "height": 170.0,
+    "weight": 95.34,
+    "chest": 118.0,
+    "waist": 99.94,
+    "hip": 116.0,
+    "shoulder": 42.0
+   },
+   "reported": {
+    "height": 170.0,
+    "weight": 95.31,
+    "chest": 118.0,
+    "waist": 99.94,
+    "hip": 116.0,
+    "shoulder": 42.0
+   },
+   "other_cm": {
+    "upper_arm": 39.16,
+    "forearm": 28.59,
+    "thigh": 57.66,
+    "calf": 41.19,
+    "neck": 42.97,
+    "arm_length": 46.53,
+    "leg_length": 83.13,
+    "shoulder_width": 42.03
+   },
+   "armpit_level_chest_cm": 120.96,
+   "fixed_plane_hip_cm": 121.94,
+   "belly_lead_cm": 1.02,
+   "glb_height_cm": 170.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -19.66,
+    "chest": 0.0,
+    "waist": -18.06,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.03,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Miss (reported)",
+    "chest": "Pass",
+    "waist": "Miss (reported)",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": []
+  },
+  "near_limit_tall": {
+   "request": {
+    "height": 200,
+    "weight": 95,
+    "chest": 108,
+    "waist": 92,
+    "hip": 104,
+    "shoulder": 46
+   },
+   "seconds": 3.2,
+   "glb": "near_limit_tall.glb",
+   "parameters": {
+    "height": 0.594,
+    "weight": 0.01,
+    "age": 0.78,
+    "muscle": 0.5,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.08,
+    "measure-waist-circ-incr": 0.793,
+    "measure-hips-circ-incr": 0.184,
+    "torso-vshape-incr": 0.595
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 200.0,
+    "weight": 95.67,
+    "chest": 108.02,
+    "waist": 92.02,
+    "hip": 104.05,
+    "shoulder": 46.0
+   },
+   "reported": {
+    "height": 200.0,
+    "weight": 95.63,
+    "chest": 108.02,
+    "waist": 92.02,
+    "hip": 104.05,
+    "shoulder": 46.0
+   },
+   "other_cm": {
+    "upper_arm": 29.42,
+    "forearm": 25.38,
+    "thigh": 49.25,
+    "calf": 42.16,
+    "neck": 44.81,
+    "arm_length": 55.23,
+    "leg_length": 100.85,
+    "shoulder_width": 48.18
+   },
+   "armpit_level_chest_cm": null,
+   "fixed_plane_hip_cm": 108.13,
+   "belly_lead_cm": 0.82,
+   "glb_height_cm": 200.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": 0.67,
+    "chest": 0.02,
+    "waist": 0.02,
+    "hip": 0.05,
+    "shoulder": 0.0
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.04,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": []
+  },
+  "near_limit_short": {
+   "request": {
+    "height": 155,
+    "weight": 52,
+    "chest": 84,
+    "waist": 72,
+    "hip": 86,
+    "shoulder": 35
+   },
+   "seconds": 1.8,
+   "glb": "near_limit_short.glb",
+   "parameters": {
+    "height": 0.181,
+    "weight": 0.256,
+    "age": 0.78,
+    "muscle": 0.5,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.41,
+    "measure-waist-circ-incr": -0.256,
+    "measure-hips-circ-incr": -0.088,
+    "torso-vshape-incr": -0.276
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 155.0,
+    "weight": 51.43,
+    "chest": 83.99,
+    "waist": 71.99,
+    "hip": 86.0,
+    "shoulder": 35.0
+   },
+   "reported": {
+    "height": 155.0,
+    "weight": 51.41,
+    "chest": 83.99,
+    "waist": 71.99,
+    "hip": 86.0,
+    "shoulder": 35.0
+   },
+   "other_cm": {
+    "upper_arm": 26.61,
+    "forearm": 22.17,
+    "thigh": 46.68,
+    "calf": 36.03,
+    "neck": 37.7,
+    "arm_length": 41.98,
+    "leg_length": 74.13,
+    "shoulder_width": 37.7
+   },
+   "armpit_level_chest_cm": 92.97,
+   "fixed_plane_hip_cm": 89.69,
+   "belly_lead_cm": 0.01,
+   "glb_height_cm": 155.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -0.57,
+    "chest": -0.01,
+    "waist": -0.01,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.02,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": []
+  },
+  "out_of_capability": {
+   "request": {
+    "height": 175,
+    "weight": 70,
+    "chest": 130,
+    "waist": 70,
+    "hip": 90,
+    "shoulder": 55
+   },
+   "seconds": 1.9,
+   "glb": "out_of_capability.glb",
+   "parameters": {
+    "height": 0.364,
+    "weight": 0.001,
+    "age": 0.78,
+    "muscle": 0.5,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": 1.0,
+    "measure-waist-circ-incr": -0.683,
+    "measure-hips-circ-incr": -0.209,
+    "torso-vshape-incr": 1.0
+   },
+   "at_bound": [
+    "measure-bust-circ-incr",
+    "torso-vshape-incr"
+   ],
+   "out_of_range": [
+    "chest",
+    "shoulder",
+    "weight"
+   ],
+   "warnings": [],
+   "mesh": {
+    "height": 175.0,
+    "weight": 73.74,
+    "chest": 120.32,
+    "waist": 70.01,
+    "hip": 90.0,
+    "shoulder": 44.94
+   },
+   "reported": {
+    "height": 175.0,
+    "weight": 73.71,
+    "chest": 120.32,
+    "waist": 70.01,
+    "hip": 90.0,
+    "shoulder": 44.94
+   },
+   "other_cm": {
+    "upper_arm": 26.83,
+    "forearm": 23.07,
+    "thigh": 46.55,
+    "calf": 38.72,
+    "neck": 40.54,
+    "arm_length": 47.86,
+    "leg_length": 86.0,
+    "shoulder_width": 47.13
+   },
+   "armpit_level_chest_cm": null,
+   "fixed_plane_hip_cm": 93.34,
+   "belly_lead_cm": -2.46,
+   "glb_height_cm": 175.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": 3.74,
+    "chest": -9.68,
+    "waist": 0.01,
+    "hip": 0.0,
+    "shoulder": -10.06
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.03,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Miss (reported)",
+    "chest": "Miss (reported)",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Miss (reported)"
+   },
+   "silent_misses": []
+  },
+  "reported_user_inputs": {
+   "request": {
+    "height": 170,
+    "weight": 78,
+    "chest": 103,
+    "waist": 94,
+    "hip": 102,
+    "shoulder": 52
+   },
+   "seconds": 3.9,
+   "glb": "reported_user_inputs.glb",
+   "parameters": {
+    "height": 0.31,
+    "weight": 0.834,
+    "age": 0.78,
+    "muscle": 0.579,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.272,
+    "measure-waist-circ-incr": 0.687,
+    "measure-hips-circ-incr": 0.25,
+    "torso-vshape-incr": 1.0
+   },
+   "at_bound": [
+    "torso-vshape-incr"
+   ],
+   "out_of_range": [
+    "shoulder"
+   ],
+   "warnings": [],
+   "mesh": {
+    "height": 170.0,
+    "weight": 78.95,
+    "chest": 103.05,
+    "waist": 94.03,
+    "hip": 102.08,
+    "shoulder": 44.57
+   },
+   "reported": {
+    "height": 170.0,
+    "weight": 78.92,
+    "chest": 103.05,
+    "waist": 94.03,
+    "hip": 102.08,
+    "shoulder": 44.57
+   },
+   "other_cm": {
+    "upper_arm": 33.76,
+    "forearm": 25.01,
+    "thigh": 53.01,
+    "calf": 39.05,
+    "neck": 41.24,
+    "arm_length": 46.48,
+    "leg_length": 83.06,
+    "shoulder_width": 46.14
+   },
+   "armpit_level_chest_cm": 111.6,
+   "fixed_plane_hip_cm": 107.73,
+   "belly_lead_cm": 1.97,
+   "glb_height_cm": 170.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": 0.95,
+    "chest": 0.05,
+    "waist": 0.03,
+    "hip": 0.08,
+    "shoulder": -7.43
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.03,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Miss (reported)"
+   },
+   "silent_misses": []
+  },
+  "reported_no_shoulder": {
+   "request": {
+    "height": 170,
+    "weight": 78,
+    "chest": 103,
+    "waist": 94,
+    "hip": 102,
+    "shoulder": null
+   },
+   "seconds": 3.4,
+   "glb": "reported_no_shoulder.glb",
+   "parameters": {
+    "height": 0.309,
+    "weight": 0.851,
+    "age": 0.78,
+    "muscle": 0.579,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": 0.127,
+    "measure-waist-circ-incr": 0.639,
+    "measure-hips-circ-incr": 0.239
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 170.0,
+    "weight": 78.92,
+    "chest": 103.09,
+    "waist": 94.02,
+    "hip": 102.09,
+    "shoulder": 39.56
+   },
+   "reported": {
+    "height": 170.0,
+    "weight": 78.89,
+    "chest": 103.09,
+    "waist": 94.02,
+    "hip": 102.09,
+    "shoulder": 39.56
+   },
+   "other_cm": {
+    "upper_arm": 33.94,
+    "forearm": 25.06,
+    "thigh": 53.14,
+    "calf": 39.12,
+    "neck": 41.27,
+    "arm_length": 46.48,
+    "leg_length": 83.06,
+    "shoulder_width": 40.81
+   },
+   "armpit_level_chest_cm": 108.79,
+   "fixed_plane_hip_cm": 107.79,
+   "belly_lead_cm": 1.31,
+   "glb_height_cm": 170.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": 0.92,
+    "chest": 0.09,
+    "waist": 0.02,
+    "hip": 0.09,
+    "shoulder": null
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.03,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass"
+   },
+   "silent_misses": []
+  },
+  "avg_chest+6": {
+   "request": {
+    "height": 175,
+    "weight": 75,
+    "chest": 104,
+    "waist": 85,
+    "hip": 97,
+    "shoulder": 40
+   },
+   "seconds": 2.2,
+   "glb": "avg_chest+6.glb",
+   "parameters": {
+    "height": 0.364,
+    "weight": 0.421,
+    "age": 0.78,
+    "muscle": 0.5,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": 0.304,
+    "measure-waist-circ-incr": 0.29,
+    "measure-hips-circ-incr": 0.103,
+    "torso-vshape-incr": 0.08
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 175.0,
+    "weight": 75.97,
+    "chest": 104.02,
+    "waist": 85.0,
+    "hip": 97.0,
+    "shoulder": 40.0
+   },
+   "reported": {
+    "height": 175.0,
+    "weight": 75.94,
+    "chest": 104.02,
+    "waist": 85.0,
+    "hip": 97.0,
+    "shoulder": 40.0
+   },
+   "other_cm": {
+    "upper_arm": 30.01,
+    "forearm": 24.69,
+    "thigh": 50.45,
+    "calf": 38.98,
+    "neck": 41.37,
+    "arm_length": 47.89,
+    "leg_length": 86.0,
+    "shoulder_width": 42.12
+   },
+   "armpit_level_chest_cm": 112.83,
+   "fixed_plane_hip_cm": 101.59,
+   "belly_lead_cm": -0.22,
+   "glb_height_cm": 175.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": 0.97,
+    "chest": 0.02,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.03,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": [],
+   "unchanged_moved_cm": {
+    "waist": -0.01,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "unchanged_ok": true
+  },
+  "avg_chest-6": {
+   "request": {
+    "height": 175,
+    "weight": 75,
+    "chest": 92,
+    "waist": 85,
+    "hip": 97,
+    "shoulder": 40
+   },
+   "seconds": 3.0,
+   "glb": "avg_chest-6.glb",
+   "parameters": {
+    "height": 0.357,
+    "weight": 0.616,
+    "age": 0.78,
+    "muscle": 0.7,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.542,
+    "measure-waist-circ-incr": -0.049,
+    "measure-hips-circ-incr": 0.055,
+    "torso-vshape-incr": 0.084
+   },
+   "at_bound": [],
+   "out_of_range": [
+    "weight"
+   ],
+   "warnings": [],
+   "mesh": {
+    "height": 175.0,
+    "weight": 73.61,
+    "chest": 91.96,
+    "waist": 85.0,
+    "hip": 97.0,
+    "shoulder": 40.04
+   },
+   "reported": {
+    "height": 175.0,
+    "weight": 73.59,
+    "chest": 91.96,
+    "waist": 85.0,
+    "hip": 97.0,
+    "shoulder": 40.04
+   },
+   "other_cm": {
+    "upper_arm": 32.84,
+    "forearm": 25.22,
+    "thigh": 52.2,
+    "calf": 38.54,
+    "neck": 42.02,
+    "arm_length": 48.07,
+    "leg_length": 86.01,
+    "shoulder_width": 41.61
+   },
+   "armpit_level_chest_cm": 100.47,
+   "fixed_plane_hip_cm": 101.9,
+   "belly_lead_cm": 0.73,
+   "glb_height_cm": 175.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -1.39,
+    "chest": -0.04,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.04
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.02,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Miss (reported)",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": [],
+   "unchanged_moved_cm": {
+    "waist": -0.01,
+    "hip": 0.0,
+    "shoulder": 0.04
+   },
+   "unchanged_ok": true
+  },
+  "avg_waist+6": {
+   "request": {
+    "height": 175,
+    "weight": 75,
+    "chest": 98,
+    "waist": 91,
+    "hip": 97,
+    "shoulder": 40
+   },
+   "seconds": 2.1,
+   "glb": "avg_waist+6.glb",
+   "parameters": {
+    "height": 0.364,
+    "weight": 0.458,
+    "age": 0.78,
+    "muscle": 0.5,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.095,
+    "measure-waist-circ-incr": 0.836,
+    "measure-hips-circ-incr": 0.095,
+    "torso-vshape-incr": 0.102
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 175.0,
+    "weight": 75.9,
+    "chest": 98.04,
+    "waist": 91.05,
+    "hip": 97.16,
+    "shoulder": 40.01
+   },
+   "reported": {
+    "height": 175.0,
+    "weight": 75.87,
+    "chest": 98.04,
+    "waist": 91.05,
+    "hip": 97.16,
+    "shoulder": 40.01
+   },
+   "other_cm": {
+    "upper_arm": 30.3,
+    "forearm": 24.83,
+    "thigh": 50.85,
+    "calf": 39.01,
+    "neck": 41.45,
+    "arm_length": 47.9,
+    "leg_length": 86.0,
+    "shoulder_width": 42.23
+   },
+   "armpit_level_chest_cm": 106.73,
+   "fixed_plane_hip_cm": 101.85,
+   "belly_lead_cm": 1.4,
+   "glb_height_cm": 175.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": 0.9,
+    "chest": 0.04,
+    "waist": 0.05,
+    "hip": 0.16,
+    "shoulder": 0.01
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.03,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": [],
+   "unchanged_moved_cm": {
+    "chest": 0.02,
+    "hip": 0.16,
+    "shoulder": 0.01
+   },
+   "unchanged_ok": true
+  },
+  "avg_waist-6": {
+   "request": {
+    "height": 175,
+    "weight": 75,
+    "chest": 98,
+    "waist": 79,
+    "hip": 97,
+    "shoulder": 40
+   },
+   "seconds": 3.5,
+   "glb": "avg_waist-6.glb",
+   "parameters": {
+    "height": 0.361,
+    "weight": 0.838,
+    "age": 0.78,
+    "muscle": 0.531,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.214,
+    "measure-waist-circ-incr": -0.964,
+    "measure-hips-circ-incr": -0.281,
+    "torso-vshape-incr": 0.037
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 175.0,
+    "weight": 74.11,
+    "chest": 97.85,
+    "waist": 79.01,
+    "hip": 96.94,
+    "shoulder": 39.96
+   },
+   "reported": {
+    "height": 175.0,
+    "weight": 74.09,
+    "chest": 97.85,
+    "waist": 79.01,
+    "hip": 96.94,
+    "shoulder": 39.96
+   },
+   "other_cm": {
+    "upper_arm": 33.44,
+    "forearm": 24.82,
+    "thigh": 52.65,
+    "calf": 39.51,
+    "neck": 41.75,
+    "arm_length": 47.92,
+    "leg_length": 86.01,
+    "shoulder_width": 41.78
+   },
+   "armpit_level_chest_cm": 105.75,
+   "fixed_plane_hip_cm": 102.61,
+   "belly_lead_cm": -0.62,
+   "glb_height_cm": 175.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -0.89,
+    "chest": -0.15,
+    "waist": 0.01,
+    "hip": -0.06,
+    "shoulder": -0.04
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.02,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": [],
+   "unchanged_moved_cm": {
+    "chest": -0.17,
+    "hip": -0.06,
+    "shoulder": -0.04
+   },
+   "unchanged_ok": true
+  },
+  "avg_hip+6": {
+   "request": {
+    "height": 175,
+    "weight": 75,
+    "chest": 98,
+    "waist": 85,
+    "hip": 103,
+    "shoulder": 40
+   },
+   "seconds": 1.3,
+   "glb": "avg_hip+6.glb",
+   "parameters": {
+    "height": 0.364,
+    "weight": 0.554,
+    "age": 0.78,
+    "muscle": 0.5,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.086,
+    "measure-waist-circ-incr": 0.096,
+    "measure-hips-circ-incr": 0.371,
+    "torso-vshape-incr": 0.095
+   },
+   "at_bound": [],
+   "out_of_range": [
+    "weight"
+   ],
+   "warnings": [],
+   "mesh": {
+    "height": 175.0,
+    "weight": 76.01,
+    "chest": 98.13,
+    "waist": 85.03,
+    "hip": 103.19,
+    "shoulder": 40.03
+   },
+   "reported": {
+    "height": 175.0,
+    "weight": 75.98,
+    "chest": 98.13,
+    "waist": 85.03,
+    "hip": 103.19,
+    "shoulder": 40.03
+   },
+   "other_cm": {
+    "upper_arm": 30.99,
+    "forearm": 24.91,
+    "thigh": 51.35,
+    "calf": 39.09,
+    "neck": 41.54,
+    "arm_length": 47.9,
+    "leg_length": 86.0,
+    "shoulder_width": 42.18
+   },
+   "armpit_level_chest_cm": 106.57,
+   "fixed_plane_hip_cm": 108.35,
+   "belly_lead_cm": 0.48,
+   "glb_height_cm": 175.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": 1.01,
+    "chest": 0.13,
+    "waist": 0.03,
+    "hip": 0.19,
+    "shoulder": 0.03
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.03,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Miss (reported)",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": [],
+   "unchanged_moved_cm": {
+    "chest": 0.11,
+    "waist": 0.02,
+    "shoulder": 0.03
+   },
+   "unchanged_ok": true
+  },
+  "avg_hip-6": {
+   "request": {
+    "height": 175,
+    "weight": 75,
+    "chest": 98,
+    "waist": 85,
+    "hip": 91,
+    "shoulder": 40
+   },
+   "seconds": 3.2,
+   "glb": "avg_hip-6.glb",
+   "parameters": {
+    "height": 0.364,
+    "weight": 0.848,
+    "age": 0.78,
+    "muscle": 0.5,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.206,
+    "measure-waist-circ-incr": -0.367,
+    "measure-hips-circ-incr": -0.963,
+    "torso-vshape-incr": 0.064
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 175.0,
+    "weight": 74.07,
+    "chest": 98.0,
+    "waist": 84.99,
+    "hip": 91.0,
+    "shoulder": 39.99
+   },
+   "reported": {
+    "height": 175.0,
+    "weight": 74.05,
+    "chest": 98.0,
+    "waist": 84.99,
+    "hip": 91.0,
+    "shoulder": 39.99
+   },
+   "other_cm": {
+    "upper_arm": 32.99,
+    "forearm": 24.39,
+    "thigh": 52.21,
+    "calf": 39.37,
+    "neck": 41.54,
+    "arm_length": 47.9,
+    "leg_length": 86.0,
+    "shoulder_width": 42.01
+   },
+   "armpit_level_chest_cm": 105.73,
+   "fixed_plane_hip_cm": 96.59,
+   "belly_lead_cm": -0.34,
+   "glb_height_cm": 175.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -0.93,
+    "chest": 0.0,
+    "waist": -0.01,
+    "hip": 0.0,
+    "shoulder": -0.01
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.02,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": [],
+   "unchanged_moved_cm": {
+    "chest": -0.02,
+    "waist": -0.02,
+    "shoulder": -0.01
+   },
+   "unchanged_ok": true
+  },
+  "avg_shoulder+3": {
+   "request": {
+    "height": 175,
+    "weight": 75,
+    "chest": 98,
+    "waist": 85,
+    "hip": 97,
+    "shoulder": 43
+   },
+   "seconds": 1.4,
+   "glb": "avg_shoulder+3.glb",
+   "parameters": {
+    "height": 0.364,
+    "weight": 0.616,
+    "age": 0.78,
+    "muscle": 0.5,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.355,
+    "measure-waist-circ-incr": 0.019,
+    "measure-hips-circ-incr": -0.013,
+    "torso-vshape-incr": 0.706
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 175.0,
+    "weight": 75.08,
+    "chest": 98.18,
+    "waist": 85.0,
+    "hip": 97.0,
+    "shoulder": 43.05
+   },
+   "reported": {
+    "height": 175.0,
+    "weight": 75.05,
+    "chest": 98.18,
+    "waist": 85.0,
+    "hip": 97.0,
+    "shoulder": 43.05
+   },
+   "other_cm": {
+    "upper_arm": 31.41,
+    "forearm": 24.8,
+    "thigh": 51.53,
+    "calf": 39.15,
+    "neck": 41.54,
+    "arm_length": 47.91,
+    "leg_length": 86.0,
+    "shoulder_width": 45.43
+   },
+   "armpit_level_chest_cm": 108.7,
+   "fixed_plane_hip_cm": 102.05,
+   "belly_lead_cm": 0.4,
+   "glb_height_cm": 175.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": 0.08,
+    "chest": 0.18,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.05
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.03,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": [],
+   "unchanged_moved_cm": {
+    "chest": 0.16,
+    "waist": -0.01,
+    "hip": 0.0
+   },
+   "unchanged_ok": true
+  },
+  "avg_shoulder-3": {
+   "request": {
+    "height": 175,
+    "weight": 75,
+    "chest": 98,
+    "waist": 85,
+    "hip": 97,
+    "shoulder": 37
+   },
+   "seconds": 1.0,
+   "glb": "avg_shoulder-3.glb",
+   "parameters": {
+    "height": 0.364,
+    "weight": 0.616,
+    "age": 0.78,
+    "muscle": 0.5,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": 0.089,
+    "measure-waist-circ-incr": -0.007,
+    "measure-hips-circ-incr": -0.013,
+    "torso-vshape-incr": -0.492
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 175.0,
+    "weight": 74.49,
+    "chest": 98.0,
+    "waist": 85.01,
+    "hip": 97.0,
+    "shoulder": 37.05
+   },
+   "reported": {
+    "height": 175.0,
+    "weight": 74.46,
+    "chest": 98.0,
+    "waist": 85.01,
+    "hip": 97.0,
+    "shoulder": 37.05
+   },
+   "other_cm": {
+    "upper_arm": 31.41,
+    "forearm": 24.8,
+    "thigh": 51.53,
+    "calf": 39.15,
+    "neck": 41.55,
+    "arm_length": 47.9,
+    "leg_length": 86.0,
+    "shoulder_width": 39.06
+   },
+   "armpit_level_chest_cm": 104.15,
+   "fixed_plane_hip_cm": 102.05,
+   "belly_lead_cm": -0.35,
+   "glb_height_cm": 175.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -0.51,
+    "chest": 0.0,
+    "waist": 0.01,
+    "hip": 0.0,
+    "shoulder": 0.05
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.03,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": [],
+   "unchanged_moved_cm": {
+    "chest": -0.02,
+    "waist": 0.0,
+    "hip": 0.0
+   },
+   "unchanged_ok": true
+  },
+  "avg_height+10": {
+   "request": {
+    "height": 185,
+    "weight": 75,
+    "chest": 98,
+    "waist": 85,
+    "hip": 97,
+    "shoulder": 40
+   },
+   "seconds": 1.5,
+   "glb": "avg_height+10.glb",
+   "parameters": {
+    "height": 0.456,
+    "weight": 0.001,
+    "age": 0.78,
+    "muscle": 0.484,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.102,
+    "measure-waist-circ-incr": 0.559,
+    "measure-hips-circ-incr": 0.112,
+    "torso-vshape-incr": -0.15
+   },
+   "at_bound": [],
+   "out_of_range": [
+    "weight"
+   ],
+   "warnings": [],
+   "mesh": {
+    "height": 185.0,
+    "weight": 76.73,
+    "chest": 97.97,
+    "waist": 84.98,
+    "hip": 97.0,
+    "shoulder": 40.02
+   },
+   "reported": {
+    "height": 185.0,
+    "weight": 76.7,
+    "chest": 97.97,
+    "waist": 84.98,
+    "hip": 97.0,
+    "shoulder": 40.02
+   },
+   "other_cm": {
+    "upper_arm": 27.64,
+    "forearm": 23.8,
+    "thigh": 47.44,
+    "calf": 39.83,
+    "neck": 42.05,
+    "arm_length": 50.82,
+    "leg_length": 91.94,
+    "shoulder_width": 42.25
+   },
+   "armpit_level_chest_cm": 106.57,
+   "fixed_plane_hip_cm": 100.66,
+   "belly_lead_cm": 0.46,
+   "glb_height_cm": 185.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": 1.73,
+    "chest": -0.03,
+    "waist": -0.02,
+    "hip": 0.0,
+    "shoulder": 0.02
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.03,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Miss (reported)",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": [],
+   "unchanged_moved_cm": {
+    "chest": -0.05,
+    "waist": -0.03,
+    "hip": 0.0,
+    "shoulder": 0.02
+   },
+   "unchanged_ok": true
+  },
+  "avg_height-10": {
+   "request": {
+    "height": 165,
+    "weight": 75,
+    "chest": 98,
+    "waist": 85,
+    "hip": 97,
+    "shoulder": 40
+   },
+   "seconds": 3.7,
+   "glb": "avg_height-10.glb",
+   "parameters": {
+    "height": 0.244,
+    "weight": 0.999,
+    "age": 0.78,
+    "muscle": 0.664,
+    "proportions": 0.2
+   },
+   "controls": {
+    "measure-bust-circ-incr": -0.424,
+    "measure-waist-circ-incr": -0.314,
+    "measure-hips-circ-incr": -0.034,
+    "torso-vshape-incr": 0.167
+   },
+   "at_bound": [],
+   "out_of_range": [],
+   "warnings": [],
+   "mesh": {
+    "height": 165.0,
+    "weight": 74.29,
+    "chest": 97.87,
+    "waist": 85.01,
+    "hip": 96.98,
+    "shoulder": 39.97
+   },
+   "reported": {
+    "height": 165.0,
+    "weight": 74.27,
+    "chest": 97.87,
+    "waist": 85.01,
+    "hip": 96.98,
+    "shoulder": 39.97
+   },
+   "other_cm": {
+    "upper_arm": 37.52,
+    "forearm": 27.14,
+    "thigh": 56.03,
+    "calf": 39.98,
+    "neck": 41.65,
+    "arm_length": 45.04,
+    "leg_length": 80.15,
+    "shoulder_width": 40.8
+   },
+   "armpit_level_chest_cm": 103.44,
+   "fixed_plane_hip_cm": 102.95,
+   "belly_lead_cm": -0.17,
+   "glb_height_cm": 165.0,
+   "glb_floor_m": 0.0,
+   "error": {
+    "height": 0.0,
+    "weight": -0.71,
+    "chest": -0.13,
+    "waist": 0.01,
+    "hip": -0.02,
+    "shoulder": -0.03
+   },
+   "report_vs_mesh": {
+    "height": 0.0,
+    "weight": -0.02,
+    "chest": 0.0,
+    "waist": 0.0,
+    "hip": 0.0,
+    "shoulder": 0.0
+   },
+   "status": {
+    "height": "Pass",
+    "weight": "Pass",
+    "chest": "Pass",
+    "waist": "Pass",
+    "hip": "Pass",
+    "shoulder": "Pass"
+   },
+   "silent_misses": [],
+   "unchanged_moved_cm": {
+    "chest": -0.15,
+    "waist": 0.0,
+    "hip": -0.02,
+    "shoulder": -0.03
+   },
+   "unchanged_ok": true
+  }
+ }
+}

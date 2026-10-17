@@ -16,6 +16,30 @@ CHEST_OFFSETS = np.arange(0.135, 0.151, 0.001)
 # Hip plane offset below the waist, as a fraction of body height.
 HIP_OFFSET = 0.10
 
+# Shoulder tip search box around each shoulder joint (metres), see shoulder_points.
+SHOULDER_POINT_HALF_WIDTH = 0.015
+SHOULDER_POINT_HALF_DEPTH = 0.03
+
+# Tape-style chest and hip (male fit only, see BodyMeasurements.tape_measurements).
+# Nipple vertices of Anny's topology (mirror pair, most anterior chest points of
+# an adult male; fixed indices like Anny's own waist vertices).
+NIPPLE_VERTICES = (8526, 1870)
+# Bones whose vertices are arm geometry (excluded from torso girths).
+ARM_BONE_PREFIXES = ("upperarm", "lowerarm", "wrist", "finger", "metacarpal", "thumb")
+# Hip: the tape girth at the level of greatest buttock prominence (ISO 8559-1
+# hip girth): the most posterior skin point between HIP_BAND_BELOW_WAIST and
+# HIP_BAND_DEPTH below the waist, HIP_BAND_X_MIN..HIP_BAND_X_MAX from the
+# midline. The largest girth is not used: in Anny's rest pose the legs stand
+# apart and, just above the crotch, the thigh roots read up to 4 cm more.
+HIP_BAND_BELOW_WAIST = 0.05
+HIP_BAND_DEPTH = 0.30
+HIP_BAND_X_MIN = 0.02
+HIP_BAND_X_MAX = 0.15
+# If that level is already split into the legs, step up by this much.
+HIP_STEP_UP = 0.005
+# A slice loop belongs to one leg when its centre is this far from the midline.
+LEG_LOOP_OFFSET = 0.03
+
 # The upper-arm loop's centre must lie within this distance of the arm bone.
 UPPER_ARM_MAX_OFFSET = 0.06
 
@@ -49,6 +73,18 @@ class BodyMeasurements:
             label: index
             for index, label in enumerate(model.bone_labels)
         }
+
+        # Faces of the body without the arms, for tape girths: a vertex is
+        # arm geometry when most of its skinning weight is on arm bones.
+        arm_bones = [
+            index
+            for index, label in enumerate(model.bone_labels)
+            if label.startswith(ARM_BONE_PREFIXES)
+        ]
+        weights = model.vertex_bone_weights.detach().cpu().numpy()
+        indices = model.vertex_bone_indices.detach().cpu().numpy()
+        arm_vertices = np.where(np.isin(indices, arm_bones), weights, 0.0).sum(axis=1) > 0.5
+        self._body_faces = self._faces[~arm_vertices[self._faces].any(axis=1)]
 
     # ============================================================
     # SHARED CONTEXT
@@ -729,6 +765,149 @@ class BodyMeasurements:
             ),
         }
 
+    # ============================================================
+    # SHOULDER BREADTH (SURFACE)
+    # ============================================================
+
+    def shoulder_points(self, vertices, rest_bone_poses):
+        """
+        Shoulder tips (acromion proxies), one per side: the highest skin
+        point directly above the shoulder joint (upperarm01 head), within
+        SHOULDER_POINT_HALF_WIDTH sideways and SHOULDER_POINT_HALF_DEPTH
+        front-to-back of it. Rest pose, z up. None if a side has no
+        such point.
+        """
+
+        points = []
+
+        for side in (".L", ".R"):
+            index = self._bone_index.get("upperarm01" + side)
+
+            if index is None:
+                return None
+
+            joint = self._bone_origin(rest_bone_poses, index)
+
+            near = (
+                (np.abs(vertices[:, 0] - joint[0]) < SHOULDER_POINT_HALF_WIDTH)
+                & (np.abs(vertices[:, 1] - joint[1]) < SHOULDER_POINT_HALF_DEPTH)
+                & (vertices[:, 2] > joint[2])
+            )
+
+            if not np.any(near):
+                return None
+
+            candidates = vertices[near]
+            points.append(candidates[np.argmax(candidates[:, 2])])
+
+        return points
+
+    def shoulder_breadth(self, vertices, rest_bone_poses):
+        """
+        Shoulder breadth on the skin: horizontal straight-line distance
+        between the two shoulder tips, as measured with a ruler or
+        calliper from shoulder tip to shoulder tip across the back.
+        Wider than shoulder_width_m (joint centres).
+        """
+
+        points = self.shoulder_points(vertices, rest_bone_poses)
+
+        if points is None:
+            return None
+
+        left, right = points
+
+        return float(np.hypot(left[0] - right[0], left[1] - right[1]))
+
+    # ============================================================
+    # TAPE-STYLE GIRTHS (ADULT MALE FIT)
+    # ============================================================
+
+    @staticmethod
+    def _hull_perimeter(points):
+        """Length of a tape around the points: their convex outline in the horizontal plane."""
+
+        if len(points) < 3:
+            return None
+
+        from scipy.spatial import ConvexHull
+
+        outline = points[ConvexHull(points[:, :2]).vertices, :2]
+
+        return float(
+            np.linalg.norm(np.diff(np.vstack([outline, outline[:1]]), axis=0), axis=1).sum()
+        )
+
+    def _tape_at(self, body, z, stop_at_legs=False):
+        """Tape girth of the body at height z; None at the crotch when stop_at_legs."""
+
+        section = body.section(plane_origin=[0.0, 0.0, z], plane_normal=[0.0, 0.0, 1.0])
+
+        if section is None:
+            return None
+
+        loops = [np.asarray(loop) for loop in section.discrete if len(loop) > 10]
+
+        if not loops:
+            return None
+
+        if stop_at_legs and len(loops) > 1 and all(
+            abs(loop[:, 0].mean()) > LEG_LOOP_OFFSET for loop in loops
+        ):
+            return None
+
+        return self._hull_perimeter(np.vstack(loops))
+
+    def tape_measurements(self, output):
+        """
+        Chest and hip as measured with a tape on a person standing with the
+        arms down (used by the adult male fit; measure() is unchanged):
+
+        - chest_tape_m: around the torso at nipple height (NIPPLE_VERTICES),
+          the arms left out, the tape bridging the hollows (convex outline);
+        - hip_tape_m: the same around the hips at the level of greatest
+          buttock prominence (see HIP_BAND_*).
+
+        measure()'s chest_m is sliced higher, at armpit level, where in the
+        rest pose the torso joins the raised arms; it reads 6-13 cm more
+        than a tape for adult men and fails on bulky torsos.
+        """
+
+        rest_vertices = output["rest_vertices"]
+        vertices = rest_vertices[0].detach().cpu().numpy()
+        body = trimesh.Trimesh(vertices=vertices, faces=self._body_faces, process=False)
+
+        chest_z = float(vertices[list(NIPPLE_VERTICES), 2].mean())
+        chest = self._tape_at(body, chest_z)
+
+        waist_z = float(vertices[self.anthropometry.waist_vertex_indices, 2].mean())
+
+        band = (
+            (vertices[:, 2] < waist_z - HIP_BAND_BELOW_WAIST)
+            & (vertices[:, 2] > waist_z - HIP_BAND_DEPTH)
+            & (np.abs(vertices[:, 0]) > HIP_BAND_X_MIN)
+            & (np.abs(vertices[:, 0]) < HIP_BAND_X_MAX)
+        )
+
+        hip = None
+        hip_z = None
+
+        if np.any(band):
+            # Most posterior point (the back is +y).
+            z = float(vertices[band][np.argmax(vertices[band][:, 1]), 2])
+
+            while z < waist_z and hip is None:
+                hip = self._tape_at(body, z, stop_at_legs=True)
+                hip_z = z
+                z += HIP_STEP_UP
+
+        return {
+            "chest_tape_m": chest,
+            "chest_tape_z": chest_z,
+            "hip_tape_m": hip,
+            "hip_tape_z": hip_z,
+        }
+
     def measure(self, output):
         rest_vertices = output["rest_vertices"]
         rest_bone_poses = output["rest_bone_poses"]
@@ -877,6 +1056,11 @@ class BodyMeasurements:
             ),
 
             "neck_m": neck,
+
+            "shoulder_breadth_m": self.shoulder_breadth(
+                vertices,
+                rest_bone_poses,
+            ),
 
             "upper_arm_m": (
                 upper_arm["circumference"]

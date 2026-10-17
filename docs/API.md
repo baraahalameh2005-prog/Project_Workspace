@@ -56,6 +56,7 @@ Request (JSON):
 | `waist` | number | yes | 40-200 cm |
 | `chest` | number | yes | 50-200 cm |
 | `hip` | number | yes | 50-200 cm |
+| `shoulder` | number | no (male only) | 30-60 cm: shoulder tip to shoulder tip, straight across the back. Without it the shoulders follow from the other measurements; for female bodies it is ignored with a warning |
 | `gender` | string | no (default `"female"`) | `"female"` or `"male"`, case-insensitive |
 | `skin_tone` | string | no (default `"#c8997e"`) | `"#RRGGBB"` (sRGB) |
 | `eye_color` | string | no (default `"brown"`) | `"brown"`, `"hazel"`, `"green"`, `"blue"`, `"gray"`, case-insensitive |
@@ -72,6 +73,9 @@ Response (200):
   "avatar_id": "<32 hex chars>",
   "legacy_avatar_url": null,                           // Module: always null (see below)
   "parameters": { "gender": "female", "height": 0.5, "weight": 0.6, "age": 0.55, "muscle": 0.65, "proportions": 0.62 },
+  "fit_method": "standard",                             // "adult_male" for male bodies
+  "body_controls": {},                                  // male: Anny body controls applied, -1..1
+  "out_of_range": [],                                   // male: measurements the model could not reach
   "appearance": { "gender_style": "female", "skin_tone": "#c8997e", "eye_color": "brown",
                   "face_controls": { "mouth-scale-horiz-incr": -0.35, "...": "..." },
                   "features": ["eye_texture", "eyebrows", "face_preset", "lip_tint"], "not_available": ["hair"] },
@@ -95,6 +99,47 @@ Response (200):
 - `warnings` lists targets that were not reached within the fitting tolerance
   (height 0.01 cm, weight 0.01 kg, circumferences 0.2%) or could not be measured.
   Waist and hip errors of a few percent are a known limitation of the current model setup.
+
+### Male bodies (`fit_method: "adult_male"`)
+
+`fit_to_measurements.fit_adult_male`, in three stages:
+
+1. **Phenotype**: adult age 0.78 (about 25 years by Anny's own calibration; the standard fit stays at
+   0.5, about 13 years), proportions 0.2, muscle 0.5; Anny's height and weight parameters solved for
+   the height and weight. Muscle moves (0.3-0.7) only when the weight parameter is at its limit.
+2. **Local shape**, with the phenotype frozen: each measurement has exactly one Anny control
+   (`MALE_TARGET_CONTROLS`): chest -> `measure-bust-circ-incr` (not below -0.6: flat chest), waist ->
+   `measure-waist-circ-incr`, hip -> `measure-hips-circ-incr`, shoulder -> `torso-vshape-incr`. A
+   control never moves to compensate another measurement.
+3. **Weight**: the controls add or remove some mass; the weight parameter (or muscle, when the weight
+   parameter is at its limit or its step would push a control out of range) is corrected in damped
+   steps while no control is pushed to its limit. A weight still missed by more than 1 kg is reported
+   in `out_of_range`. `mass_kg` and `bmi` use a body density of 1040 kg/m3 (Anny: 980): an estimate.
+
+How the male measurements are taken on the mesh (as a person is measured standing, arms down):
+
+| Request | Mesh measurement |
+|---|---|
+| `chest` | `chest_tape_m`: tape around the torso at nipple height (vertices 8526/1870), arm geometry left out (skinning weights), hollows bridged (convex outline) |
+| `waist` | `waist_m`: Anny's waist vertex loop (around the navel) |
+| `hip` | `hip_tape_m`: tape at the level of greatest buttock prominence (ISO 8559-1), arms left out |
+| `shoulder` | `shoulder_breadth_m`: straight distance between the highest skin points above the two shoulder joints |
+
+`measurements.chest_m` (also returned) is sliced at armpit level, where in the rest pose the torso is
+fused with the raised arms; it reads 6-13 cm more than a tape on adult men and is not used for male
+bodies. Female bodies still use `chest_m` / `hip_m` and are unchanged.
+
+`shoulder` is the straight distance between the two shoulder tips (the bony points at the outer end
+of each shoulder), measured from behind. Typical adult men: 36-46 cm. The widest width over the
+shoulder muscles and a shirt's shoulder width are larger and are not this measurement.
+
+For male bodies the response's `measurements` and `accuracy` are those of the exported body (with the
+face preset). A measurement beyond its control's range is not forced: the control stops at its limit,
+the measurement appears in `out_of_range` (male only; `[]` otherwise) and `accuracy` shows the value
+reached. Example: a 52 cm shoulder at 170 cm reaches about 44 cm.
+
+Test matrix (exported GLBs measured again, synthetic cases): `backend/tools/male_fit_matrix.py`;
+results in `var/male_qa/<label>/`.
 
 ### Loading the avatar in three.js
 

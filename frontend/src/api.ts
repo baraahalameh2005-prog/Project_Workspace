@@ -18,9 +18,15 @@ export interface MeasurementLimit {
   unit: string;
 }
 
+export interface OptionalMeasurementLimit extends MeasurementLimit {
+  genders: string[];
+}
+
 export interface AvatarOptions {
   api_version: number;
   measurements: Record<MeasurementName, MeasurementLimit>;
+  // Present from the adult male fit on: shoulder (male only).
+  optional_measurements?: Record<string, OptionalMeasurementLimit>;
   gender: { required: boolean; values: string[]; default: string; case_insensitive: boolean };
   skin_tone: { required: boolean; format: string; default: string };
   // Present from the appearance version of the backend on.
@@ -50,6 +56,8 @@ export interface AvatarRequest {
   waist: number;
   chest: number;
   hip: number;
+  // Male only, optional: shoulder tip to shoulder tip across the back (cm).
+  shoulder?: number;
   skin_tone?: string;
   eye_color?: string;
 }
@@ -69,6 +77,11 @@ export interface AvatarResponse {
   avatar_id: string;
   legacy_avatar_url: string | null;
   parameters: Record<string, unknown>;
+  // "adult_male" or "standard" (absent on older backends).
+  fit_method?: string;
+  body_controls?: Record<string, number>;
+  // Male: measurements the model could not reach (absent on older backends).
+  out_of_range?: string[];
   appearance?: AppliedAppearance;
   measurements: Record<string, number>;
   failed_measurements: string[];

@@ -257,6 +257,23 @@ button.secondary {
   color: var(--warn);
 }
 
+.transfer {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.transfer-button {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.transfer-button.blocked {
+  opacity: 0.6;
+}
+
 .result {
   margin-top: 16px;
   padding-top: 12px;

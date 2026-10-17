@@ -15,6 +15,15 @@ import {
   getHealth,
   resolveApiUrl,
 } from "./api";
+import { clearSavedAvatar, fittingRoomUrl, loadSavedAvatar, storeSavedAvatar } from "./savedAvatar";
+
+// The clothing module's server (Clothing3D backend/server.py); its fitting room
+// loads the avatar by id from var/generated/.
+const CLOTHING_URL = ((import.meta.env.VITE_CLOTHING_URL as string | undefined) ?? "http://127.0.0.1:8010").replace(
+  /\/+$/,
+  "",
+);
+const CLOTHING_CHECK_TIMEOUT_MS = 3_000;
 
 // Used only until /avatar-options has loaded; the backend validates either way.
 const FALLBACK_LIMITS: Record<MeasurementName, MeasurementLimit> = {
@@ -25,6 +34,16 @@ const FALLBACK_LIMITS: Record<MeasurementName, MeasurementLimit> = {
   hip: { required: true, minimum: 50, maximum: 200, unit: "cm" },
 };
 const FALLBACK_GENDERS = ["female", "male"];
+// Arabic names for the response's out_of_range entries.
+const OUT_OF_RANGE_LABELS: Record<string, string> = {
+  chest: "محيط الصدر",
+  waist: "محيط الخصر",
+  hip: "محيط الورك",
+  shoulder: "عرض الكتفين",
+  weight: "الوزن",
+};
+// Used only until /avatar-options has loaded (optional_measurements.shoulder).
+const FALLBACK_SHOULDER_LIMIT = { minimum: 30, maximum: 60, unit: "cm" };
 const FALLBACK_SKIN_TONE = "#c8997e"; // backend default (/avatar-options)
 const FALLBACK_EYE_COLOR = "brown";
 const SKIN_TONE_PRESETS = [
@@ -59,6 +78,8 @@ interface ShownResult {
   receivedAt: Date;
   requestNumber: number;
   request: AvatarRequest;
+  // Restored from browser storage, not generated in this page load.
+  restored: boolean;
 }
 
 interface RequestError {
@@ -101,23 +122,63 @@ function fmt(value: number | null | undefined, digits = 2) {
   return value === null || value === undefined || !Number.isFinite(value) ? "—" : value.toFixed(digits);
 }
 
+/** Resolves when the fitting room's server answers (the response itself is opaque: no CORS). */
+async function fittingRoomReachable(): Promise<boolean> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), CLOTHING_CHECK_TIMEOUT_MS);
+  try {
+    await fetch(`${CLOTHING_URL}/viewer/`, { mode: "no-cors", cache: "no-store", signal: controller.signal });
+    return true;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export default function App() {
+  // An explicit ?avatar= link wins; otherwise the last generated avatar is restored.
+  const [link] = useState(readLinkedAvatar);
+  const [saved] = useState(() => (link.linked ? null : loadSavedAvatar(API_URL)));
+
   const [backend, setBackend] = useState<BackendState>("checking");
   const [options, setOptions] = useState<AvatarOptions | null>(null);
   const [optionsError, setOptionsError] = useState<string | null>(null);
 
-  const [values, setValues] = useState(DEFAULT_VALUES);
-  const [gender, setGender] = useState("female");
-  const [skinTone, setSkinTone] = useState(FALLBACK_SKIN_TONE);
-  const [skinToneTouched, setSkinToneTouched] = useState(false);
-  const [eyeColor, setEyeColor] = useState(FALLBACK_EYE_COLOR);
+  const [values, setValues] = useState<Record<MeasurementName, string>>(() =>
+    saved
+      ? (Object.fromEntries(MEASUREMENT_NAMES.map((n) => [n, String(saved.request[n])])) as Record<MeasurementName, string>)
+      : DEFAULT_VALUES,
+  );
+  const [gender, setGender] = useState(saved?.request.gender ?? "female");
+  // Male only and optional; "" means not given (the backend then derives the shoulders).
+  const [shoulder, setShoulder] = useState(
+    saved?.request.shoulder !== undefined ? String(saved.request.shoulder) : "",
+  );
+  const [shoulderError, setShoulderError] = useState<string | null>(null);
+  const [skinTone, setSkinTone] = useState(saved?.request.skin_tone ?? FALLBACK_SKIN_TONE);
+  const [skinToneTouched, setSkinToneTouched] = useState(saved?.request.skin_tone !== undefined);
+  const [eyeColor, setEyeColor] = useState(saved?.request.eye_color ?? FALLBACK_EYE_COLOR);
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<MeasurementName, string>>>({});
 
   const [pending, setPending] = useState<{ requestNumber: number; startedAt: number } | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const [error, setError] = useState<RequestError | null>(null);
-  const [result, setResult] = useState<ShownResult | null>(null);
-  const [link] = useState(readLinkedAvatar);
+  const [result, setResult] = useState<ShownResult | null>(() =>
+    saved
+      ? {
+          response: saved.response,
+          glbUrl: resolveApiUrl(saved.response.avatar_url),
+          receivedAt: new Date(saved.savedAt),
+          requestNumber: 0,
+          request: saved.request,
+          restored: true,
+        }
+      : null,
+  );
+  const [storageFailed, setStorageFailed] = useState(false);
+  const [transferMessage, setTransferMessage] = useState<string | null>(null);
+  const [transferring, setTransferring] = useState(false);
   const [viewer, setViewer] = useState<ViewerStatus>({ state: "empty" });
   // "?view=face" opens the face framing directly (handy for screenshots).
   const [view, setView] = useState<ViewMode>(() =>
@@ -132,6 +193,11 @@ export default function App() {
   const genders = options?.gender.values ?? FALLBACK_GENDERS;
   // Only offered when the backend advertises eye colours (/avatar-options).
   const eyeColors = options?.eye_color?.values ?? null;
+  // Offered for male avatars when the backend accepts it (or before /avatar-options has loaded).
+  const shoulderLimit = options
+    ? (options.optional_measurements?.shoulder ?? null)
+    : { ...FALLBACK_SHOULDER_LIMIT, required: false, genders: ["male"] };
+  const showShoulder = shoulderLimit !== null && shoulderLimit.genders.includes(gender);
 
   // Backend readiness: poll /health; load /avatar-options once it answers.
   useEffect(() => {
@@ -203,10 +269,30 @@ export default function App() {
       }
     }
 
-    setFieldErrors(errors);
-    if (Object.keys(errors).length > 0) return null;
+    let shoulderValue: number | undefined;
+    let shoulderMessage: string | null = null;
+    if (showShoulder && shoulderLimit && shoulder.trim() !== "") {
+      const value = Number(shoulder.trim());
+      if (!Number.isFinite(value)) {
+        shoulderMessage = "أدخل رقماً صحيحاً لعرض الكتفين، أو اترك الحقل فارغاً.";
+      } else if (value < shoulderLimit.minimum || value > shoulderLimit.maximum) {
+        shoulderMessage = `عرض الكتفين يجب أن يكون بين ${shoulderLimit.minimum} و${shoulderLimit.maximum} سم.`;
+      } else {
+        shoulderValue = value;
+      }
+    }
 
-    return { gender, ...parsed, skin_tone: skinTone, ...(eyeColors ? { eye_color: eyeColor } : {}) };
+    setFieldErrors(errors);
+    setShoulderError(shoulderMessage);
+    if (Object.keys(errors).length > 0 || shoulderMessage) return null;
+
+    return {
+      gender,
+      ...parsed,
+      ...(shoulderValue !== undefined ? { shoulder: shoulderValue } : {}),
+      skin_tone: skinTone,
+      ...(eyeColors ? { eye_color: eyeColor } : {}),
+    };
   }
 
   async function onSubmit(event: FormEvent) {
@@ -221,18 +307,21 @@ export default function App() {
     const cancel = new AbortController();
     cancelRef.current = cancel;
     setError(null);
+    setTransferMessage(null);
     setPending({ requestNumber, startedAt: Date.now() });
 
     try {
       const response = await generateAvatar(body, cancel.signal);
       // Ignore responses from requests that are no longer the latest.
       if (requestNumber !== latestRequest.current) return;
+      setStorageFailed(!storeSavedAvatar(API_URL, body, response));
       setResult({
         response,
         glbUrl: resolveApiUrl(response.avatar_url),
         receivedAt: new Date(),
         requestNumber,
         request: body,
+        restored: false,
       });
     } catch (err) {
       if (requestNumber !== latestRequest.current) return;
@@ -260,6 +349,46 @@ export default function App() {
   const viewerMatchesResult = result && "url" in viewer && viewer.url === result.glbUrl;
   const viewerMatchesLinked = linked && "url" in viewer && viewer.url === linked.glbUrl;
   const errorIsNewerThanResult = error && (!result || error.requestNumber > result.requestNumber);
+  const restoreFailed = result?.restored && viewerMatchesResult && viewer.state === "failed";
+
+  // The avatar on screen is the one sent; null id means it is not a generated avatar (face preview).
+  const selected = result
+    ? { avatarId: result.response.avatar_id, glbUrl: result.glbUrl }
+    : linked
+      ? { avatarId: /^[0-9a-f]{32}$/.test(linked.avatarId) ? linked.avatarId : null, glbUrl: linked.glbUrl }
+      : null;
+
+  function transferBlocker(): string | null {
+    if (pending) return "الأفاتار قيد الإنشاء الآن. انتظر حتى يكتمل الإنشاء ثم أرسله.";
+    if (!selected) return "لا يوجد أفاتار بعد. أدخل القياسات واضغط «Generate avatar» أولاً.";
+    if (!selected.avatarId) return "هذا الأفاتار للمعاينة فقط وليس أفاتاراً مُنشأً، فلا يمكن إرساله إلى غرفة القياس.";
+    if (!("url" in viewer) || viewer.url !== selected.glbUrl || viewer.state === "loading")
+      return "الأفاتار ما زال قيد التحميل. انتظر حتى يظهر ثم أعد المحاولة.";
+    if (viewer.state === "failed") return "تعذّر تحميل ملف هذا الأفاتار من الخادم، لذلك لا يمكن إرساله. أنشئ أفاتاراً جديداً.";
+    return null;
+  }
+
+  async function onTransfer() {
+    const blocker = transferBlocker();
+    if (blocker || !selected?.avatarId) {
+      setTransferMessage(blocker);
+      return;
+    }
+    setTransferMessage(null);
+    setTransferring(true);
+    const reachable = await fittingRoomReachable();
+    setTransferring(false);
+    if (!reachable) {
+      setTransferMessage(`غرفة القياس غير متاحة على ${CLOTHING_URL}. تأكد من تشغيل خادم الملابس ثم أعد المحاولة.`);
+      return;
+    }
+    window.location.assign(fittingRoomUrl(CLOTHING_URL, selected.avatarId));
+  }
+
+  function onForgetSaved() {
+    clearSavedAvatar();
+    setResult(null);
+  }
 
   return (
     <div className="app">
@@ -311,6 +440,44 @@ export default function App() {
                   </label>
                 );
               })}
+
+              {gender === "male" && (
+                <p className="hint" dir="rtl" lang="ar">
+                  <strong>طريقة القياس:</strong> قِف مستقيماً والذراعان منسدلتان، وشدّ الشريط أفقياً على الجلد دون ضغط.
+                  الصدر: حول الصدر عند مستوى الحلمتين. الخصر: حول البطن عند مستوى السرة تقريباً. الورك: حول الأرداف عند
+                  أبرز نقطة لها من الجانب. الطول بلا حذاء.
+                </p>
+              )}
+
+              {showShoulder && shoulderLimit && (
+                <label className="field" dir="rtl" lang="ar">
+                  <span>
+                    عرض الكتفين{" "}
+                    <small>
+                      (سم، {shoulderLimit.minimum}–{shoulderLimit.maximum}، اختياري)
+                    </small>
+                  </span>
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    step="any"
+                    min={shoulderLimit.minimum}
+                    max={shoulderLimit.maximum}
+                    dir="ltr"
+                    value={shoulder}
+                    placeholder="مثال: 42"
+                    aria-invalid={shoulderError ? true : undefined}
+                    onChange={(e) => setShoulder(e.target.value)}
+                  />
+                  <small className="hint">
+                    المسافة <strong>المستقيمة</strong> بين طرفي الكتفين: العظمة البارزة في نهاية كل كتف من الأعلى. قِسها
+                    من الخلف بمسطرة أو بشريط مشدود بخط مستقيم، لا يلتف حول الكتفين. القيمة المعتادة للرجل البالغ بين 36
+                    و46 سم. لا تقِس أعرض نقطة فوق عضلات الكتفين ولا عرض كتف القميص، فهما أكبر من هذا القياس. إذا تُرك
+                    الحقل فارغاً يُحسب عرض الكتفين من القياسات الأخرى.
+                  </small>
+                  {shoulderError && <em className="field-error">{shoulderError}</em>}
+                </label>
+              )}
 
             </fieldset>
 
@@ -382,6 +549,47 @@ export default function App() {
             {optionsError && <p className="hint">Could not load limits from the backend; using built-in limits.</p>}
           </form>
 
+          <div className="transfer" dir="rtl" lang="ar">
+            <button
+              type="button"
+              className={`transfer-button ${transferBlocker() ? "blocked" : ""}`}
+              aria-disabled={transferBlocker() !== null || transferring}
+              onClick={transferring ? undefined : onTransfer}
+            >
+              {transferring ? "جارٍ التحقق من غرفة القياس…" : "إرسال الأفاتار إلى غرفة القياس"}
+            </button>
+            {selected?.avatarId && (
+              <p className="hint">
+                الأفاتار الذي سيُرسل: <code dir="ltr">{selected.avatarId}</code>
+              </p>
+            )}
+            {transferMessage && (
+              <div className="notice error" role="alert">
+                {transferMessage}
+              </div>
+            )}
+          </div>
+
+          {storageFailed && (
+            <div className="notice warning" dir="rtl" lang="ar">
+              تعذّر حفظ الأفاتار في هذا المتصفح (التخزين محظور). سيبقى معروضاً الآن، لكنه لن يُسترجع بعد مغادرة الصفحة أو
+              تحديثها.
+            </div>
+          )}
+
+          {restoreFailed && (
+            <div className="notice error" dir="rtl" lang="ar" role="alert">
+              <strong>تعذّر استرجاع الأفاتار السابق.</strong>
+              <p>
+                لم يُحمَّل ملف الأفاتار <code dir="ltr">{result.response.avatar_id}</code> من الخادم ({API_URL}). قد
+                يكون الخادم متوقفاً أو أن الملف حُذف. إذا كان الخادم يعمل، أنشئ أفاتاراً جديداً.
+              </p>
+              <button type="button" className="secondary" onClick={onForgetSaved}>
+                نسيان الأفاتار المحفوظ
+              </button>
+            </div>
+          )}
+
           {pending && (
             <div className="notice info">
               Request #{pending.requestNumber} running: {elapsed.toFixed(0)} s (stops waiting after{" "}
@@ -401,7 +609,12 @@ export default function App() {
                   ))}
                 </ul>
               )}
-              {result && <p>The avatar shown is still from request #{result.requestNumber}.</p>}
+              {result && result.restored && (
+                <p dir="rtl" lang="ar">
+                  الأفاتار المعروض ما زال الأفاتار المحفوظ السابق.
+                </p>
+              )}
+              {result && !result.restored && <p>The avatar shown is still from request #{result.requestNumber}.</p>}
             </div>
           )}
 
@@ -435,14 +648,20 @@ export default function App() {
 
           {result && (
             <div className="result">
-              <h2>Result of request #{result.requestNumber}</h2>
+              {result.restored ? (
+                <h2 dir="rtl" lang="ar">
+                  آخر أفاتار أنشأته (مُسترجَع، أُنشئ في {result.receivedAt.toLocaleString("ar")})
+                </h2>
+              ) : (
+                <h2>Result of request #{result.requestNumber}</h2>
+              )}
               <dl>
                 <dt>Avatar ID</dt>
                 <dd>
                   <code>{result.response.avatar_id}</code>
                 </dd>
                 <dt>Received</dt>
-                <dd>{result.receivedAt.toLocaleTimeString()}</dd>
+                <dd>{result.restored ? result.receivedAt.toLocaleString() : result.receivedAt.toLocaleTimeString()}</dd>
                 <dt>Fit time</dt>
                 <dd>{fmt(result.response.fit_time_seconds, 1)} s</dd>
                 <dt>Viewer</dt>
@@ -459,6 +678,35 @@ export default function App() {
                   </a>
                 </dd>
               </dl>
+
+              {(result.response.out_of_range?.length ?? 0) > 0 && (
+                <div className="notice warning" dir="rtl" lang="ar" role="status">
+                  <strong>بعض القياسات خارج ما يستطيع النموذج تمثيله، فلم تُفرض على الجسم:</strong>
+                  <ul>
+                    {result.response.out_of_range!.map((name) => {
+                      const entry = result.response.accuracy[name];
+                      return (
+                        <li key={name}>
+                          {OUT_OF_RANGE_LABELS[name] ?? name}: المطلوب {fmt(entry?.requested, 1)}، والممكن في هذا الأفاتار{" "}
+                          {fmt(entry?.actual, 1)} {name === "weight" ? "كغ" : "سم"}.
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  {result.response.out_of_range!.includes("weight") && (
+                    <p>
+                      الوزن في الأفاتار تقدير من حجم الجسم. لم يُفرض الوزن المطلوب كاملاً لأن ذلك كان سيتطلب تضخيم
+                      الذراعين والساقين أو إخراج قياس آخر عن حدود النموذج؛ القياسات المحيطية لها الأولوية.
+                    </p>
+                  )}
+                  {result.response.out_of_range!.includes("shoulder") && (
+                    <p>
+                      عرض الكتفين المطلوب أكبر من أقصى عرض يمكن تمثيله لهذا الطول، فاستُخدم أقرب عرض ممكن دون تشويه الصدر
+                      أو البطن. تأكّد أنك قِست المسافة المستقيمة بين طرفي عظمتي الكتفين، وليس أعرض نقطة فوق العضلات.
+                    </p>
+                  )}
+                </div>
+              )}
 
               {result.response.warnings.length > 0 ? (
                 <div className="notice warning">
@@ -544,11 +792,19 @@ export default function App() {
               Face
             </button>
           </div>
-          {viewer.state === "empty" && <div className="overlay">No avatar yet. Generate one.</div>}
-          {viewer.state === "loading" && <div className="overlay">Loading avatar…</div>}
+          {viewer.state === "empty" && (
+            <div className="overlay" dir="rtl" lang="ar">
+              لا يوجد أفاتار بعد. أنشئ أفاتاراً.
+            </div>
+          )}
+          {viewer.state === "loading" && (
+            <div className="overlay" dir="rtl" lang="ar">
+              {result?.restored ? "جارٍ استرجاع آخر أفاتار…" : "جارٍ تحميل الأفاتار…"}
+            </div>
+          )}
           {viewer.state === "failed" && (
-            <div className="overlay error">
-              Could not load the GLB: {viewer.error}
+            <div className="overlay error" dir="rtl" lang="ar">
+              تعذّر تحميل ملف الأفاتار: <span dir="ltr">{viewer.error}</span>
             </div>
           )}
         </section>

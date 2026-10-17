@@ -19,11 +19,10 @@ DT = torch.float64
 PARAM_MIN = 0.001
 PARAM_MAX = 0.999
 
-# Anny's age anchors (anny/models/phenotype.py) are
-# baby 0.0, child 1/3, young adult 2/3 and old 1.0.
-# Anny's default age, 0.5, lies halfway between child and young adult.
-# The fit never goes below that default, so the circumferences are
-# not matched by blending in child body proportions.
+# Anny 0.6.1's age anchors (anny/models/model_data.py) are newborn 0.0,
+# baby 0.25, child 0.5, young 0.75 and old 1.0; by Anny's own calibration
+# 0.5 is about 13 years. This bound is kept for the general (female) fit;
+# male bodies use ADULT_MALE_AGE (see fit_adult_male).
 AGE_MIN = 0.5
 AGE_MAX = PARAM_MAX
 
@@ -51,6 +50,8 @@ TARGET_MEASUREMENTS = {
     "waist": ("waist_m", 100.0, "cm"),
     "chest": ("chest_m", 100.0, "cm"),
     "hip": ("hip_m", 100.0, "cm"),
+    # Male bodies only: shoulder tip to shoulder tip (measurements.shoulder_breadth).
+    "shoulder": ("shoulder_breadth_m", 100.0, "cm"),
 }
 
 # How each requested measurement is reached by the fit.
@@ -60,6 +61,24 @@ TARGET_CONTROL = {
     "waist": "fitted indirectly (age, muscle, proportions)",
     "chest": "fitted indirectly (age, muscle, proportions)",
     "hip": "fitted indirectly (age, muscle, proportions)",
+}
+
+# Adult male fit: chest and hip are tape girths (measurements.tape_measurements:
+# nipple height / greatest buttock prominence, arms left out, hollows bridged).
+MALE_TARGET_MEASUREMENTS = {
+    **TARGET_MEASUREMENTS,
+    "chest": ("chest_tape_m", 100.0, "cm"),
+    "hip": ("hip_tape_m", 100.0, "cm"),
+}
+
+# The same for the adult male fit (fit_adult_male).
+ADULT_MALE_CONTROL = {
+    "height": "solved directly (height parameter)",
+    "weight": "solved directly (weight parameter, muscle; body density 1040 kg/m3)",
+    "waist": "fitted with Anny's waist control",
+    "chest": "tape at nipple height, arms left out; fitted with Anny's bust control",
+    "hip": "tape at the most prominent point of the buttocks; fitted with Anny's hips control",
+    "shoulder": "fitted with Anny's torso V-shape control",
 }
 
 
@@ -495,19 +514,24 @@ def percentage_error(requested, actual):
     return abs(actual - requested) / abs(requested) * 100.0
 
 
-def accuracy_report(targets, result):
+def accuracy_report(targets, result, controls=None, keys=None):
     """
     Compare requested measurements with the measured body.
 
     targets maps names from TARGET_MEASUREMENTS to requested values
     in their user units (cm or kg). A measurement the pipeline could
     not produce is reported as "measurement_failed", never dropped.
+    controls overrides TARGET_CONTROL (how each target was reached) and
+    keys overrides TARGET_MEASUREMENTS (which result value is compared).
     """
+
+    controls = controls or TARGET_CONTROL
+    keys = keys or TARGET_MEASUREMENTS
 
     report = {}
 
     for name, requested in targets.items():
-        key, scale, unit = TARGET_MEASUREMENTS[name]
+        key, scale, unit = keys[name]
 
         raw = result.get(key) if result else None
 
@@ -521,7 +545,7 @@ def accuracy_report(targets, result):
             "actual": None,
             "absolute_error": None,
             "percentage_error": None,
-            "control": TARGET_CONTROL[name],
+            "control": controls[name],
             "status": "measurement_failed",
         }
 
@@ -812,6 +836,8 @@ def fit_body(
     waist_cm,
     chest_cm,
     hip_cm,
+    shoulder_cm=None,
+    shape_model=None,
 ):
     """
     Reusable function for FastAPI.
@@ -820,6 +846,10 @@ def fit_body(
     the fitted Anny parameters and the generated body data,
     plus an accuracy report comparing the measured body with
     the requested values.
+
+    Male bodies use fit_adult_male when shape_model (see there) is
+    given; shoulder_cm is used for male bodies only. Female bodies
+    always use fit(), unchanged.
     """
 
     gender = normalize_gender(gender)
@@ -828,18 +858,46 @@ def fit_body(
     start_time = time.perf_counter()
 
     stats = {}
+    body_controls = {}
+    targets = {
+        "height": height_cm,
+        "weight": weight_kg,
+        "waist": waist_cm,
+        "chest": chest_cm,
+        "hip": hip_cm,
+    }
 
-    output, result, params = fit(
-        model=model,
-        measurements=measurements,
-        gender=GENDER_VALUES[gender],
-        height_cm=height_cm,
-        weight_kg=weight_kg,
-        waist_cm=waist_cm,
-        chest_cm=chest_cm,
-        hip_cm=hip_cm,
-        stats=stats,
-    )
+    if gender == "male" and shape_model is not None:
+        fit_method = "adult_male"
+
+        output, result, params, body_controls = fit_adult_male(
+            shape_model=shape_model,
+            measurements=measurements,
+            height_cm=height_cm,
+            weight_kg=weight_kg,
+            waist_cm=waist_cm,
+            chest_cm=chest_cm,
+            hip_cm=hip_cm,
+            shoulder_cm=shoulder_cm,
+            stats=stats,
+        )
+
+        if shoulder_cm is not None:
+            targets["shoulder"] = shoulder_cm
+    else:
+        fit_method = "standard"
+
+        output, result, params = fit(
+            model=model,
+            measurements=measurements,
+            gender=GENDER_VALUES[gender],
+            height_cm=height_cm,
+            weight_kg=weight_kg,
+            waist_cm=waist_cm,
+            chest_cm=chest_cm,
+            hip_cm=hip_cm,
+            stats=stats,
+        )
 
     # Calculate total fitting time.
     elapsed = time.perf_counter() - start_time
@@ -855,20 +913,20 @@ def fit_body(
     )
 
     accuracy = accuracy_report(
-        {
-            "height": height_cm,
-            "weight": weight_kg,
-            "waist": waist_cm,
-            "chest": chest_cm,
-            "hip": hip_cm,
-        },
+        targets,
         result,
+        controls=ADULT_MALE_CONTROL if fit_method == "adult_male" else None,
+        keys=MALE_TARGET_MEASUREMENTS if fit_method == "adult_male" else None,
     )
 
     return {
         "output": output,
         "result": result,
         "accuracy": accuracy,
+        "fit_method": fit_method,
+        "body_controls": body_controls,
+        # Targets the adult male fit could not reach within its control ranges.
+        "out_of_range": list(stats.get("out_of_range", [])),
         "fit_info": {
             "seconds": elapsed,
             **stats,
@@ -882,6 +940,470 @@ def fit_body(
             "proportions": float(params[4]),
         },
     }
+
+
+# ============================================================
+# ADULT MALE FIT
+# ============================================================
+
+# Anny's own calibration (anny/data/shape_calibration/boys.pth,
+# morphological_age_mapping) maps age 0.415 -> 11 years, 0.67 -> 16,
+# 0.77 -> 18 and 0.83 -> 64. The general fit above never goes below
+# AGE_MIN = 0.5 (about 13 years), and male fits stayed at that bound,
+# so male bodies had adolescent proportions (larger head share, shorter
+# legs, narrow shoulders). Male bodies use a fixed adult age instead,
+# about 25 years.
+ADULT_MALE_AGE = 0.78
+
+# Anny's "proportions": 0 = idealproportions, 1 = uncommonproportions.
+# 0.2 needed the smallest measurement controls over the male test matrix
+# (tools/male_fit_matrix.py) and was kept after visual review.
+ADULT_MALE_PROPORTIONS = 0.2
+
+# Anny's mass is mesh volume * 980 kg/m3 (anny/anthropometry.py, "for
+# simplicity"). Adult male tissue is about 1045-1060 kg/m3 (15-25 % fat)
+# and the closed mesh also holds residual lung air, so the mesh volume
+# of a real man weighs about 1030-1045 kg/m3. With 980 the fit had to
+# add ~6 % volume to reach the weight, and with chest, waist and hip
+# fixed that volume went into bulky arms and legs.
+ANNY_DENSITY = 980.0
+MALE_BODY_DENSITY = 1040.0
+# One kilogram of Anny's mass in real (density-corrected) kilograms.
+KG_PER_ANNY_KG = MALE_BODY_DENSITY / ANNY_DENSITY
+
+# Anny local changes (MPFB measurement targets, -1..1) used by the male fit.
+# Each requested measurement is reached by exactly one control, and a control
+# never moves to compensate another measurement: target -> (control, metres
+# per unit). Slopes measured on an adult male (average of the decrease and
+# increase sides); the fit refines them with secant steps.
+#
+# An earlier version solved all controls together (least squares). It then
+# used any control for any error, e.g. Anny's pregnancy shape against the
+# chest, or the hips control against the pelvis-width control, and gave
+# unnatural bodies when a target was out of reach (avatar 551c0fd9...).
+MALE_TARGET_CONTROLS = {
+    "chest": ("measure-bust-circ-incr", 0.14),
+    "waist": ("measure-waist-circ-incr", 0.10),
+    "hip": ("measure-hips-circ-incr", 0.145),
+    # Only when a shoulder width is requested. Also widens the upper chest;
+    # the bust control then corrects the chest.
+    "shoulder": ("torso-vshape-incr", 0.053),
+}
+
+# Control ranges. Anny's local changes run from -1 to 1; the bust control
+# stops at -0.6 because below that the male chest looks flat and sunken
+# (front and side renders, 2026-10-17). A measurement that would need more
+# than its control's range is reported as out of range, not forced.
+MALE_CONTROL_BOUNDS = {
+    "measure-bust-circ-incr": (-0.6, 1.0),
+}
+DEFAULT_CONTROL_BOUNDS = (-1.0, 1.0)
+
+# Muscle stays at Anny's average unless the weight parameter alone cannot
+# reach the weight; then muscle carries the rest, within these limits. Above
+# 0.7 the arms become bodybuilder-sized (165 cm / 85 kg at muscle 0.87: upper
+# arm 44 cm); a weight that needs more is reported, not forced.
+MALE_DEFAULT_MUSCLE = 0.5
+MALE_MUSCLE_RANGE = (0.3, 0.7)
+# Muscle step per kg of missing weight (first step; then secant).
+MALE_MUSCLE_PER_KG = 0.02
+# Stage A: at most this many muscle steps.
+MALE_MUSCLE_STEPS = 8
+
+# Stage C (weight correction after the local controls): passes, tolerance,
+# damping of each weight-parameter step and the probe used for its slope.
+MALE_WEIGHT_PASSES = 3
+MALE_WEIGHT_PASS_TOLERANCE_KG = 1.0
+MALE_WEIGHT_DAMPING = 0.7
+MALE_WEIGHT_PROBE = 0.05
+
+MALE_MAX_ITERATIONS = 20
+# Circumferences and shoulder: done within 2 mm; weight within 0.2 kg.
+MALE_TOLERANCE_M = 0.002
+MALE_WEIGHT_TOLERANCE_KG = 0.2
+# A control is "at its bound" this close to it.
+AT_BOUND = 1e-3
+# A measurement is reported as out of range when its control is held at a
+# bound and it is still missed by more than this.
+MALE_OUT_OF_RANGE_M = 0.01
+
+
+def report_male_body(output, measurements, targets, out_of_range):
+    """
+    Measurements, accuracy and out-of-range list of the body that is actually
+    exported (the fitted body with the face preset), for the adult male fit.
+    targets: {"height": cm, "weight": kg, "waist": cm, "chest": cm, "hip": cm,
+    optional "shoulder": cm}. out_of_range: the fit's list; "weight" is set
+    again from this body.
+    """
+
+    result = dict(measurements.measure(output))
+    result.update(measurements.tape_measurements(output))
+    result = _density_corrected(result)
+
+    accuracy = accuracy_report(targets, result, controls=ADULT_MALE_CONTROL, keys=MALE_TARGET_MEASUREMENTS)
+
+    weight = accuracy.get("weight", {})
+    missed = weight.get("absolute_error") is None or weight["absolute_error"] > MALE_WEIGHT_PASS_TOLERANCE_KG
+    out_of_range = [name for name in out_of_range if name != "weight"] + (["weight"] if missed else [])
+
+    return result, accuracy, out_of_range
+
+
+def _density_corrected(result):
+    """Anny's mass and BMI recomputed with MALE_BODY_DENSITY."""
+
+    corrected = dict(result)
+    factor = MALE_BODY_DENSITY / ANNY_DENSITY
+
+    for key in ("mass_kg", "bmi"):
+        if _finite(corrected.get(key)):
+            corrected[key] = float(corrected[key]) * factor
+
+    return corrected
+
+
+def fit_adult_male(
+    shape_model,
+    measurements,
+    height_cm,
+    weight_kg,
+    waist_cm,
+    chest_cm,
+    hip_cm,
+    shoulder_cm=None,
+    stats=None,
+):
+    """
+    Fit an adult male body, in stages, so that the body stays natural:
+
+    A. Phenotype: the adult male body (ADULT_MALE_AGE, ADULT_MALE_PROPORTIONS,
+       muscle MALE_DEFAULT_MUSCLE) with Anny's height and weight parameters
+       solved for the height and weight. Muscle moves only when the weight
+       parameter alone cannot reach the weight.
+    B. Local shape: chest, waist, hip and the optional shoulder width, each
+       with its own Anny measurement control (MALE_TARGET_CONTROLS), by
+       secant steps within MALE_CONTROL_BOUNDS, with the phenotype frozen.
+       A control never moves for another measurement.
+    C. Weight: the controls add or remove some mass. If the weight is then
+       missed by more than MALE_WEIGHT_PASS_TOLERANCE_KG, the weight
+       parameter is corrected (damped) and B repeated, at most
+       MALE_WEIGHT_PASSES times, and only while that does not push a
+       control to its limit; a remaining miss is reported.
+
+    Why frozen: when the weight parameter was solved again after every
+    control step, each step that trimmed a girth also removed mass, the
+    weight parameter refilled it as body fat everywhere, and the controls
+    trimmed harder: average men ended at Anny's maximum body fat with
+    every control near its limit.
+
+    Measurements a control cannot reach within its range, and a weight
+    missed by more than MALE_WEIGHT_PASS_TOLERANCE_KG, end up in
+    stats["out_of_range"]. Chest and hip are tape girths
+    (measurements.tape_measurements).
+
+    shape_model(controls) must return an Anny model callable with those
+    local changes (every other local change at 0); measurements is
+    a BodyMeasurements for the same topology.
+
+    Returns (output, result, params, controls); result has mass_kg and
+    bmi for MALE_BODY_DENSITY.
+    """
+
+    if stats is None:
+        stats = {}
+
+    stats.setdefault("anny_evaluations", 0)
+    stats.setdefault("shape_evaluations", 0)
+
+    target_height = height_cm / 100.0
+    # Anny's mass * MALE_BODY_DENSITY / ANNY_DENSITY must equal the weight.
+    anny_weight = weight_kg * ANNY_DENSITY / MALE_BODY_DENSITY
+
+    requested = {
+        "chest": chest_cm / 100.0,
+        "waist": waist_cm / 100.0,
+        "hip": hip_cm / 100.0,
+    }
+
+    if shoulder_cm is not None:
+        requested["shoulder"] = shoulder_cm / 100.0
+
+    result_keys = {name: key for name, (key, _, _) in MALE_TARGET_MEASUREMENTS.items()}
+
+    names = list(requested)
+    labels = {name: MALE_TARGET_CONTROLS[name][0] for name in names}
+    bounds = {name: MALE_CONTROL_BOUNDS.get(labels[name], DEFAULT_CONTROL_BOUNDS) for name in names}
+
+    # ---------------- A. phenotype for height and weight
+
+    def phenotype_body(muscle, start):
+        stats["shape_evaluations"] += 1
+        return evaluate_shape(
+            shape_model({}),
+            measurements,
+            GENDER_VALUES["male"],
+            target_height,
+            anny_weight,
+            ADULT_MALE_AGE,
+            muscle,
+            ADULT_MALE_PROPORTIONS,
+            start=start,
+            stats=stats,
+        )
+
+    muscle = MALE_DEFAULT_MUSCLE
+    _, result, height_param, weight_param = phenotype_body(muscle, (0.5, 0.5))
+    previous = None
+
+    for _ in range(MALE_MUSCLE_STEPS):
+        mass_error = float(result["mass_kg"]) - anny_weight
+
+        if abs(mass_error) <= MALE_WEIGHT_TOLERANCE_KG or not (
+            (mass_error < 0 and weight_param >= PARAM_MAX - AT_BOUND)
+            or (mass_error > 0 and weight_param <= PARAM_MIN + AT_BOUND)
+        ):
+            break
+
+        per_kg = MALE_MUSCLE_PER_KG
+
+        if previous is not None and abs(muscle - previous[0]) > 1e-4:
+            change = (mass_error - previous[1]) / (muscle - previous[0])
+            if change > 0:
+                per_kg = 1.0 / change
+
+        new_muscle = float(np.clip(muscle - mass_error * per_kg, *MALE_MUSCLE_RANGE))
+
+        if new_muscle == muscle:
+            break
+
+        previous = (muscle, mass_error)
+        muscle = new_muscle
+        _, result, height_param, weight_param = phenotype_body(muscle, (height_param, weight_param))
+
+    stats["phenotype"] = {"muscle": muscle, "weight": weight_param, "height": height_param}
+
+    # ---------------- B. local shape with the phenotype frozen
+
+    def body(controls, weight, body_muscle=None):
+        body_muscle = muscle if body_muscle is None else body_muscle
+        stats["shape_evaluations"] += 1
+        stats["anny_evaluations"] += 1
+
+        output, result = evaluate(
+            shape_model(dict(controls)),
+            measurements,
+            GENDER_VALUES["male"],
+            ADULT_MALE_AGE,
+            height_param,
+            weight,
+            body_muscle,
+            ADULT_MALE_PROPORTIONS,
+        )
+
+        # Chest and hip as a tape measures them (measurements.tape_measurements).
+        result = dict(result)
+        result.update(measurements.tape_measurements(output))
+
+        errors = {}
+
+        for name in names:
+            value = result.get(result_keys[name])
+            errors[name] = None if not _finite(value) else float(value) - requested[name]
+
+        mass = result.get("mass_kg")
+
+        return {
+            "controls": dict(controls),
+            "weight": weight,
+            "output": output,
+            "result": result,
+            "errors": errors,
+            "mass_error": None if not _finite(mass) else float(mass) - anny_weight,
+        }
+
+    def blocked(name, entry):
+        """The control is at the bound that stops it from fixing this error."""
+        low, high = bounds[name]
+        value = entry["controls"][labels[name]]
+        error = entry["errors"][name]
+        return error is not None and (
+            (error > 0 and value <= low + AT_BOUND) or (error < 0 and value >= high - AT_BOUND)
+        )
+
+    def score(entry):
+        # Errors of reachable targets only: a target whose control is held
+        # at the blocking bound cannot get better, so it must not decide
+        # which body is kept.
+        values = [
+            float("inf") if e is None else abs(e)
+            for name, e in entry["errors"].items()
+            if not blocked(name, entry)
+        ]
+        return max(values) if values else 0.0
+
+    def fit_controls(weight, start_controls):
+        slopes = {name: MALE_TARGET_CONTROLS[name][1] for name in names}
+        current = body(start_controls, weight)
+        best = current
+        previous = None
+
+        for _ in range(MALE_MAX_ITERATIONS):
+            if any(e is None for e in current["errors"].values()):
+                stats["stop_reason"] = "a measurement failed"
+                break
+
+            if all(abs(e) <= MALE_TOLERANCE_M or blocked(name, current) for name, e in current["errors"].items()):
+                stats["stop_reason"] = "all reachable targets within tolerance"
+                break
+
+            new_controls = dict(current["controls"])
+
+            for name in names:
+                label = labels[name]
+
+                # Secant slope for this control alone, from the last two bodies.
+                if previous is not None:
+                    step = current["controls"][label] - previous["controls"][label]
+                    if abs(step) > 1e-3:
+                        measured = (current["errors"][name] - previous["errors"][name]) / step
+                        nominal = MALE_TARGET_CONTROLS[name][1]
+                        slopes[name] = float(np.clip(measured, 0.3 * nominal, 3.0 * nominal))
+
+                low, high = bounds[name]
+                new_controls[label] = float(np.clip(
+                    current["controls"][label] - current["errors"][name] / slopes[name],
+                    low,
+                    high,
+                ))
+
+            if new_controls == current["controls"]:
+                stats["stop_reason"] = "no control can move further"
+                break
+
+            previous = current
+            current = body(new_controls, weight)
+
+            if score(current) <= score(best):
+                best = current
+        else:
+            stats["stop_reason"] = "iteration limit"
+
+        return best
+
+    best = fit_controls(weight_param, {labels[name]: 0.0 for name in names})
+    stats["weight_passes"] = 0
+
+    # ---------------- C. weight correction (damped), only while it stays natural
+
+    def weight_missed(entry):
+        return entry["mass_error"] is None or abs(entry["mass_error"]) * KG_PER_ANNY_KG > MALE_WEIGHT_PASS_TOLERANCE_KG
+
+    # Muscle carries the correction when the weight parameter is at its limit
+    # in the needed direction, or once a weight-parameter step was rejected
+    # (e.g. a heavy man whose waist control would leave its range: less
+    # muscle, not less belly).
+    use_muscle = False
+
+    for _ in range(MALE_WEIGHT_PASSES + 1):
+        if not weight_missed(best):
+            break
+
+        mass_error = best["mass_error"]
+
+        weight_blocked = use_muscle or (mass_error < 0 and best["weight"] >= PARAM_MAX - AT_BOUND) or (
+            mass_error > 0 and best["weight"] <= PARAM_MIN + AT_BOUND
+        )
+        name, value, low, high = (
+            ("muscle", muscle, *MALE_MUSCLE_RANGE) if weight_blocked
+            else ("weight", best["weight"], PARAM_MIN, PARAM_MAX)
+        )
+
+        def phenotype_with(new_value):
+            return (new_value, muscle) if name == "weight" else (best["weight"], new_value)
+
+        probe_value = float(np.clip(value + MALE_WEIGHT_PROBE, low, high))
+
+        if probe_value == value:
+            probe_value = float(np.clip(value - MALE_WEIGHT_PROBE, low, high))
+
+        if probe_value == value:
+            break
+
+        probe = body(best["controls"], *phenotype_with(probe_value))
+        slope = (probe["mass_error"] - mass_error) / (probe_value - value)
+
+        if slope <= 0:
+            break
+
+        new_value = float(np.clip(value - MALE_WEIGHT_DAMPING * mass_error / slope, low, high))
+
+        if abs(new_value - value) < 1e-4:
+            break
+
+        new_weight, new_muscle = phenotype_with(new_value)
+        saved = (height_param, muscle)
+        muscle = new_muscle
+        # The new phenotype changes the height a little: solve it again.
+        height_param = solve_height(
+            shape_model(best["controls"]), measurements, GENDER_VALUES["male"], ADULT_MALE_AGE, new_weight,
+            muscle, ADULT_MALE_PROPORTIONS, target_height, start=height_param,
+        )
+        candidate = fit_controls(new_weight, best["controls"])
+        stats["weight_passes"] += 1
+
+        newly_blocked = [
+            name for name in names if blocked(name, candidate) and not blocked(name, best)
+        ]
+
+        if newly_blocked or score(candidate) > max(score(best), MALE_TOLERANCE_M):
+            stats["weight_stopped_by"] = newly_blocked or "a measurement got worse"
+            height_param, muscle = saved
+
+            if name == "weight" and not use_muscle:
+                use_muscle = True
+                continue
+
+            break
+
+        best = candidate
+
+    stats["out_of_range"] = [
+        name
+        for name in names
+        if blocked(name, best) and abs(best["errors"][name]) > MALE_OUT_OF_RANGE_M
+    ]
+
+    if weight_missed(best):
+        stats["out_of_range"].append("weight")
+
+    fitted_controls = {label: float(value) for label, value in best["controls"].items()}
+
+    params = np.array(
+        [
+            height_param,
+            best["weight"],
+            ADULT_MALE_AGE,
+            muscle,
+            ADULT_MALE_PROPORTIONS,
+        ],
+        dtype=np.float64,
+    )
+
+    print(
+        f"  Adult male fit: {stats['shape_evaluations']} evaluations"
+        f" | {stats.get('stop_reason')} | weight passes {stats['weight_passes']}"
+        f" | out of range {stats['out_of_range']}"
+        f" | muscle {muscle:.3f} | weight parameter {best['weight']:.3f}"
+        f" | controls { {k: round(v, 3) for k, v in fitted_controls.items()} }"
+    )
+
+    return (
+        best["output"],
+        _density_corrected(best["result"]),
+        params,
+        fitted_controls,
+    )
 
 
 # ============================================================

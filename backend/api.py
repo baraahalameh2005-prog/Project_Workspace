@@ -172,11 +172,23 @@ MEASUREMENT_LIMITS = {
     "hip": (50.0, 200.0, "cm"),
 }
 
+# Optional, male bodies only: shoulder breadth from shoulder tip to shoulder
+# tip, straight across the back (measurements.shoulder_breadth).
+OPTIONAL_MEASUREMENT_LIMITS = {
+    "shoulder": (30.0, 60.0, "cm"),
+}
+
 
 def _measurement_field(name):
     low, high, _ = MEASUREMENT_LIMITS[name]
 
     return Field(ge=low, le=high, allow_inf_nan=False)
+
+
+def _optional_measurement_field(name):
+    low, high, _ = OPTIONAL_MEASUREMENT_LIMITS[name]
+
+    return Field(default=None, ge=low, le=high, allow_inf_nan=False)
 
 
 class AvatarRequest(BaseModel):
@@ -186,6 +198,7 @@ class AvatarRequest(BaseModel):
     waist: float = _measurement_field("waist")
     chest: float = _measurement_field("chest")
     hip: float = _measurement_field("hip")
+    shoulder: Optional[float] = _optional_measurement_field("shoulder")
     skin_tone: Optional[str] = None
     eye_color: Optional[str] = None
 
@@ -308,6 +321,16 @@ def avatar_options():
             }
             for name, (low, high, unit) in MEASUREMENT_LIMITS.items()
         },
+        "optional_measurements": {
+            name: {
+                "required": False,
+                "minimum": low,
+                "maximum": high,
+                "unit": unit,
+                "genders": ["male"],
+            }
+            for name, (low, high, unit) in OPTIONAL_MEASUREMENT_LIMITS.items()
+        },
         "gender": {
             "required": False,
             "values": sorted(ftm.GENDER_VALUES),
@@ -336,6 +359,9 @@ def avatar_options():
         },
         "notes": [
             "Fields not listed here are ignored and do not change the avatar.",
+            "shoulder: male bodies only, shoulder tip to shoulder tip straight across the back."
+            " Without it the shoulder breadth follows from the other measurements."
+            " Ignored (with a warning) for female bodies.",
         ],
     }
 
@@ -441,6 +467,15 @@ def generate_avatar(data: AvatarRequest):
 
         start_time = time.perf_counter()
 
+        face = get_face_model()
+
+        male = data.gender == "male"
+
+        if data.shoulder is not None and not male:
+            warnings.append(
+                "shoulder: used for male avatars only; ignored for this female avatar."
+            )
+
         fitted = fit_body(
             model=model,
             measurements=measurements,
@@ -450,6 +485,10 @@ def generate_avatar(data: AvatarRequest):
             waist_cm=data.waist,
             chest_cm=data.chest,
             hip_cm=data.hip,
+            # Male bodies: adult fit with the face model's body controls
+            # (fit_to_measurements.fit_adult_male).
+            shoulder_cm=data.shoulder if male else None,
+            shape_model=face.controls if male else None,
         )
 
         fit_time = time.perf_counter() - start_time
@@ -457,23 +496,23 @@ def generate_avatar(data: AvatarRequest):
         print(f"Fit time: {fit_time:.2f} seconds")
 
         params = fitted["parameters"]
+        body_controls = fitted.get("body_controls") or {}
 
         # ---------------------------
         # 2. Build avatar with the appearance
         # ---------------------------
 
-        # The fit is unchanged; the fitted phenotype is evaluated once more
-        # with the face model and the gender face preset (head vertices only).
+        # The fitted phenotype (and, for male bodies, the fitted body
+        # controls) is evaluated once more with the face model and the
+        # gender face preset (head vertices only).
         appearance = appearance_for(
             gender=params["gender"],
             skin_tone=data.skin_tone or DEFAULT_SKIN_TONE,
             eye_color=data.eye_color or DEFAULT_EYE_COLOR,
         )
 
-        face = get_face_model()
-
         output = build(
-            model=face.controls(appearance.face_controls),
+            model=face.controls({**appearance.face_controls, **body_controls}),
             gender=1.0 if params["gender"] == "female" else 0.0,
             height=params["height"],
             weight=params["weight"],
@@ -481,6 +520,20 @@ def generate_avatar(data: AvatarRequest):
             muscle=params["muscle"],
             proportions=params["proportions"],
         )
+
+        # Male bodies: report the measurements of the body that is exported
+        # (with the face preset), not of the fitting body.
+        if fitted.get("fit_method") == "adult_male":
+            targets = {"height": data.height, "weight": data.weight, "waist": data.waist,
+                       "chest": data.chest, "hip": data.hip}
+
+            if data.shoulder is not None:
+                targets["shoulder"] = data.shoulder
+
+            result, accuracy, out_of_range = ftm.report_male_body(
+                output, measurements, targets, fitted.get("out_of_range", [])
+            )
+            fitted = dict(fitted, result=result, accuracy=accuracy, out_of_range=out_of_range)
 
         # ---------------------------
         # 3. Export GLB
@@ -525,6 +578,17 @@ def generate_avatar(data: AvatarRequest):
         "legacy_avatar_url": LEGACY_AVATAR_URL if WRITE_LEGACY_AVATAR else None,
 
         "parameters": params,
+
+        # "adult_male" (fit_to_measurements.fit_adult_male) or "standard".
+        "fit_method": fitted.get("fit_method", "standard"),
+
+        # Anny body controls (-1..1) applied on top of the phenotype; {} for "standard".
+        "body_controls": body_controls,
+
+        # Male bodies: requested measurements beyond what Anny's controls can
+        # reach (see accuracy for the values reached). They are reported, not
+        # forced at the cost of other body parts.
+        "out_of_range": fitted.get("out_of_range", []),
 
         # Appearance actually applied to this avatar.
         "appearance": appearance.summary(),
