@@ -8,6 +8,7 @@ test_uses_requested_not_generated (tests.test_adapters.TestAvatarResponse.test_u
 test_weight_and_joint_lengths_not_used (tests.test_adapters.TestAvatarResponse.test_weight_and_joint_lengths_not_used) ... ok
 test_bad_shape (tests.test_adapters.TestAvatarToBodyEndpoint.test_bad_shape) ... ok
 test_response_converted (tests.test_adapters.TestAvatarToBodyEndpoint.test_response_converted) ... ok
+test_ui_reads_avatar_link (tests.test_adapters.TestAvatarToBodyEndpoint.test_ui_reads_avatar_link) ... ok
 test_each_area_has_its_own_status (tests.test_audit_additions.TestAreasJudgedSeparately.test_each_area_has_its_own_status) ... ok
 test_tight_and_loose_areas_give_mixed (tests.test_audit_additions.TestAreasJudgedSeparately.test_tight_and_loose_areas_give_mixed) ... ok
 test_all_given_is_high (tests.test_audit_additions.TestAssumptionsLowerConfidence.test_all_given_is_high) ... ok
@@ -88,6 +89,6 @@ test_recommends_m (tests.test_scenarios.TestOneSizeFits.test_recommends_m) ... o
 test_result_is_json_serialisable (tests.test_scenarios.TestOneSizeFits.test_result_is_json_serialisable) ... ok
 
 ----------------------------------------------------------------------
-Ran 88 tests in 1.866s
+Ran 89 tests in 1.785s
 
 OK

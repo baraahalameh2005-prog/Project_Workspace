@@ -107,6 +107,16 @@ class TestAvatarToBodyEndpoint(unittest.TestCase):
         status, _ = self._post({"nothing": 1})
         self.assertEqual(status, 400)
 
+    def test_ui_reads_avatar_link(self):
+        # the avatar page opens /?avatar_id=..&chest=..; the UI must map it through the API
+        from fit_engine.server import UI_PATH
+        with open(UI_PATH, encoding="utf-8") as f:
+            html = f.read()
+        self.assertIn("fillFromAvatarLink", html)
+        self.assertIn('fetch("/avatar-to-body"', html)
+        for key in ("height", "chest", "waist", "hip", "shoulder"):
+            self.assertIn(f'"{key}"', html)
+
 
 if __name__ == "__main__":
     unittest.main()

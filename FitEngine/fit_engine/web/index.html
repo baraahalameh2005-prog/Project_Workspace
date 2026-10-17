@@ -82,6 +82,7 @@ pre { direction: ltr; text-align: left; overflow: auto; max-height: 400px; backg
     <span class="ltr">POST /recommend</span>. الحقول الفارغة تُعتبر غير متوفرة ولا تُخترع لها قيم.</p>
 
   <div id="schemaError" class="banner bad" hidden></div>
+  <div id="avatarBanner" class="banner info" hidden></div>
 
   <form id="form" novalidate>
     <section class="panel">
@@ -503,6 +504,41 @@ async function init() {
   buildBodyFields();
   buildSizesHead();
   for (let i = 0; i < 3; i++) addSizeRow();
+  await fillFromAvatarLink();
+}
+
+// Opened from the avatar page (?avatar_id=..&chest=..&waist=..): fill the body form
+// through POST /avatar-to-body, the same mapping the API uses.
+async function fillFromAvatarLink() {
+  const q = new URLSearchParams(window.location.search);
+  const avatar = {};
+  for (const key of ["height", "chest", "waist", "hip", "shoulder"]) {
+    const n = Number(q.get(key));
+    if (q.has(key) && Number.isFinite(n)) avatar[key] = n;
+  }
+  if (!Object.keys(avatar).length) return;
+  const id = q.get("avatar_id");
+  try {
+    const resp = await fetch("/avatar-to-body", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ avatar }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || resp.status);
+    const m = data.body.measurements;
+    $("bodyUnit").value = "cm";
+    document.querySelectorAll("[data-body]").forEach((inp) => {
+      inp.value = m[inp.dataset.body] == null ? "" : m[inp.dataset.body];
+    });
+    const box = $("avatarBanner");
+    box.hidden = false;
+    box.textContent = `تمت تعبئة قياسات الجسم من الأفاتار${id ? " " + id : ""} (القياسات التي أدخلها المستخدم). أدخلي مقاسات القطعة ثم احسبي.`;
+  } catch (e) {
+    const box = $("avatarBanner");
+    box.hidden = false;
+    box.className = "banner bad";
+    box.textContent = "تعذر تعبئة القياسات من رابط الأفاتار: " + e.message;
+  }
 }
 init();
 </script>

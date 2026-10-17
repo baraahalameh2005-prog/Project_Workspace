@@ -17,7 +17,7 @@ FitEngine's default port is 8765, which Dress3D uses here, so start it on 8020:
 ```
 cd FitEngine
 python -m fit_engine serve --port 8020          -> http://127.0.0.1:8020/
-python -m unittest discover -s tests -t . -v    -> Ran 88 tests ... OK
+python -m unittest discover -s tests -t . -v    -> Ran 89 tests ... OK
 ```
 
 ## How it connects to the avatar module
@@ -26,6 +26,10 @@ python -m unittest discover -s tests -t . -v    -> Ran 88 tests ... OK
   into a FitEngine body document, using the measurements the **user entered** (not the generated mesh).
 - HTTP: `POST /avatar-to-body {"avatar": {...}}`, then `POST /recommend {"body": ..., "garment": ...}`.
 - UI: section «تعبئة القياسات من الأفاتار» on http://127.0.0.1:8020/.
+- Link: `http://127.0.0.1:8020/?avatar_id=<id>&height=..&chest=..&waist=..&hip=..&shoulder=..` opens FitEngine with
+  the body measurements already filled in.
+- Proposed button for the avatar page («اقترح لي مقاسًا»): `integration/avatar_page_size_button.patch`, with what it
+  changes and how it was tested in `integration/README.md`. It is **not applied**; Baraah decides.
 
 Details, the field mapping and what is still open (a one-click button needs an avatar-module change that
 Baraah decides on; there is no size-chart data on the clothing side yet): `docs/INTEGRATION.md` and
