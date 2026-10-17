@@ -1,0 +1,15 @@
+{
+  "garment_id": "TS-001",
+  "name": "تيشيرت قطن كلاسيك",
+  "category": "t_shirt",
+  "fit_type": "regular",
+  "stretch": "low",
+  "measurement_type": "circumference",
+  "unit": "cm",
+  "sizes": [
+    {"label": "S",  "measurements": {"chest": 92,  "shoulder_width": 42, "waist": 88,  "hip": 90,  "length": 68, "sleeve_length": 19}},
+    {"label": "M",  "measurements": {"chest": 100, "shoulder_width": 44, "waist": 96,  "hip": 98,  "length": 70, "sleeve_length": 20}},
+    {"label": "L",  "measurements": {"chest": 108, "shoulder_width": 46, "waist": 104, "hip": 106, "length": 72, "sleeve_length": 21}},
+    {"label": "XL", "measurements": {"chest": 116, "shoulder_width": 48, "waist": 112, "hip": 114, "length": 74, "sleeve_length": 22}}
+  ]
+}

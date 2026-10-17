@@ -1,0 +1,192 @@
+{
+  "engine_version": "0.2.0",
+  "garment_id": "SH-033",
+  "garment_name": "قميص رسمي",
+  "category": "shirt",
+  "fit_type": "slim",
+  "stretch": "none",
+  "body_source": "manual",
+  "user_id": "demo-user-2",
+  "disclaimer": {
+    "code": "disclaimer",
+    "message_ar": "هذه توصية تقديرية مبنية على مقارنة رقمية للقياسات ونطاقات راحة افتراضية، ولم يتم التحقق من دقتها على ملابس حقيقية بعد. لا تضمن ملاءمة مثالية.",
+    "message_en": "This is an estimate based on numeric comparison and default ease ranges. It has not been validated on real garments yet and does not guarantee a perfect fit."
+  },
+  "all_sizes": [
+    {
+      "size": "S",
+      "score": 0.0253,
+      "acceptable": true,
+      "incomplete_primary": [],
+      "overall_fit": "good",
+      "statuses": {
+        "chest": "good",
+        "shoulder_width": "good",
+        "waist": "good",
+        "sleeve_length": "missing_body",
+        "hip": "missing_garment"
+      }
+    },
+    {
+      "size": "M",
+      "score": 0.0161,
+      "acceptable": true,
+      "incomplete_primary": [],
+      "overall_fit": "good",
+      "statuses": {
+        "chest": "good",
+        "shoulder_width": "good",
+        "waist": "good",
+        "sleeve_length": "missing_body",
+        "hip": "missing_garment"
+      }
+    },
+    {
+      "size": "L",
+      "score": 1.3506,
+      "acceptable": false,
+      "incomplete_primary": [],
+      "overall_fit": "loose",
+      "statuses": {
+        "chest": "too_loose",
+        "shoulder_width": "slightly_loose",
+        "waist": "too_loose",
+        "sleeve_length": "missing_body",
+        "hip": "missing_garment"
+      }
+    }
+  ],
+  "missing_measurements": {
+    "body": [
+      "arm_length"
+    ],
+    "garment": [
+      "hip"
+    ]
+  },
+  "status": "ok",
+  "recommended_size": "M",
+  "closest_size": "M",
+  "overall_fit": "good",
+  "overall_fit_ar": "مناسب",
+  "overall_fit_en": "good fit",
+  "confidence": "medium",
+  "alternative_size": {
+    "size": "S",
+    "direction": "smaller",
+    "code": "alt_smaller",
+    "message_ar": "المقاس S بديل لمن يفضّل قصة أكثر إحكامًا.",
+    "message_en": "Size S is an alternative for a closer fit."
+  },
+  "comparisons": [
+    {
+      "measurement": "chest",
+      "body_measurement": "chest",
+      "name_ar": "محيط الصدر",
+      "name_en": "chest",
+      "importance": "primary",
+      "body_cm": 91.95,
+      "garment_cm": 102.0,
+      "status": "good",
+      "ease_cm": 10.05,
+      "target_ease_cm": [
+        4.0,
+        12.0
+      ],
+      "ease_source": "default",
+      "penalty": 0.0131,
+      "label_ar": "مناسب",
+      "label_en": "good fit"
+    },
+    {
+      "measurement": "shoulder_width",
+      "body_measurement": "shoulder_width",
+      "name_ar": "عرض الكتفين",
+      "name_en": "shoulder width",
+      "importance": "primary",
+      "body_cm": 43.94,
+      "garment_cm": 45.0,
+      "status": "good",
+      "ease_cm": 1.06,
+      "target_ease_cm": [
+        -2.0,
+        2.0
+      ],
+      "ease_source": "default",
+      "penalty": 0.014,
+      "label_ar": "مناسب",
+      "label_en": "good fit"
+    },
+    {
+      "measurement": "waist",
+      "body_measurement": "waist",
+      "name_ar": "محيط الخصر",
+      "name_en": "waist",
+      "importance": "secondary",
+      "body_cm": 80.01,
+      "garment_cm": 94.0,
+      "status": "good",
+      "ease_cm": 13.99,
+      "target_ease_cm": [
+        2.0,
+        16.0
+      ],
+      "ease_source": "default",
+      "penalty": 0.0254,
+      "label_ar": "مناسب",
+      "label_en": "good fit"
+    },
+    {
+      "measurement": "sleeve_length",
+      "body_measurement": "arm_length",
+      "name_ar": "طول الكم",
+      "name_en": "sleeve length",
+      "importance": "secondary",
+      "body_cm": null,
+      "garment_cm": 62.0,
+      "status": "missing_body",
+      "ease_cm": null,
+      "target_ease_cm": null,
+      "label_ar": "قياس الجسم غير متوفر",
+      "label_en": "body measurement missing"
+    },
+    {
+      "measurement": "hip",
+      "body_measurement": "hip",
+      "name_ar": "محيط الورك",
+      "name_en": "hip",
+      "importance": "secondary",
+      "body_cm": 96.01,
+      "garment_cm": null,
+      "status": "missing_garment",
+      "ease_cm": null,
+      "target_ease_cm": null,
+      "label_ar": "قياس القطعة غير متوفر لهذا المقاس",
+      "label_en": "garment measurement missing for this size"
+    }
+  ],
+  "not_compared": [
+    {
+      "measurement": "length",
+      "garment_cm": 76.0,
+      "code": "not_compared",
+      "message_ar": "طول القطعة للقطعة لا يقابله قياس جسم مباشر؛ يُعرض للمعلومة فقط.",
+      "message_en": "Garment garment length has no direct body counterpart; shown for information only."
+    }
+  ],
+  "issues": [],
+  "reasons": [
+    {
+      "code": "reason_all_good",
+      "message_ar": "المقاس M: كل القياسات المقارنة ضمن نطاق الراحة المطلوب لهذه القصة.",
+      "message_en": "Size M: every compared measurement is within the target ease for this fit."
+    }
+  ],
+  "warnings": [
+    {
+      "code": "missing_secondary",
+      "message_ar": "قياسات ثانوية غير متوفرة ولم تدخل في المقارنة: طول الكم، محيط الورك.",
+      "message_en": "Secondary measurements not available and not compared: sleeve length, hip."
+    }
+  ]
+}

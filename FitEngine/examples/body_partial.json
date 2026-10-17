@@ -1,0 +1,10 @@
+{
+  "user_id": "demo-user-4",
+  "source": "manual",
+  "unit": "cm",
+  "measurements": {
+    "height": 170,
+    "chest": 94,
+    "weight": 68
+  }
+}

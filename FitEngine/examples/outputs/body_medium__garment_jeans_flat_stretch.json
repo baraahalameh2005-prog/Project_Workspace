@@ -1,0 +1,180 @@
+{
+  "engine_version": "0.2.0",
+  "garment_id": "JN-204",
+  "garment_name": "جينز سكيني",
+  "category": "pants",
+  "fit_type": "slim",
+  "stretch": "medium",
+  "body_source": "manual",
+  "user_id": "demo-user-1",
+  "disclaimer": {
+    "code": "disclaimer",
+    "message_ar": "هذه توصية تقديرية مبنية على مقارنة رقمية للقياسات ونطاقات راحة افتراضية، ولم يتم التحقق من دقتها على ملابس حقيقية بعد. لا تضمن ملاءمة مثالية.",
+    "message_en": "This is an estimate based on numeric comparison and default ease ranges. It has not been validated on real garments yet and does not guarantee a perfect fit."
+  },
+  "all_sizes": [
+    {
+      "size": "28",
+      "score": 1.0934,
+      "acceptable": true,
+      "incomplete_primary": [],
+      "overall_fit": "tight",
+      "statuses": {
+        "waist": "slightly_tight",
+        "hip": "slightly_tight",
+        "thigh": "slightly_tight",
+        "inseam": "good"
+      }
+    },
+    {
+      "size": "30",
+      "score": 0.0351,
+      "acceptable": true,
+      "incomplete_primary": [],
+      "overall_fit": "tight",
+      "statuses": {
+        "waist": "good",
+        "hip": "good",
+        "thigh": "slightly_tight",
+        "inseam": "good"
+      }
+    },
+    {
+      "size": "32",
+      "score": 0.0085,
+      "acceptable": true,
+      "incomplete_primary": [],
+      "overall_fit": "good",
+      "statuses": {
+        "waist": "good",
+        "hip": "good",
+        "thigh": "good",
+        "inseam": "good"
+      }
+    },
+    {
+      "size": "34",
+      "score": 0.3478,
+      "acceptable": true,
+      "incomplete_primary": [],
+      "overall_fit": "loose",
+      "statuses": {
+        "waist": "slightly_loose",
+        "hip": "good",
+        "thigh": "good",
+        "inseam": "good"
+      }
+    }
+  ],
+  "missing_measurements": {
+    "body": [],
+    "garment": []
+  },
+  "status": "ok",
+  "recommended_size": "32",
+  "closest_size": "32",
+  "overall_fit": "good",
+  "overall_fit_ar": "مناسب",
+  "overall_fit_en": "good fit",
+  "confidence": "high",
+  "alternative_size": {
+    "size": "30",
+    "direction": "smaller",
+    "code": "alt_smaller",
+    "message_ar": "المقاس 30 بديل لمن يفضّل قصة أكثر إحكامًا.",
+    "message_en": "Size 30 is an alternative for a closer fit."
+  },
+  "comparisons": [
+    {
+      "measurement": "waist",
+      "body_measurement": "waist",
+      "name_ar": "محيط الخصر",
+      "name_en": "waist",
+      "importance": "primary",
+      "body_cm": 80.0,
+      "garment_cm": 81.0,
+      "status": "good",
+      "ease_cm": 1.0,
+      "target_ease_cm": [
+        -5.6,
+        3.0
+      ],
+      "ease_source": "default",
+      "penalty": 0.0143,
+      "label_ar": "مناسب",
+      "label_en": "good fit"
+    },
+    {
+      "measurement": "hip",
+      "body_measurement": "hip",
+      "name_ar": "محيط الورك",
+      "name_en": "hip",
+      "importance": "primary",
+      "body_cm": 96.0,
+      "garment_cm": 97.0,
+      "status": "good",
+      "ease_cm": 1.0,
+      "target_ease_cm": [
+        -5.72,
+        7.0
+      ],
+      "ease_source": "default",
+      "penalty": 0.0002,
+      "label_ar": "مناسب",
+      "label_en": "good fit"
+    },
+    {
+      "measurement": "thigh",
+      "body_measurement": "thigh",
+      "name_ar": "محيط الفخذ",
+      "name_en": "thigh",
+      "importance": "secondary",
+      "body_cm": 56.0,
+      "garment_cm": 55.0,
+      "status": "good",
+      "ease_cm": -1.0,
+      "target_ease_cm": [
+        -3.32,
+        6.4
+      ],
+      "ease_source": "default",
+      "penalty": 0.0137,
+      "label_ar": "مناسب",
+      "label_en": "good fit"
+    },
+    {
+      "measurement": "inseam",
+      "body_measurement": "inseam",
+      "name_ar": "طول الساق الداخلي",
+      "name_en": "inseam",
+      "importance": "secondary",
+      "body_cm": 79.0,
+      "garment_cm": 80.0,
+      "status": "good",
+      "ease_cm": 1.0,
+      "target_ease_cm": [
+        -3.0,
+        3.0
+      ],
+      "ease_source": "default",
+      "penalty": 0.0056,
+      "label_ar": "مناسب",
+      "label_en": "good fit"
+    }
+  ],
+  "not_compared": [],
+  "issues": [],
+  "reasons": [
+    {
+      "code": "reason_all_good",
+      "message_ar": "المقاس 32: كل القياسات المقارنة ضمن نطاق الراحة المطلوب لهذه القصة.",
+      "message_en": "Size 32: every compared measurement is within the target ease for this fit."
+    },
+    {
+      "code": "stretch_note",
+      "message_ar": "القماش مطاطي (medium)، لذلك يُسمح بأن تكون القطعة أصغر من الجسم بحدود 7% في المحيطات.",
+      "message_en": "Fabric is stretchy (medium); garment circumferences may be up to 7% smaller than the body."
+    }
+  ],
+  "warnings": []
+}

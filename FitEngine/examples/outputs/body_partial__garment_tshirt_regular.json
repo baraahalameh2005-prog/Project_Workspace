@@ -1,0 +1,200 @@
+{
+  "engine_version": "0.2.0",
+  "garment_id": "TS-001",
+  "garment_name": "تيشيرت قطن كلاسيك",
+  "category": "t_shirt",
+  "fit_type": "regular",
+  "stretch": "low",
+  "body_source": "manual",
+  "user_id": "demo-user-4",
+  "disclaimer": {
+    "code": "disclaimer",
+    "message_ar": "هذه توصية تقديرية مبنية على مقارنة رقمية للقياسات ونطاقات راحة افتراضية، ولم يتم التحقق من دقتها على ملابس حقيقية بعد. لا تضمن ملاءمة مثالية.",
+    "message_en": "This is an estimate based on numeric comparison and default ease ranges. It has not been validated on real garments yet and does not guarantee a perfect fit."
+  },
+  "all_sizes": [
+    {
+      "size": "S",
+      "score": 5.9628,
+      "acceptable": false,
+      "incomplete_primary": [],
+      "overall_fit": "tight",
+      "statuses": {
+        "chest": "too_tight",
+        "shoulder_width": "missing_body",
+        "waist": "missing_body",
+        "hip": "missing_body"
+      }
+    },
+    {
+      "size": "M",
+      "score": 0.0157,
+      "acceptable": true,
+      "incomplete_primary": [],
+      "overall_fit": "good",
+      "statuses": {
+        "chest": "good",
+        "shoulder_width": "missing_body",
+        "waist": "missing_body",
+        "hip": "missing_body"
+      }
+    },
+    {
+      "size": "L",
+      "score": 0.0237,
+      "acceptable": true,
+      "incomplete_primary": [],
+      "overall_fit": "good",
+      "statuses": {
+        "chest": "good",
+        "shoulder_width": "missing_body",
+        "waist": "missing_body",
+        "hip": "missing_body"
+      }
+    },
+    {
+      "size": "XL",
+      "score": 4.0,
+      "acceptable": false,
+      "incomplete_primary": [],
+      "overall_fit": "loose",
+      "statuses": {
+        "chest": "too_loose",
+        "shoulder_width": "missing_body",
+        "waist": "missing_body",
+        "hip": "missing_body"
+      }
+    }
+  ],
+  "missing_measurements": {
+    "body": [
+      "shoulder_width",
+      "waist",
+      "hip"
+    ],
+    "garment": []
+  },
+  "status": "ok",
+  "recommended_size": "M",
+  "closest_size": "M",
+  "overall_fit": "good",
+  "overall_fit_ar": "مناسب",
+  "overall_fit_en": "good fit",
+  "confidence": "low",
+  "alternative_size": {
+    "size": "L",
+    "direction": "larger",
+    "code": "alt_larger",
+    "message_ar": "المقاس L بديل لمن يفضّل قصة أوسع وأكثر راحة.",
+    "message_en": "Size L is an alternative for a roomier, more relaxed fit."
+  },
+  "comparisons": [
+    {
+      "measurement": "chest",
+      "body_measurement": "chest",
+      "name_ar": "محيط الصدر",
+      "name_en": "chest",
+      "importance": "primary",
+      "body_cm": 94.0,
+      "garment_cm": 100.0,
+      "status": "good",
+      "ease_cm": 6.0,
+      "target_ease_cm": [
+        3.18,
+        16.0
+      ],
+      "ease_source": "default",
+      "penalty": 0.0157,
+      "label_ar": "مناسب",
+      "label_en": "good fit"
+    },
+    {
+      "measurement": "shoulder_width",
+      "body_measurement": "shoulder_width",
+      "name_ar": "عرض الكتفين",
+      "name_en": "shoulder width",
+      "importance": "primary",
+      "body_cm": null,
+      "garment_cm": 44.0,
+      "status": "missing_body",
+      "ease_cm": null,
+      "target_ease_cm": null,
+      "label_ar": "قياس الجسم غير متوفر",
+      "label_en": "body measurement missing"
+    },
+    {
+      "measurement": "waist",
+      "body_measurement": "waist",
+      "name_ar": "محيط الخصر",
+      "name_en": "waist",
+      "importance": "secondary",
+      "body_cm": null,
+      "garment_cm": 96.0,
+      "status": "missing_body",
+      "ease_cm": null,
+      "target_ease_cm": null,
+      "label_ar": "قياس الجسم غير متوفر",
+      "label_en": "body measurement missing"
+    },
+    {
+      "measurement": "hip",
+      "body_measurement": "hip",
+      "name_ar": "محيط الورك",
+      "name_en": "hip",
+      "importance": "secondary",
+      "body_cm": null,
+      "garment_cm": 98.0,
+      "status": "missing_body",
+      "ease_cm": null,
+      "target_ease_cm": null,
+      "label_ar": "قياس الجسم غير متوفر",
+      "label_en": "body measurement missing"
+    }
+  ],
+  "not_compared": [
+    {
+      "measurement": "length",
+      "garment_cm": 70.0,
+      "code": "not_compared",
+      "message_ar": "طول القطعة للقطعة لا يقابله قياس جسم مباشر؛ يُعرض للمعلومة فقط.",
+      "message_en": "Garment garment length has no direct body counterpart; shown for information only."
+    },
+    {
+      "measurement": "sleeve_length",
+      "garment_cm": 20.0,
+      "code": "not_relevant",
+      "message_ar": "طول الكم غير مهم لتحديد المقاس في هذا النوع من الملابس ولم يدخل في المقارنة.",
+      "message_en": "sleeve length does not drive sizing for this garment type and was not compared."
+    }
+  ],
+  "issues": [],
+  "reasons": [
+    {
+      "code": "reason_all_good",
+      "message_ar": "المقاس M: كل القياسات المقارنة ضمن نطاق الراحة المطلوب لهذه القصة.",
+      "message_en": "Size M: every compared measurement is within the target ease for this fit."
+    },
+    {
+      "code": "stretch_note",
+      "message_ar": "القماش مطاطي (low)، لذلك يُسمح بأن تكون القطعة أصغر من الجسم بحدود 3% في المحيطات.",
+      "message_en": "Fabric is stretchy (low); garment circumferences may be up to 3% smaller than the body."
+    }
+  ],
+  "warnings": [
+    {
+      "code": "weight_ignored",
+      "message_ar": "الوزن لا يُستخدم لتحديد المقاس؛ النظام يعتمد على قياسات الجسم فقط.",
+      "message_en": "Weight is not used to choose a size; only body measurements are used."
+    },
+    {
+      "code": "missing_primary_partial",
+      "message_ar": "بعض القياسات الأساسية غير متوفرة (عرض الكتفين)، لذلك التوصية أقل موثوقية.",
+      "message_en": "Some key measurements are missing (shoulder width), so the recommendation is less reliable."
+    },
+    {
+      "code": "missing_secondary",
+      "message_ar": "قياسات ثانوية غير متوفرة ولم تدخل في المقارنة: محيط الخصر، محيط الورك.",
+      "message_en": "Secondary measurements not available and not compared: waist, hip."
+    }
+  ]
+}

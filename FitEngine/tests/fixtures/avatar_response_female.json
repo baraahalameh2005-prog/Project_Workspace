@@ -1,0 +1,90 @@
+{
+  "_source": "Real POST /generate-avatar response from the avatar module (Project_Workspace commit fd94a8b), 2026-10-17. Request: height 200, weight 150, waist 72, chest 90, hip 96, female. Trimmed to the fields fit_engine reads.",
+  "avatar_id": "0bff298e81db4568bdd77d2ba6697d6d",
+  "parameters": {
+    "gender": "female",
+    "height": 0.9147558741043603,
+    "weight": 0.999,
+    "age": 0.5117338951550124,
+    "muscle": 0.7871682712272347,
+    "proportions": 0.9017111898446194
+  },
+  "accuracy": {
+    "height": {
+      "unit": "cm",
+      "requested": 200.0,
+      "actual": 200.0,
+      "absolute_error": 0.0,
+      "percentage_error": 0.0,
+      "control": "solved directly (height parameter), shape assists if out of range",
+      "status": "measured"
+    },
+    "weight": {
+      "unit": "kg",
+      "requested": 150.0,
+      "actual": 89.5095466569026,
+      "absolute_error": 60.4904533430974,
+      "percentage_error": 40.32696889539827,
+      "control": "solved directly (weight parameter), shape assists if out of range",
+      "status": "measured"
+    },
+    "waist": {
+      "unit": "cm",
+      "requested": 72.0,
+      "actual": 82.78195988202371,
+      "absolute_error": 10.781959882023713,
+      "percentage_error": 14.97494428058849,
+      "control": "fitted indirectly (age, muscle, proportions)",
+      "status": "measured"
+    },
+    "chest": {
+      "unit": "cm",
+      "requested": 90.0,
+      "actual": 101.5778738397911,
+      "absolute_error": 11.577873839791096,
+      "percentage_error": 12.864304266434551,
+      "control": "fitted indirectly (age, muscle, proportions)",
+      "status": "measured"
+    },
+    "hip": {
+      "unit": "cm",
+      "requested": 96.0,
+      "actual": 108.46338449874762,
+      "absolute_error": 12.463384498747615,
+      "percentage_error": 12.982692186195433,
+      "control": "fitted indirectly (age, muscle, proportions)",
+      "status": "measured"
+    }
+  },
+  "measurements": {
+    "height_m": 2.0,
+    "mass_kg": 89.5095466569026,
+    "bmi": 22.37738666422565,
+    "waist_m": 0.8278195988202371,
+    "waist_width_m": 0.311347315342263,
+    "chest_m": 1.0157787383979109,
+    "chest_width_m": 0.34112714814141376,
+    "hip_m": 1.0846338449874762,
+    "hip_width_m": 0.389295222338172,
+    "neck_m": 0.3652389641082989,
+    "shoulder_breadth_m": 0.3247403230833599,
+    "upper_arm_m": 0.3499773496412478,
+    "forearm_m": 0.2907897631735636,
+    "thigh_m": 0.5231512249408358,
+    "thigh_left_m": 0.5231512249408358,
+    "thigh_right_m": 0.5231512249408358,
+    "calf_m": 0.4075377027303255,
+    "calf_left_m": 0.4075377027303255,
+    "calf_right_m": 0.4075377027303255,
+    "shoulder_width_m": 0.34671258483777495,
+    "arm_length_m": 0.5468422716559012,
+    "leg_length_m": 1.0035361704689476
+  },
+  "out_of_range": [],
+  "warnings": [
+    "weight: 89.51 kg vs requested 150.00 kg (40.33% off), outside the fitting tolerance.",
+    "waist: 82.78 cm vs requested 72.00 cm (14.97% off), outside the fitting tolerance.",
+    "chest: 101.58 cm vs requested 90.00 cm (12.86% off), outside the fitting tolerance.",
+    "hip: 108.46 cm vs requested 96.00 cm (12.98% off), outside the fitting tolerance."
+  ]
+}

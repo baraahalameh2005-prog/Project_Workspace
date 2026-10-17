@@ -1,0 +1,38 @@
+{
+  "engine_version": "0.2.0",
+  "garment_id": "TS-001",
+  "garment_name": "تيشيرت قطن كلاسيك",
+  "category": "t_shirt",
+  "fit_type": "regular",
+  "stretch": "low",
+  "body_source": null,
+  "user_id": null,
+  "status": "invalid_input",
+  "recommended_size": null,
+  "closest_size": null,
+  "overall_fit": "insufficient_data",
+  "overall_fit_ar": "معلومات غير كافية",
+  "overall_fit_en": "insufficient data",
+  "confidence": "none",
+  "errors": [
+    {
+      "code": "out_of_range",
+      "message_ar": "القيمة 38 سم في body.measurements.chest خارج النطاق المعقول (40–200 سم). هل القياس بالإنش؟",
+      "message_en": "Value 38 cm in body.measurements.chest is outside the plausible range (40-200 cm). Was it measured in inches?",
+      "field": "body.measurements.chest"
+    },
+    {
+      "code": "invalid_number",
+      "message_ar": "القيمة 'abc' في body.measurements.waist ليست رقمًا صالحًا.",
+      "message_en": "Value 'abc' in body.measurements.waist is not a valid number.",
+      "field": "body.measurements.waist"
+    },
+    {
+      "code": "non_positive",
+      "message_ar": "القيمة -5 في body.measurements.hip يجب أن تكون أكبر من صفر.",
+      "message_en": "Value -5 in body.measurements.hip must be greater than zero.",
+      "field": "body.measurements.hip"
+    }
+  ],
+  "warnings": []
+}

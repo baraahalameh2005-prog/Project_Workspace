@@ -1,0 +1,12 @@
+{
+  "user_id": "demo-user-3",
+  "source": "avatar",
+  "unit": "cm",
+  "measurements": {
+    "height": 163,
+    "chest": 86,
+    "waist": 72,
+    "hip": 108,
+    "shoulder_width": 38
+  }
+}

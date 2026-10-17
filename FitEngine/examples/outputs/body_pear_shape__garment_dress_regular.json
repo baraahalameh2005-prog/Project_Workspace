@@ -1,0 +1,203 @@
+{
+  "engine_version": "0.2.0",
+  "garment_id": "DR-010",
+  "garment_name": "فستان مطرّز بقصة مستقيمة",
+  "category": "dress",
+  "fit_type": "regular",
+  "stretch": "none",
+  "body_source": "avatar",
+  "user_id": "demo-user-3",
+  "disclaimer": {
+    "code": "disclaimer",
+    "message_ar": "هذه توصية تقديرية مبنية على مقارنة رقمية للقياسات ونطاقات راحة افتراضية، ولم يتم التحقق من دقتها على ملابس حقيقية بعد. لا تضمن ملاءمة مثالية.",
+    "message_en": "This is an estimate based on numeric comparison and default ease ranges. It has not been validated on real garments yet and does not guarantee a perfect fit."
+  },
+  "all_sizes": [
+    {
+      "size": "S",
+      "score": 15.5918,
+      "acceptable": false,
+      "incomplete_primary": [],
+      "overall_fit": "tight",
+      "statuses": {
+        "chest": "good",
+        "waist": "slightly_tight",
+        "hip": "too_tight",
+        "shoulder_width": "good"
+      }
+    },
+    {
+      "size": "M",
+      "score": 6.0654,
+      "acceptable": false,
+      "incomplete_primary": [],
+      "overall_fit": "tight",
+      "statuses": {
+        "chest": "good",
+        "waist": "good",
+        "hip": "too_tight",
+        "shoulder_width": "good"
+      }
+    },
+    {
+      "size": "L",
+      "score": 1.6372,
+      "acceptable": false,
+      "incomplete_primary": [],
+      "overall_fit": "mixed",
+      "statuses": {
+        "chest": "too_loose",
+        "waist": "slightly_loose",
+        "hip": "too_tight",
+        "shoulder_width": "good"
+      }
+    },
+    {
+      "size": "XL",
+      "score": 5.3786,
+      "acceptable": false,
+      "incomplete_primary": [],
+      "overall_fit": "loose",
+      "statuses": {
+        "chest": "too_loose",
+        "waist": "too_loose",
+        "hip": "good",
+        "shoulder_width": "slightly_loose"
+      }
+    }
+  ],
+  "missing_measurements": {
+    "body": [],
+    "garment": []
+  },
+  "status": "no_suitable_size",
+  "situation": "no_single_size_fits",
+  "recommended_size": null,
+  "closest_size": "L",
+  "overall_fit": "mixed",
+  "overall_fit_ar": "ضيق في مناطق وواسع في أخرى",
+  "overall_fit_en": "tight in some areas, loose in others",
+  "confidence": "high",
+  "alternative_size": null,
+  "comparisons": [
+    {
+      "measurement": "chest",
+      "body_measurement": "chest",
+      "name_ar": "محيط الصدر",
+      "name_en": "chest",
+      "importance": "primary",
+      "body_cm": 86.0,
+      "garment_cm": 102.0,
+      "status": "too_loose",
+      "ease_cm": 16.0,
+      "target_ease_cm": [
+        4.0,
+        12.0
+      ],
+      "ease_source": "default",
+      "penalty": 1.7778,
+      "label_ar": "واسع",
+      "label_en": "too loose"
+    },
+    {
+      "measurement": "waist",
+      "body_measurement": "waist",
+      "name_ar": "محيط الخصر",
+      "name_en": "waist",
+      "importance": "primary",
+      "body_cm": 72.0,
+      "garment_cm": 86.0,
+      "status": "slightly_loose",
+      "ease_cm": 14.0,
+      "target_ease_cm": [
+        3.0,
+        12.0
+      ],
+      "ease_source": "default",
+      "penalty": 0.4444,
+      "label_ar": "واسع قليلًا",
+      "label_en": "slightly loose"
+    },
+    {
+      "measurement": "hip",
+      "body_measurement": "hip",
+      "name_ar": "محيط الورك",
+      "name_en": "hip",
+      "importance": "primary",
+      "body_cm": 108.0,
+      "garment_cm": 108.0,
+      "status": "too_tight",
+      "ease_cm": 0.0,
+      "target_ease_cm": [
+        4.0,
+        14.0
+      ],
+      "ease_source": "default",
+      "penalty": 3.5556,
+      "label_ar": "ضيق",
+      "label_en": "too tight"
+    },
+    {
+      "measurement": "shoulder_width",
+      "body_measurement": "shoulder_width",
+      "name_ar": "عرض الكتفين",
+      "name_en": "shoulder width",
+      "importance": "secondary",
+      "body_cm": 38.0,
+      "garment_cm": 40.0,
+      "status": "good",
+      "ease_cm": 2.0,
+      "target_ease_cm": [
+        -1.0,
+        2.0
+      ],
+      "ease_source": "default",
+      "penalty": 0.05,
+      "label_ar": "مناسب",
+      "label_en": "good fit"
+    }
+  ],
+  "not_compared": [
+    {
+      "measurement": "length",
+      "garment_cm": 124.0,
+      "code": "not_compared",
+      "message_ar": "طول القطعة للقطعة لا يقابله قياس جسم مباشر؛ يُعرض للمعلومة فقط.",
+      "message_en": "Garment garment length has no direct body counterpart; shown for information only."
+    }
+  ],
+  "issues": [
+    {
+      "code": "issue_width",
+      "message_ar": "محيط الصدر: القطعة أكبر من الجسم بـ +16 سم (واسع)، والمطلوب بين +4 و+12 سم.",
+      "message_en": "chest: garment exceeds body by +16 cm (too loose); target is +4 to +12 cm.",
+      "measurement": "chest",
+      "status": "too_loose",
+      "importance": "primary"
+    },
+    {
+      "code": "issue_width",
+      "message_ar": "محيط الخصر: القطعة أكبر من الجسم بـ +14 سم (واسع قليلًا)، والمطلوب بين +3 و+12 سم.",
+      "message_en": "waist: garment exceeds body by +14 cm (slightly loose); target is +3 to +12 cm.",
+      "measurement": "waist",
+      "status": "slightly_loose",
+      "importance": "primary"
+    },
+    {
+      "code": "issue_width",
+      "message_ar": "محيط الورك: القطعة أكبر من الجسم بـ 0 سم (ضيق)، والمطلوب بين +4 و+14 سم.",
+      "message_en": "hip: garment exceeds body by 0 cm (too tight); target is +4 to +14 cm.",
+      "measurement": "hip",
+      "status": "too_tight",
+      "importance": "primary"
+    }
+  ],
+  "reasons": [
+    {
+      "code": "no_single_size",
+      "message_ar": "لا يوجد مقاس واحد يناسب كل المناطق. محيط الصدر يناسبه: S، M؛ محيط الخصر يناسبه: S، M، L؛ محيط الورك يناسبه: XL.",
+      "message_en": "No single size fits every area. chest fits: S, M; waist fits: S, M, L; hip fits: XL."
+    }
+  ],
+  "warnings": []
+}

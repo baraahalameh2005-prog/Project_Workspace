@@ -1,0 +1,15 @@
+{
+  "garment_id": "JN-204",
+  "name": "جينز سكيني",
+  "category": "pants",
+  "fit_type": "slim",
+  "stretch": "medium",
+  "measurement_type": "flat",
+  "unit": "cm",
+  "sizes": [
+    {"label": "28", "measurements": {"waist": 36, "hip": 44, "thigh": 25, "inseam": 78}},
+    {"label": "30", "measurements": {"waist": 38, "hip": 46, "thigh": 26, "inseam": 79}},
+    {"label": "32", "measurements": {"waist": 40.5, "hip": 48.5, "thigh": 27.5, "inseam": 80}},
+    {"label": "34", "measurements": {"waist": 43, "hip": 51, "thigh": 29, "inseam": 81}}
+  ]
+}

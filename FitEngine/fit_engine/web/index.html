@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>اقتراح المقاس</title>
+<!--
+  Web UI for fit_engine. It contains NO sizing logic and NO precomputed results:
+  every result shown is returned by POST /recommend (fit_engine.recommend_size).
+  Supported categories and the measurements that matter per category come from GET /schema.
+-->
+<style>
+:root {
+  --bg: #f6f7f9; --panel: #ffffff; --text: #1d2127; --muted: #5f6b7a; --border: #d9dee5;
+  --accent: #1f6feb; --accent-text: #ffffff;
+  --good-bg: #e3f4e8; --good: #17663a; --warn-bg: #fff4d6; --warn: #7a5300;
+  --bad-bg: #fde4e4; --bad: #a12020; --info-bg: #e7effc; --info: #1c4f9c;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14171c; --panel: #1c2027; --text: #e6e9ee; --muted: #9aa5b4; --border: #333a45;
+    --accent: #4c8dff; --accent-text: #0b0d10;
+    --good-bg: #173524; --good: #7fd8a1; --warn-bg: #3a2f12; --warn: #f2c96b;
+    --bad-bg: #3d1a1a; --bad: #ff9a9a; --info-bg: #1a2a45; --info: #9cc0ff;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14171c; --panel: #1c2027; --text: #e6e9ee; --muted: #9aa5b4; --border: #333a45;
+  --accent: #4c8dff; --accent-text: #0b0d10;
+  --good-bg: #173524; --good: #7fd8a1; --warn-bg: #3a2f12; --warn: #f2c96b;
+  --bad-bg: #3d1a1a; --bad: #ff9a9a; --info-bg: #1a2a45; --info: #9cc0ff;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+       font: 15px/1.6 system-ui, "Segoe UI", Tahoma, sans-serif; }
+main { max-width: 1100px; margin: 0 auto; padding: 16px; }
+h1 { font-size: 1.5rem; margin: 8px 0 4px; }
+h2 { font-size: 1.1rem; margin: 0 0 12px; }
+h3 { font-size: 1rem; margin: 16px 0 8px; }
+.sub { color: var(--muted); margin: 0 0 16px; }
+.panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+         padding: 16px; margin-bottom: 16px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px 14px; }
+label { display: block; font-size: .85rem; color: var(--muted); margin-bottom: 2px; }
+input, select, textarea { width: 100%; padding: 7px 9px; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--bg); color: var(--text); font: inherit; }
+input.invalid { border-color: var(--bad); background: var(--bad-bg); }
+textarea { font-family: ui-monospace, Consolas, monospace; font-size: .85rem; min-height: 160px; direction: ltr; }
+button { padding: 8px 14px; border-radius: 6px; border: 1px solid var(--border);
+         background: var(--panel); color: var(--text); font: inherit; cursor: pointer; }
+button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); font-weight: 600; }
+button:disabled { opacity: .6; cursor: wait; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { border-bottom: 1px solid var(--border); padding: 6px 8px; text-align: start; vertical-align: top; }
+th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+.sizes input { min-width: 64px; padding: 5px 6px; }
+th.primary { color: var(--accent); }
+.hint { font-size: .82rem; color: var(--muted); }
+.banner { border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; font-weight: 600; }
+.ok { background: var(--good-bg); color: var(--good); }
+.warn { background: var(--warn-bg); color: var(--warn); }
+.bad { background: var(--bad-bg); color: var(--bad); }
+.info { background: var(--info-bg); color: var(--info); }
+.pill { display: inline-block; border-radius: 999px; padding: 1px 9px; font-size: .82rem; font-weight: 600; }
+.kv { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin-bottom: 8px; }
+.kv div { background: var(--bg); border-radius: 6px; padding: 8px 10px; }
+.kv b { display: block; font-size: 1.15rem; }
+ul.msgs { margin: 4px 0; padding-inline-start: 20px; }
+.ltr { direction: ltr; unicode-bidi: embed; }
+details summary { cursor: pointer; color: var(--muted); }
+pre { direction: ltr; text-align: left; overflow: auto; max-height: 400px; background: var(--bg);
+      padding: 10px; border-radius: 6px; font-size: .8rem; }
+@media (max-width: 600px) { main { padding: 12px 16px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>اقتراح المقاس وتقييم الملاءمة</h1>
+  <p class="sub">كل نتيجة تظهر هنا محسوبة فعليًا من خوارزمية <span class="ltr">fit_engine</span> عبر
+    <span class="ltr">POST /recommend</span>. الحقول الفارغة تُعتبر غير متوفرة ولا تُخترع لها قيم.</p>
+
+  <div id="schemaError" class="banner bad" hidden></div>
+  <div id="avatarBanner" class="banner info" hidden></div>
+
+  <form id="form" novalidate>
+    <section class="panel">
+      <h2>قياسات جسم المستخدم</h2>
+      <div class="grid">
+        <div><label for="bodyUnit">الوحدة</label>
+          <select id="bodyUnit"><option value="cm">cm</option><option value="mm">mm</option>
+            <option value="m">m</option><option value="in">in</option></select></div>
+      </div>
+      <h3>قياسات الجسم (محيطات وأطوال الجسم نفسه)</h3>
+      <div class="grid" id="bodyFields"></div>
+      <p class="hint">القياسات المهمة لنوع الملابس المختار مميزة بعلامة ★. الوزن لا يُستخدم في تحديد المقاس.</p>
+      <details>
+        <summary>تعبئة القياسات من الأفاتار (موديول براءه)</summary>
+        <p class="hint">الصقي هنا طلب أو رد <span class="ltr">POST /generate-avatar</span> بصيغة JSON.
+          تُستخدم القياسات التي أدخلها المستخدم (الصدر، الخصر، الورك، الطول، والكتفين إن وُجدت)، وليس قياسات الموديل المتولّد.</p>
+        <textarea id="avatarJson" spellcheck="false" placeholder='{"height":165,"weight":60,"waist":72,"chest":90,"hip":96,"gender":"female"}'></textarea>
+        <div class="row" style="margin-top:8px">
+          <button type="button" id="fromAvatar">تعبئة قياسات الجسم</button>
+          <span id="avatarMsg" class="hint"></span>
+        </div>
+      </details>
+    </section>
+
+    <section class="panel">
+      <h2>قطعة الملابس</h2>
+      <div class="grid">
+        <div><label for="gId">معرّف المنتج</label><input id="gId" placeholder="اختياري"></div>
+        <div><label for="gName">اسم القطعة</label><input id="gName" placeholder="اختياري"></div>
+        <div><label for="gCategory">نوع الملابس *</label><select id="gCategory"></select></div>
+        <div><label for="gFit">القصة</label><select id="gFit"></select></div>
+        <div><label for="gStretch">مرونة القماش</label><select id="gStretch"></select></div>
+        <div><label for="gMType">طريقة قياس القطعة</label>
+          <select id="gMType">
+            <option value="circumference">محيط كامل للقطعة</option>
+            <option value="flat">عرض مسطّح (نصف المحيط)</option>
+          </select></div>
+        <div><label for="gUnit">وحدة قياسات القطعة</label>
+          <select id="gUnit"><option value="cm">cm</option><option value="mm">mm</option>
+            <option value="m">m</option><option value="in">in</option></select></div>
+      </div>
+      <p class="hint">"عرض مسطّح" = القطعة ممدودة على طاولة وقياس عرضها من طرف لطرف؛ المحرك يضاعف قيم المحيطات (صدر، خصر، ورك، فخذ، نهاية الكم) ×2. عرض الكتفين والأطوال لا تتأثر.</p>
+
+      <h3>المقاسات المتاحة (من الأصغر للأكبر)</h3>
+      <div class="scroll"><table class="sizes"><thead id="sizesHead"></thead><tbody id="sizesBody"></tbody></table></div>
+      <div class="row" style="margin-top:8px">
+        <button type="button" id="addSize">+ إضافة مقاس</button>
+        <span class="hint">★ = قياس أساسي لهذا النوع، ☆ = ثانوي، بدون علامة = للمعلومة فقط.</span>
+      </div>
+    </section>
+
+    <div class="row panel">
+      <button type="submit" class="primary" id="submitBtn">احسب المقاس المناسب</button>
+      <button type="button" id="loadSample">تعبئة مدخلات تجريبية</button>
+      <button type="button" id="clearAll">مسح الكل</button>
+      <span id="clientMsg" class="hint"></span>
+    </div>
+  </form>
+
+  <details class="panel">
+    <summary>إدخال JSON مباشر (لاختبار بيانات بصيغة عقد البيانات)</summary>
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-top:10px">
+      <div><label for="jsonBody">body</label><textarea id="jsonBody" spellcheck="false"></textarea></div>
+      <div><label for="jsonGarment">garment</label><textarea id="jsonGarment" spellcheck="false"></textarea></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button type="button" id="formToJson">نسخ النموذج إلى JSON</button>
+      <button type="button" class="primary" id="sendJson">احسب من JSON</button>
+    </div>
+  </details>
+
+  <section id="result" class="panel" hidden aria-live="polite"></section>
+</main>
+
+<script>
+"use strict";
+let SCHEMA = null;
+
+const BODY_NAMES = {
+  height: "الطول", chest: "محيط الصدر", waist: "محيط الخصر", hip: "محيط الورك",
+  shoulder_width: "عرض الكتفين", arm_length: "طول الذراع", inseam: "طول الساق الداخلي", thigh: "محيط الفخذ",
+};
+const GARMENT_NAMES = {
+  chest: "صدر", waist: "خصر", hip: "ورك", shoulder_width: "كتفين", sleeve_length: "طول الكم",
+  sleeve_opening: "نهاية الكم", length: "طول القطعة", inseam: "ساق داخلي", thigh: "فخذ",
+};
+// garment key -> body key it is compared with (mirrors schema.GARMENT_TO_BODY for UI hints only)
+const G2B = { chest: "chest", waist: "waist", hip: "hip", shoulder_width: "shoulder_width",
+              sleeve_length: "arm_length", inseam: "inseam", thigh: "thigh" };
+const CATEGORY_AR = { t_shirt: "تيشيرت", shirt: "قميص", jacket: "جاكيت", dress: "فستان", pants: "بنطلون", skirt: "تنورة" };
+const FIT_AR = { slim: "ضيقة (slim)", regular: "عادية (regular)", loose: "واسعة (loose)", oversized: "واسعة جدًا (oversized)" };
+const STRETCH_AR = { none: "غير مطاطي", low: "مطاطي قليلًا", medium: "مطاطي متوسط", high: "مطاطي عالي" };
+const STATUS_TEXT = { ok: "تمت التوصية", no_suitable_size: "لا يوجد مقاس مناسب",
+  insufficient_data: "معلومات غير كافية", invalid_input: "مدخلات غير صالحة" };
+const CONF_AR = { high: "عالية", medium: "متوسطة", low: "منخفضة", none: "لا توجد" };
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function statusClass(st) {
+  if (st === "good") return "ok";
+  if (st && st.startsWith("slightly")) return "warn";
+  if (st && st.startsWith("too")) return "bad";
+  return "info";
+}
+
+function option(sel, value, text) {
+  const o = document.createElement("option");
+  o.value = value; o.textContent = text; sel.appendChild(o);
+}
+
+function rulesFor(cat) {
+  const r = (SCHEMA && SCHEMA.category_rules[cat]) || { primary: {}, secondary: {} };
+  return { primary: Object.keys(r.primary), secondary: Object.keys(r.secondary) };
+}
+
+// ---------- form building ----------
+function buildBodyFields() {
+  const box = $("bodyFields");
+  box.innerHTML = "";
+  for (const key of SCHEMA.body_measurements) {
+    const d = document.createElement("div");
+    d.innerHTML = `<label for="b_${key}" id="lb_${key}">${esc(BODY_NAMES[key] || key)} <span class="ltr">(${key})</span></label>
+      <input id="b_${key}" data-body="${key}" inputmode="decimal" autocomplete="off">`;
+    box.appendChild(d);
+  }
+}
+
+function sizeColumns() { return SCHEMA.garment_measurements; }
+
+function buildSizesHead() {
+  const cat = $("gCategory").value;
+  const { primary, secondary } = rulesFor(cat);
+  let h = "<tr><th>اسم المقاس *</th>";
+  for (const k of sizeColumns()) {
+    const mark = primary.includes(k) ? " ★" : secondary.includes(k) ? " ☆" : "";
+    h += `<th class="${primary.includes(k) ? "primary" : ""}">${esc(GARMENT_NAMES[k] || k)}${mark}<br><span class="hint ltr">${k}</span></th>`;
+  }
+  h += "<th></th></tr>";
+  $("sizesHead").innerHTML = h;
+  // mark body fields that matter for this category
+  for (const key of SCHEMA.body_measurements) {
+    const lab = $("lb_" + key);
+    const used = [...primary, ...secondary].some((g) => G2B[g] === key);
+    const isPrim = primary.some((g) => G2B[g] === key);
+    lab.innerHTML = `${esc(BODY_NAMES[key] || key)} <span class="ltr">(${key})</span>${isPrim ? " ★" : used ? " ☆" : ""}`;
+  }
+}
+
+function addSizeRow(values = {}) {
+  const tr = document.createElement("tr");
+  let h = `<td><input data-label value="${esc(values.label ?? "")}" style="min-width:56px"></td>`;
+  for (const k of sizeColumns()) {
+    const v = values.measurements && values.measurements[k] != null ? values.measurements[k] : "";
+    h += `<td><input data-g="${k}" inputmode="decimal" value="${esc(v)}"></td>`;
+  }
+  h += `<td><button type="button" title="حذف المقاس" aria-label="حذف المقاس">✕</button></td>`;
+  tr.innerHTML = h;
+  tr.querySelector("button").addEventListener("click", () => tr.remove());
+  $("sizesBody").appendChild(tr);
+}
+
+// ---------- reading the form (no values are invented: empty = omitted) ----------
+function readNumber(input, errors, label) {
+  input.classList.remove("invalid");
+  const raw = input.value.trim().replace(",", ".");
+  if (raw === "") return undefined;
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n <= 0) {
+    input.classList.add("invalid");
+    errors.push(`${label}: "${input.value}" ليس رقمًا موجبًا`);
+    return undefined;
+  }
+  return n;
+}
+
+function readForm() {
+  const errors = [];
+  const measurements = {};
+  document.querySelectorAll("[data-body]").forEach((inp) => {
+    const v = readNumber(inp, errors, BODY_NAMES[inp.dataset.body] || inp.dataset.body);
+    if (v !== undefined) measurements[inp.dataset.body] = v;
+  });
+  const body = { source: "manual", unit: $("bodyUnit").value, measurements };
+
+  const garment = { category: $("gCategory").value, measurement_type: $("gMType").value,
+                    unit: $("gUnit").value, sizes: [] };
+  if ($("gId").value.trim()) garment.garment_id = $("gId").value.trim();
+  if ($("gName").value.trim()) garment.name = $("gName").value.trim();
+  if ($("gFit").value) garment.fit_type = $("gFit").value;
+  if ($("gStretch").value) garment.stretch = $("gStretch").value;
+
+  $("sizesBody").querySelectorAll("tr").forEach((tr, i) => {
+    const label = tr.querySelector("[data-label]").value.trim();
+    const m = {};
+    tr.querySelectorAll("[data-g]").forEach((inp) => {
+      const v = readNumber(inp, errors, `المقاس ${label || i + 1} / ${GARMENT_NAMES[inp.dataset.g] || inp.dataset.g}`);
+      if (v !== undefined) m[inp.dataset.g] = v;
+    });
+    if (!label && Object.keys(m).length === 0) return;  // fully empty row is skipped
+    garment.sizes.push({ label, measurements: m });
+  });
+  return { body, garment, errors };
+}
+
+function fillForm(body, garment) {
+  $("bodyUnit").value = body.unit || "cm";
+  document.querySelectorAll("[data-body]").forEach((inp) => {
+    const v = (body.measurements || {})[inp.dataset.body];
+    inp.value = v == null ? "" : v;
+    inp.classList.remove("invalid");
+  });
+  $("gId").value = garment.garment_id || "";
+  $("gName").value = garment.name || "";
+  $("gCategory").value = garment.category;
+  $("gFit").value = garment.fit_type || "";
+  $("gStretch").value = garment.stretch || "";
+  $("gMType").value = garment.measurement_type || "circumference";
+  $("gUnit").value = garment.unit || "cm";
+  buildSizesHead();
+  $("sizesBody").innerHTML = "";
+  (garment.sizes || []).forEach(addSizeRow);
+}
+
+// Sample INPUT data only (demo numbers, not real product specs). Results are always computed.
+const SAMPLE_BODY = { unit: "cm", measurements: { height: 163, chest: 86, waist: 72, hip: 100, shoulder_width: 39 } };
+const SAMPLE_GARMENT = {
+  garment_id: "DEMO-DR", name: "فستان تجريبي", category: "dress", fit_type: "regular", stretch: "none",
+  measurement_type: "circumference", unit: "cm",
+  sizes: [
+    { label: "S", measurements: { chest: 90, waist: 74, hip: 96, shoulder_width: 38 } },
+    { label: "M", measurements: { chest: 96, waist: 80, hip: 102, shoulder_width: 39 } },
+    { label: "L", measurements: { chest: 102, waist: 86, hip: 108, shoulder_width: 40 } },
+  ],
+};
+
+// ---------- calling the real engine ----------
+async function recommend(body, garment) {
+  const btns = [$("submitBtn"), $("sendJson")];
+  btns.forEach((b) => (b.disabled = true));
+  $("clientMsg").textContent = "جارٍ الحساب…";
+  try {
+    const resp = await fetch("/recommend", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ body, garment }),
+    });
+    const data = await resp.json();
+    if (resp.status === 400) throw new Error("طلب غير صالح: " + (data.error || resp.status));
+    renderResult(data);
+    $("clientMsg").textContent = "";
+  } catch (e) {
+    $("clientMsg").textContent = "";
+    const r = $("result");
+    r.hidden = false;
+    r.innerHTML = `<div class="banner bad">تعذر الاتصال بالمحرك أو قراءة الرد: ${esc(e.message)}.<br>
+      تأكد من تشغيل الخادم: <span class="ltr">python -m fit_engine serve</span></div>`;
+  } finally {
+    btns.forEach((b) => (b.disabled = false));
+  }
+}
+
+function msgList(title, items, cls) {
+  if (!items || !items.length) return "";
+  return `<h3>${title}</h3><ul class="msgs ${cls || ""}">${items.map((m) => `<li>${esc(m.message_ar)}${m.field ? ` <span class="hint ltr">[${esc(m.field)}]</span>` : ""}</li>`).join("")}</ul>`;
+}
+
+function fmtNum(x) { return x == null ? "—" : (Math.round(x * 10) / 10).toString(); }
+function fmtSigned(x) { if (x == null) return "—"; const r = Math.round(x * 10) / 10; return (r > 0 ? "+" : "") + r; }
+
+function renderResult(res) {
+  const r = $("result");
+  r.hidden = false;
+  const st = res.status;
+  const bannerCls = st === "ok" ? "ok" : st === "invalid_input" ? "bad" : "warn";
+  let h = `<h2>النتيجة</h2>`;
+  let headline = STATUS_TEXT[st] || st;
+  if (st === "ok") headline = `المقاس الموصى به: ${esc(res.recommended_size)}`;
+  else if (st === "no_suitable_size") headline = `لا يوجد مقاس مناسب — الأقرب: ${esc(res.closest_size)}`;
+  h += `<div class="banner ${bannerCls}">${headline}</div>`;
+
+  if (st !== "invalid_input") {
+    h += `<div class="kv">
+      <div>الحالة<b class="ltr">${esc(st)}${res.situation ? " / " + esc(res.situation) : ""}</b></div>
+      <div>تقييم الملاءمة العام<b>${esc(res.overall_fit_ar)}</b></div>
+      <div>مستوى الثقة<b>${esc(CONF_AR[res.confidence] || res.confidence)}</b></div>
+      <div>المقاس البديل<b>${res.alternative_size ? esc(res.alternative_size.size) : "—"}</b></div>
+    </div>`;
+    if (res.alternative_size) h += `<p>${esc(res.alternative_size.message_ar)}</p>`;
+  }
+
+  h += msgList("الأخطاء", res.errors, "");
+  h += msgList("أسباب التوصية", res.reasons);
+  h += msgList("المناطق التي تحتاج انتباهًا", res.issues);
+
+  if (res.comparisons && res.comparisons.length) {
+    const sizeName = res.recommended_size || res.closest_size;
+    h += `<h3>تقييم كل منطقة${sizeName ? " للمقاس " + esc(sizeName) : ""}</h3>
+      <div class="scroll"><table><thead><tr><th>المنطقة</th><th>الأهمية</th><th>الجسم (سم)</th>
+      <th>القطعة (سم)</th><th>الفرق (سم)</th><th>الفرق المطلوب</th><th>التقييم</th></tr></thead><tbody>`;
+    for (const c of res.comparisons) {
+      const tgt = c.target_ease_cm ? `${fmtSigned(c.target_ease_cm[0])} .. ${fmtSigned(c.target_ease_cm[1])}` : "—";
+      h += `<tr><td>${esc(c.name_ar)}</td><td>${c.importance === "primary" ? "أساسي" : "ثانوي"}</td>
+        <td>${fmtNum(c.body_cm)}</td><td>${fmtNum(c.garment_cm)}</td><td class="ltr">${fmtSigned(c.ease_cm)}</td>
+        <td class="ltr">${tgt}</td><td><span class="pill ${statusClass(c.status)}">${esc(c.label_ar)}</span></td></tr>`;
+    }
+    h += `</tbody></table></div><p class="hint">الفرق = قياس القطعة − قياس الجسم (بعد تحويل العرض المسطّح إلى محيط).</p>`;
+  }
+
+  if (res.all_sizes && res.all_sizes.length) {
+    const keys = [...new Set(res.all_sizes.flatMap((s) => Object.keys(s.statuses)))];
+    h += `<h3>مقارنة كل المقاسات</h3><div class="scroll"><table><thead><tr><th>المقاس</th><th>قابل للارتداء</th>
+      ${keys.map((k) => `<th>${esc(GARMENT_NAMES[k] || k)}</th>`).join("")}<th>النتيجة (أقل = أفضل)</th></tr></thead><tbody>`;
+    for (const s of res.all_sizes) {
+      h += `<tr><td><b>${esc(s.size)}</b></td><td>${s.acceptable ? "نعم" : s.incomplete_primary && s.incomplete_primary.length ? "بيانات ناقصة" : "لا"}</td>
+        ${keys.map((k) => { const v = s.statuses[k]; return `<td>${v ? `<span class="pill ${statusClass(v)}">${esc(STATUS_LABEL_AR[v] || v)}</span>` : "—"}</td>`; }).join("")}
+        <td class="ltr">${s.score == null ? "—" : s.score}</td></tr>`;
+    }
+    h += `</tbody></table></div>`;
+  }
+
+  if (res.missing_measurements) {
+    const mb = res.missing_measurements.body || [], mg = res.missing_measurements.garment || [];
+    if (mb.length || mg.length) {
+      h += `<h3>قياسات ناقصة</h3><ul class="msgs">
+        ${mb.length ? `<li>من الجسم: ${mb.map((k) => esc(BODY_NAMES[k] || k)).join("، ")}</li>` : ""}
+        ${mg.length ? `<li>من بعض مقاسات القطعة: ${mg.map((k) => esc(GARMENT_NAMES[k] || k)).join("، ")}</li>` : ""}</ul>`;
+    }
+  }
+  h += msgList("تنبيهات", res.warnings);
+  h += msgList("قياسات لم تدخل في المقارنة", res.not_compared);
+  if (res.disclaimer) h += `<p class="hint">${esc(res.disclaimer.message_ar)}</p>`;
+  h += `<p class="hint">محسوبة بواسطة المحرك، الإصدار <span class="ltr">${esc(res.engine_version)}</span>.</p>`;
+  h += `<details><summary>الرد الكامل (JSON)</summary><pre>${esc(JSON.stringify(res, null, 2))}</pre></details>`;
+  r.innerHTML = h;
+  r.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+const STATUS_LABEL_AR = {
+  good: "مناسب", slightly_tight: "ضيق قليلًا", too_tight: "ضيق", slightly_loose: "واسع قليلًا",
+  too_loose: "واسع", slightly_short: "قصير قليلًا", too_short: "قصير", slightly_long: "طويل قليلًا",
+  too_long: "طويل", missing_body: "قياس الجسم ناقص", missing_garment: "قياس القطعة ناقص",
+};
+
+// ---------- wiring ----------
+$("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const { body, garment, errors } = readForm();
+  if (errors.length) {
+    const r = $("result");
+    r.hidden = false;
+    r.innerHTML = `<div class="banner bad">صحّح القيم التالية قبل الحساب:</div><ul class="msgs">${errors.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
+    return;
+  }
+  // further validation (ranges, units, sizes) is done by the engine itself
+  recommend(body, garment);
+});
+$("fromAvatar").addEventListener("click", async () => {
+  const out = $("avatarMsg");
+  let avatar;
+  try { avatar = JSON.parse($("avatarJson").value); }
+  catch (e) { out.textContent = "JSON غير صالح: " + e.message; return; }
+  try {
+    const resp = await fetch("/avatar-to-body", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ avatar }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) { out.textContent = "تعذر التحويل: " + (data.error || resp.status); return; }
+    const m = data.body.measurements;
+    $("bodyUnit").value = "cm";
+    document.querySelectorAll("[data-body]").forEach((inp) => {
+      inp.value = m[inp.dataset.body] == null ? "" : m[inp.dataset.body];
+      inp.classList.remove("invalid");
+    });
+    const n = Object.keys(m).length;
+    out.textContent = n ? `تمت تعبئة ${n} قياسات من الأفاتار.` : "لم يُعثر على قياسات صالحة في بيانات الأفاتار.";
+  } catch (e) {
+    out.textContent = "تعذر الاتصال بالخادم: " + e.message;
+  }
+});
+$("addSize").addEventListener("click", () => addSizeRow());
+$("gCategory").addEventListener("change", buildSizesHead);
+$("loadSample").addEventListener("click", () => fillForm(SAMPLE_BODY, SAMPLE_GARMENT));
+$("clearAll").addEventListener("click", () => {
+  fillForm({ unit: "cm", measurements: {} }, { category: $("gCategory").value, sizes: [{}, {}, {}] });
+  $("result").hidden = true;
+});
+$("formToJson").addEventListener("click", () => {
+  const { body, garment } = readForm();
+  $("jsonBody").value = JSON.stringify(body, null, 2);
+  $("jsonGarment").value = JSON.stringify(garment, null, 2);
+});
+$("sendJson").addEventListener("click", () => {
+  let body, garment;
+  try { body = JSON.parse($("jsonBody").value); garment = JSON.parse($("jsonGarment").value); }
+  catch (e) {
+    const r = $("result"); r.hidden = false;
+    r.innerHTML = `<div class="banner bad">JSON غير صالح: ${esc(e.message)}</div>`;
+    return;
+  }
+  recommend(body, garment);
+});
+
+async function init() {
+  try {
+    const resp = await fetch("/schema");
+    SCHEMA = await resp.json();
+  } catch (e) {
+    $("schemaError").hidden = false;
+    $("schemaError").textContent = "تعذر تحميل إعدادات المحرك من /schema. شغّل الخادم: python -m fit_engine serve ثم افتح http://127.0.0.1:8765/";
+    $("form").querySelectorAll("button").forEach((b) => (b.disabled = true));
+    return;
+  }
+  for (const c of SCHEMA.categories) option($("gCategory"), c, CATEGORY_AR[c] || c);
+  option($("gFit"), "", "غير محددة (يُفترض regular وتقل الثقة)");
+  for (const f of SCHEMA.fit_types) option($("gFit"), f, FIT_AR[f] || f);
+  option($("gStretch"), "", "غير محددة (يُفترض غير مطاطي وتقل الثقة)");
+  for (const s of SCHEMA.stretch_levels) option($("gStretch"), s, STRETCH_AR[s] || s);
+  buildBodyFields();
+  buildSizesHead();
+  for (let i = 0; i < 3; i++) addSizeRow();
+  await fillFromAvatarLink();
+}
+
+// Opened from the avatar page (?avatar_id=..&chest=..&waist=..): fill the body form
+// through POST /avatar-to-body, the same mapping the API uses.
+async function fillFromAvatarLink() {
+  const q = new URLSearchParams(window.location.search);
+  const avatar = {};
+  for (const key of ["height", "chest", "waist", "hip", "shoulder"]) {
+    const n = Number(q.get(key));
+    if (q.has(key) && Number.isFinite(n)) avatar[key] = n;
+  }
+  if (!Object.keys(avatar).length) return;
+  const id = q.get("avatar_id");
+  try {
+    const resp = await fetch("/avatar-to-body", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ avatar }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || resp.status);
+    const m = data.body.measurements;
+    $("bodyUnit").value = "cm";
+    document.querySelectorAll("[data-body]").forEach((inp) => {
+      inp.value = m[inp.dataset.body] == null ? "" : m[inp.dataset.body];
+    });
+    const box = $("avatarBanner");
+    box.hidden = false;
+    box.textContent = `تمت تعبئة قياسات الجسم من الأفاتار${id ? " " + id : ""} (القياسات التي أدخلها المستخدم). أدخلي مقاسات القطعة ثم احسبي.`;
+  } catch (e) {
+    const box = $("avatarBanner");
+    box.hidden = false;
+    box.className = "banner bad";
+    box.textContent = "تعذر تعبئة القياسات من رابط الأفاتار: " + e.message;
+  }
+}
+init();
+</script>
+</body>
+</html>
